@@ -48,6 +48,13 @@ os.makedirs(OUTPUT_DIR, exist_ok=True)
 # ── Font ──────────────────────────────────────────────────────────────────────
 def get_font(size, bold=False):
     paths = [
+        # Ubuntu/Linux — Noto фонт (Монгол дэмжинэ)
+        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf" if bold
+            else "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+        "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc" if bold
+            else "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
+        "/usr/share/fonts/truetype/noto/NotoSansMongolian-Regular.ttf",
+        # macOS
         "/System/Library/Fonts/Supplemental/Arial Bold.ttf" if bold
             else "/System/Library/Fonts/Supplemental/Arial.ttf",
         "/System/Library/Fonts/Helvetica.ttc",
@@ -197,7 +204,7 @@ def generate_image(
         base = make_gradient_bg(cat_upper)
     else:
         base = bg_img.resize((IMG_W, IMG_H), Image.LANCZOS)
-        base = ImageEnhance.Brightness(base).enhance(0.38)
+        base = ImageEnhance.Brightness(base).enhance(0.55)
         base = base.filter(ImageFilter.GaussianBlur(radius=1.2))
 
     # 2. Bottom shadow
@@ -224,8 +231,8 @@ def generate_image(
 
     # 5. HEADLINE — fixed bottom-up layout
     BOTTOM_BAR = 50   # Logo + watermark zone
-    LINE_H     = 62
-    h_font     = get_font(50, bold=True)
+    LINE_H     = 70
+    h_font     = get_font(58, bold=True)
     wrapped    = textwrap.wrap(headline, width=30)[:3]
 
     # Мөрүүдийг доороос дээшээ байрлуулна
