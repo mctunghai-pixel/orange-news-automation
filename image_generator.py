@@ -51,9 +51,15 @@ def get_font(size, bold=False):
         # Ubuntu/Linux — Noto фонт (Монгол дэмжинэ)
         "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf" if bold
             else "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc" if bold
+            else "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
         "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc" if bold
             else "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
         "/usr/share/fonts/truetype/noto/NotoSansMongolian-Regular.ttf",
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold
+            else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf" if bold
+            else "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
         # macOS
         "/System/Library/Fonts/Supplemental/Arial Bold.ttf" if bold
             else "/System/Library/Fonts/Supplemental/Arial.ttf",
@@ -70,9 +76,11 @@ def get_font(size, bold=False):
 # ── Text cleaner ──────────────────────────────────────────────────────────────
 def clean_headline(text: str) -> str:
     text = re.sub(r"\*+", "", text)
-    text = re.sub(r"#+\s*", "", text)
+    text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
+    text = re.sub(r"#+", "", text)
     text = re.sub(r"`+", "", text)
     text = re.sub(r"_{2,}", "", text)
+    text = text.replace("#", "")
     # Хиймэл төгсгөл хэллэг
     for pattern in [
         r"Та үүнийг юу гэж бодож байна\?.*",
