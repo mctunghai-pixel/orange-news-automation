@@ -18,18 +18,67 @@ def get_market_data() -> str:
     """Yahoo Finance-аас live тоонуудыг татна."""
     try:
         import yfinance as yf
-        tickers = {
-            "S&P 500": "^GSPC", "Nasdaq": "^IXIC", "Nikkei": "^N225",
-            "Bitcoin": "BTC-USD", "Ethereum": "ETH-USD",
-            "Solana": "SOL-USD", "Алт": "GC=F", "Нефть": "CL=F"
-        }
-        lines = []
-        for name, symbol in tickers.items():
+        # Валют
+        fx = {"USD": "USDMNT=X", "EUR": "EURMNT=X", "CNY": "CNYMNT=X", "JPY": "JPYMNT=X", "KRW": "KRWMNT=X"}
+        # Зах зээл
+        indices = {"S&P 500": "^GSPC", "Nasdaq": "^IXIC", "Nikkei": "^N225"}
+        # Крипто
+        crypto = {"Bitcoin": "BTC-USD", "Ethereum": "ETH-USD", "Solana": "SOL-USD"}
+        # Түүхий эд
+        commodities = {"Алт": "GC=F", "Нефть": "CL=F", "Зэс": "HG=F"}
+        # Топ компани
+        stocks = {"Apple": "AAPL", "Microsoft": "MSFT", "Nvidia": "NVDA", "Tesla": "TSLA", "Amazon": "AMZN"}
+
+        def fmt(symbol, prev=None):
             try:
-                p = yf.Ticker(symbol).fast_info.last_price
-                lines.append(f"{name}: {p:,.2f}")
+                t = yf.Ticker(symbol)
+                p = t.fast_info.last_price
+                if prev is None:
+                    return f"{p:,.2f}"
+                change = p - prev
+                pct = (change / prev) * 100
+                arrow = "⬆️" if change >= 0 else "⬇️"
+                sign = "+" if change >= 0 else ""
+                return f"{p:,.2f} {arrow} {sign}{pct:.2f}%"
             except:
-                pass
+                return "[мэдээлэл байхгүй]"
+
+        def prev_close(symbol):
+            try:
+                return yf.Ticker(symbol).fast_info.previous_close
+            except:
+                return None
+
+        lines = []
+        # Валют
+        fx_parts = []
+        for name, sym in fx.items():
+            fx_parts.append(f"{name}: {fmt(sym)}₮")
+        lines.append("FX|" + " | ".join(fx_parts))
+        # Индекс
+        idx_parts = []
+        for name, sym in indices.items():
+            pc = prev_close(sym)
+            idx_parts.append(f"{name}: {fmt(sym, pc)}")
+        lines.append("IDX|" + " | ".join(idx_parts))
+        # Крипто
+        cr_parts = []
+        for name, sym in crypto.items():
+            pc = prev_close(sym)
+            cr_parts.append(f"{name}: ${fmt(sym, pc)}")
+        lines.append("CRYPTO|" + " | ".join(cr_parts))
+        # Түүхий эд
+        cm_parts = []
+        for name, sym in commodities.items():
+            pc = prev_close(sym)
+            cm_parts.append(f"{name}: ${fmt(sym, pc)}")
+        lines.append("COMM|" + " | ".join(cm_parts))
+        # Топ компани
+        st_parts = []
+        for name, sym in stocks.items():
+            pc = prev_close(sym)
+            st_parts.append(f"{name}: ${fmt(sym, pc)}")
+        lines.append("STOCKS|" + " | ".join(st_parts))
         return "\n".join(lines)
     except:
         return ""
