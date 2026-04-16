@@ -24,4 +24,4 @@ jobs:
           python3 orange_rss_collector.py
           python3 orange_translator.py
           python3 image_generator.py
-          python3 fb_poster.py
+          python3 fb_poster.py --live
