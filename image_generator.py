@@ -1,312 +1,380 @@
 """
-image_generator.py — Orange News Visual Generator v3
-Azurise AI System
+Orange News — Image Generator v5
+=================================
+Шинэчлэлт:
+1. 6 категори тус бүрт өөр badge + өнгө
+2. Зөв категори автоматаар татна (translated_posts.json-оос)
+3. OG зураг + gradient fallback
+4. Монгол Noto фонт
+5. Logo/headline давхцалгүй
 
-Fixes v3:
-  1. ✅ Markdown ** ## # тэмдэглэгээ + "Та үүнийг..." хиймэл төгсгөл цэвэрлэнэ
-  2. ✅ Logo зүүн доод буланд headline-тай ОГТХОН давхцахгүй (fixed layout)
-  3. ✅ OG зураг татагдахгүй үед илүү мэргэжлийн gradient background
-  4. ✅ translated_posts.json болон translated_posts_v2.json аль алиныг дэмжинэ
+Author: Azurise AI Master Architect
+Date: April 2026
 """
 
-from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
-import requests, os, re, textwrap
-from io import BytesIO
+import os
+import json
+import platform
 from datetime import datetime
-from urllib.parse import urljoin
-from html.parser import HTMLParser
+from pathlib import Path
+from PIL import Image, ImageDraw, ImageFont, ImageEnhance, ImageFilter
+import requests
+from io import BytesIO
+import re
 
-# ── Paths ─────────────────────────────────────────────────────────────────────
-OUTPUT_DIR = "assets/generated"
-LOGO_PATH  = "assets/logo.png"
-IMG_W, IMG_H = 1200, 630
+# =============================================================================
+# ТОХИРГОО
+# =============================================================================
 
-COLOR_ORANGE = (255, 107, 53)
-COLOR_WHITE  = (255, 255, 255)
-COLOR_GRAY   = (160, 160, 160)
+INPUT_FILE = "translated_posts.json"
+OUTPUT_DIR = Path("assets/generated")
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-CATEGORY_COLORS = {
-    "FINANCE":  (255, 107, 53),
-    "AI":       (80,  180, 255),
-    "TECH":     (100, 220, 120),
-    "CRYPTO":   (255, 200,   0),
-    "ECONOMY":  (255, 107,  53),
-    "DEFAULT":  (255, 107,  53),
+# Зургийн хэмжээ (Facebook/Instagram-д оновчтой)
+WIDTH = 1200
+HEIGHT = 630
+
+# Font file-ийн зам (OS-ээс хамаарна)
+IS_LINUX = platform.system() == "Linux"
+IS_MACOS = platform.system() == "Darwin"
+
+if IS_LINUX:
+    FONT_BOLD = "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf"
+    FONT_REGULAR = "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf"
+elif IS_MACOS:
+    FONT_BOLD = "/System/Library/Fonts/Supplemental/Arial Bold.ttf"
+    FONT_REGULAR = "/System/Library/Fonts/Supplemental/Arial.ttf"
+else:
+    FONT_BOLD = "arial.ttf"
+    FONT_REGULAR = "arial.ttf"
+
+# Font size
+FONT_SIZE_HEADLINE = 58
+FONT_SIZE_BADGE = 22
+FONT_SIZE_FOOTER = 20
+
+# Background brightness (OG зураг хэт гэрэлтэй үед)
+BG_BRIGHTNESS = 0.55
+
+# =============================================================================
+# КАТЕГОРИЙН ӨНГӨНИЙ ТОХИРГОО
+# =============================================================================
+
+CATEGORY_STYLES = {
+    "finance": {
+        "badge_text": "🔶 FINANCE",
+        "badge_bg": (255, 107, 26),       # Orange #FF6B1A
+        "badge_fg": (255, 255, 255),
+        "gradient_from": (120, 40, 10),
+        "gradient_to": (20, 10, 5),
+    },
+    "tech": {
+        "badge_text": "🔷 TECH",
+        "badge_bg": (30, 144, 255),       # Blue #1E90FF
+        "badge_fg": (255, 255, 255),
+        "gradient_from": (10, 40, 120),
+        "gradient_to": (5, 10, 30),
+    },
+    "crypto": {
+        "badge_text": "🟡 CRYPTO",
+        "badge_bg": (240, 185, 11),       # Yellow #F0B90B
+        "badge_fg": (30, 30, 30),
+        "gradient_from": (120, 90, 5),
+        "gradient_to": (30, 20, 5),
+    },
+    "AI": {
+        "badge_text": "🟣 AI",
+        "badge_bg": (155, 89, 182),       # Purple #9B59B6
+        "badge_fg": (255, 255, 255),
+        "gradient_from": (70, 30, 100),
+        "gradient_to": (20, 10, 30),
+    },
+    "business": {
+        "badge_text": "🟠 BUSINESS",
+        "badge_bg": (230, 126, 34),       # Dark orange #E67E22
+        "badge_fg": (255, 255, 255),
+        "gradient_from": (110, 55, 15),
+        "gradient_to": (25, 15, 5),
+    },
+    "economy": {
+        "badge_text": "🟢 ECONOMY",
+        "badge_bg": (39, 174, 96),        # Green #27AE60
+        "badge_fg": (255, 255, 255),
+        "gradient_from": (15, 80, 45),
+        "gradient_to": (5, 20, 10),
+    }
 }
 
-CATEGORY_GRADIENT = {
-    "FINANCE":  ((18, 18, 35), (35, 18,  8)),
-    "AI":       (( 8, 18, 38), (18,  8, 38)),
-    "TECH":     (( 8, 28, 18), (18, 28,  8)),
-    "CRYPTO":   ((28, 22,  4), (18, 18, 35)),
-    "DEFAULT":  ((18, 18, 35), (12, 12, 25)),
-}
+DEFAULT_CATEGORY = "business"
 
-os.makedirs(OUTPUT_DIR, exist_ok=True)
+# =============================================================================
+# ТУСЛАХ ФУНКЦ
+# =============================================================================
 
-
-# ── Font ──────────────────────────────────────────────────────────────────────
-def get_font(size, bold=False):
-    paths = [
-        # Ubuntu/Linux — Noto фонт (Монгол дэмжинэ)
-        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf" if bold
-            else "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSansCJK-Bold.ttc" if bold
-            else "/usr/share/fonts/truetype/noto/NotoSansCJK-Regular.ttc",
-        "/usr/share/fonts/opentype/noto/NotoSansCJK-Bold.ttc" if bold
-            else "/usr/share/fonts/opentype/noto/NotoSansCJK-Regular.ttc",
-        "/usr/share/fonts/truetype/noto/NotoSansMongolian-Regular.ttf",
-        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf" if bold
-            else "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf" if bold
-            else "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
-        # macOS
-        "/System/Library/Fonts/Supplemental/Arial Bold.ttf" if bold
-            else "/System/Library/Fonts/Supplemental/Arial.ttf",
-        "/System/Library/Fonts/Helvetica.ttc",
-        "/Library/Fonts/Arial Bold.ttf" if bold else "/Library/Fonts/Arial.ttf",
-    ]
-    for p in paths:
-        if os.path.exists(p):
-            try: return ImageFont.truetype(p, size)
-            except: pass
-    return ImageFont.load_default()
-
-
-# ── Text cleaner ──────────────────────────────────────────────────────────────
-def clean_headline(text: str) -> str:
-    text = re.sub(r"\*+", "", text)
-    text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
-    text = re.sub(r"#+", "", text)
-    text = re.sub(r"`+", "", text)
-    text = re.sub(r"_{2,}", "", text)
-    text = text.replace("#", "")
-    # Хиймэл төгсгөл хэллэг
-    for pattern in [
-        r"Та үүнийг юу гэж бодож байна\?.*",
-        r"Сэтгэгдэлээ хуваалцаарай.*",
-        r"Монголын хөрөнгө оруулагчдад.*",
-        r"👇.*",
-    ]:
-        text = re.sub(pattern, "", text, flags=re.IGNORECASE | re.DOTALL)
-    first = text.strip().split("\n")[0].strip()
-    return (first[:88] + "…") if len(first) > 90 else first
-
-
-def extract_headline(post: dict) -> str:
-    h = post.get("headline", "")
-    if h and len(h) > 5:
-        return clean_headline(h)
-    pt = post.get("post_text", "")
-    if pt:
-        return clean_headline(pt)
-    return clean_headline(post.get("title", post.get("original_title", "")))
-
-
-def get_article_url(post: dict) -> str:
-    return post.get("url") or post.get("original_url") or ""
-
-
-# ── OG image fetcher ──────────────────────────────────────────────────────────
-class OGParser(HTMLParser):
-    def __init__(self):
-        super().__init__()
-        self.og_image = None
-    def handle_starttag(self, tag, attrs):
-        if tag == "meta" and not self.og_image:
-            d = dict(attrs)
-            if d.get("property") == "og:image" or d.get("name") == "twitter:image":
-                self.og_image = d.get("content", "")
-
-def fetch_og_image(article_url: str):
-    if not article_url:
-        return None
+def fetch_og_image(url):
+    """URL-ээс og:image meta tag татаж зургийг буулгах"""
     try:
-        headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 Chrome/124.0.0.0 Safari/537.36"}
-        r = requests.get(article_url, headers=headers, timeout=8)
-        if r.status_code != 200:
-            return None
-        parser = OGParser()
-        parser.feed(r.text[:60000])
-        img_url = parser.og_image
-        if not img_url:
-            return None
-        if img_url.startswith("//"):
-            img_url = "https:" + img_url
-        elif img_url.startswith("/"):
-            img_url = urljoin(article_url, img_url)
-        ir = requests.get(img_url, headers=headers, timeout=8)
-        img = Image.open(BytesIO(ir.content)).convert("RGB")
-        print(f"    🖼️  OG зураг: {img_url[:65]}...")
-        return img
+        r = requests.get(url, timeout=10, headers={
+            "User-Agent": "Mozilla/5.0 (Orange News Bot)"
+        })
+        html = r.text
+
+        # og:image олох
+        match = re.search(
+            r'<meta[^>]+property=["\']og:image["\'][^>]+content=["\']([^"\']+)["\']',
+            html, re.IGNORECASE
+        )
+        if not match:
+            match = re.search(
+                r'<meta[^>]+content=["\']([^"\']+)["\'][^>]+property=["\']og:image["\']',
+                html, re.IGNORECASE
+            )
+
+        if match:
+            img_url = match.group(1)
+            img_response = requests.get(img_url, timeout=10)
+            return Image.open(BytesIO(img_response.content)).convert("RGB")
     except Exception as e:
-        print(f"    ⚠️  OG татаж чадсангүй: {e}")
-        return None
+        print(f"  ⚠️ OG зураг татаж чадсангүй: {e}")
+    return None
 
 
-# ── Gradient background ───────────────────────────────────────────────────────
-def make_gradient_bg(category: str) -> Image.Image:
-    stops = CATEGORY_GRADIENT.get(category.upper(), CATEGORY_GRADIENT["DEFAULT"])
-    c1, c2 = stops
-    base = Image.new("RGB", (IMG_W, IMG_H))
-    draw = ImageDraw.Draw(base)
-    for y in range(IMG_H):
-        t = y / IMG_H
-        draw.line([(0, y), (IMG_W, y)], fill=(
-            int(c1[0] + (c2[0]-c1[0])*t),
-            int(c1[1] + (c2[1]-c1[1])*t),
-            int(c1[2] + (c2[2]-c1[2])*t),
-        ))
-    # Dot grid overlay
-    ov = Image.new("RGBA", (IMG_W, IMG_H), (0,0,0,0))
-    od = ImageDraw.Draw(ov)
-    for x in range(0, IMG_W, 60):
-        for y in range(0, IMG_H, 60):
-            od.ellipse([(x-1,y-1),(x+1,y+1)], fill=(255,255,255,18))
-    # Diagonal glow
-    accent = CATEGORY_COLORS.get(category.upper(), COLOR_ORANGE)
-    for i in range(3):
-        od.line([(int(IMG_W*0.55)+i*3, 0),(int(IMG_W*1.1)+i*3, IMG_H)],
-                fill=(*accent, 22), width=55)
-    return Image.alpha_composite(base.convert("RGBA"), ov).convert("RGB")
+def create_gradient(from_color, to_color, size):
+    """Хоёр өнгийн хооронд босоо gradient үүсгэх"""
+    w, h = size
+    img = Image.new("RGB", size)
+    pixels = img.load()
+
+    for y in range(h):
+        ratio = y / h
+        r = int(from_color[0] * (1 - ratio) + to_color[0] * ratio)
+        g = int(from_color[1] * (1 - ratio) + to_color[1] * ratio)
+        b = int(from_color[2] * (1 - ratio) + to_color[2] * ratio)
+        for x in range(w):
+            pixels[x, y] = (r, g, b)
+
+    return img
 
 
-# ── Main generator ────────────────────────────────────────────────────────────
-def generate_image(
-    headline: str,
-    category: str = "FINANCE",
-    image_url: str = None,
-    article_url: str = None,
-    index: int = 0,
-) -> str:
-    """
-    FIXED LAYOUT (давхцалгүй):
-    ┌────────────────────────────────────────┐
-    │ [BADGE]                                │ y=22
-    │                                        │
-    │            [BACKGROUND]                │
-    │                                        │
-    │ Headline мөр 1                         │
-    │ Headline мөр 2                         │
-    │ Headline мөр 3          (max 3 мөр)    │
-    ├────────────────────────────────────────┤ ← separator line
-    │ [LOGO]  orangenews.mn                  │ BOTTOM_BAR (48px)
-    └────────────────────────────────────────┘
-    """
-    headline  = clean_headline(headline)
-    cat_upper = category.upper()
-    accent    = CATEGORY_COLORS.get(cat_upper, CATEGORY_COLORS["DEFAULT"])
+def wrap_text(text, font, max_width, draw):
+    """Текстийг тодорхой өргөнд багтаж байхаар мөрөнд хуваах"""
+    words = text.split()
+    lines = []
+    current_line = []
 
-    # 1. Background
-    bg_img = None
-    if image_url:
-        try:
-            r = requests.get(image_url, timeout=8)
-            bg_img = Image.open(BytesIO(r.content)).convert("RGB")
-        except: pass
-    if bg_img is None and article_url:
-        bg_img = fetch_og_image(article_url)
+    for word in words:
+        test_line = " ".join(current_line + [word])
+        bbox = draw.textbbox((0, 0), test_line, font=font)
+        line_width = bbox[2] - bbox[0]
 
-    if bg_img is None:
-        print(f"    🎨 Gradient ({cat_upper})")
-        base = make_gradient_bg(cat_upper)
+        if line_width <= max_width:
+            current_line.append(word)
+        else:
+            if current_line:
+                lines.append(" ".join(current_line))
+            current_line = [word]
+
+    if current_line:
+        lines.append(" ".join(current_line))
+
+    return lines[:3]  # Максимум 3 мөр
+
+
+def draw_badge(draw, text, x, y, bg_color, fg_color, font):
+    """Категорийн badge зурах (жижиг толбо)"""
+    bbox = draw.textbbox((0, 0), text, font=font)
+    text_w = bbox[2] - bbox[0]
+    text_h = bbox[3] - bbox[1]
+
+    padding_x = 16
+    padding_y = 10
+
+    # Background rectangle
+    draw.rectangle(
+        [x, y, x + text_w + 2 * padding_x, y + text_h + 2 * padding_y],
+        fill=bg_color
+    )
+
+    # Text
+    draw.text(
+        (x + padding_x, y + padding_y - 2),
+        text,
+        fill=fg_color,
+        font=font
+    )
+
+
+# =============================================================================
+# ГОЛ ЗУРАГ ҮҮСГЭХ ФУНКЦ
+# =============================================================================
+
+def generate_image(post, index):
+    """Нэг постод тохирсон зураг үүсгэх"""
+    category = post.get("category", DEFAULT_CATEGORY).lower()
+    if category not in CATEGORY_STYLES:
+        category = DEFAULT_CATEGORY
+
+    style = CATEGORY_STYLES[category]
+    headline = post["headline"]
+    original_url = post.get("original_url", "")
+
+    # 1. Background: OG зураг эсвэл gradient fallback
+    og_img = None
+    if original_url:
+        og_img = fetch_og_image(original_url)
+
+    if og_img:
+        # OG зургийг resize + crop
+        og_img = og_img.resize(
+            (WIDTH, HEIGHT), Image.LANCZOS
+        )
+        # Хар давхарга нэмэх (текст унших боломжтой байхаар)
+        enhancer = ImageEnhance.Brightness(og_img)
+        bg = enhancer.enhance(BG_BRIGHTNESS)
+        bg = bg.filter(ImageFilter.GaussianBlur(radius=1))
     else:
-        base = bg_img.resize((IMG_W, IMG_H), Image.LANCZOS)
-        base = ImageEnhance.Brightness(base).enhance(0.55)
-        base = base.filter(ImageFilter.GaussianBlur(radius=1.2))
+        # Gradient fallback (категорийн өнгөөр)
+        bg = create_gradient(
+            style["gradient_from"],
+            style["gradient_to"],
+            (WIDTH, HEIGHT)
+        )
 
-    # 2. Bottom shadow
-    ov = Image.new("RGBA", (IMG_W, IMG_H), (0,0,0,0))
-    od = ImageDraw.Draw(ov)
-    grad_start = int(IMG_H * 0.38)
-    for y in range(grad_start, IMG_H):
-        t = (y - grad_start) / (IMG_H - grad_start)
-        od.line([(0,y),(IMG_W,y)], fill=(8, 8, 18, int(248 * t**0.7)))
-    base = Image.alpha_composite(base.convert("RGBA"), ov).convert("RGB")
-    draw = ImageDraw.Draw(base)
+    draw = ImageDraw.Draw(bg)
 
-    # 3. Accent bars
-    draw.rectangle([(0,0),(6,IMG_H)], fill=accent)
-    draw.rectangle([(0,0),(IMG_W,5)], fill=accent)
-
-    # 4. Category badge
-    cat_font  = get_font(19, bold=True)
-    badge_pad = 14
-    bbox      = draw.textbbox((0,0), cat_upper, font=cat_font)
-    bw        = bbox[2] - bbox[0] + badge_pad*2
-    draw.rectangle([(22,22),(22+bw, 22+30)], fill=accent)
-    draw.text((22+badge_pad, 27), cat_upper, font=cat_font, fill=COLOR_WHITE)
-
-    # 5. HEADLINE — fixed bottom-up layout
-    BOTTOM_BAR = 50   # Logo + watermark zone
-    LINE_H     = 70
-    h_font     = get_font(58, bold=True)
-    wrapped    = textwrap.wrap(headline, width=30)[:3]
-
-    # Мөрүүдийг доороос дээшээ байрлуулна
-    for i, line in enumerate(reversed(wrapped)):
-        y = IMG_H - BOTTOM_BAR - 12 - (i * LINE_H) - LINE_H + 10
-        draw.text((32, y+2), line, font=h_font, fill=(0,0,0))   # shadow
-        draw.text((30, y),   line, font=h_font, fill=COLOR_WHITE)
-
-    # 6. Separator line
-    sep_y = IMG_H - BOTTOM_BAR
-    draw.line([(22, sep_y),(IMG_W-22, sep_y)], fill=(*accent, 120), width=1)
-
-    # 7. Logo + watermark (bottom bar дотор — headline-аас ДООР)
-    LOGO_H  = 30
-    logo_y  = IMG_H - LOGO_H - 10
-    wm_x    = 22
+    # 2. Category badge (зүүн дээд)
     try:
-        logo = Image.open(LOGO_PATH).convert("RGBA")
-        lw   = int(logo.width * LOGO_H / logo.height)
-        logo = logo.resize((lw, LOGO_H), Image.LANCZOS)
-        base.paste(logo, (22, logo_y), logo)
-        wm_x = 22 + lw + 10
+        badge_font = ImageFont.truetype(FONT_BOLD, FONT_SIZE_BADGE)
     except:
-        pass
+        badge_font = ImageFont.load_default()
 
-    draw.text((wm_x, logo_y + 7), "orangenews.mn", font=get_font(16), fill=COLOR_GRAY)
+    draw_badge(
+        draw,
+        style["badge_text"],
+        x=40, y=40,
+        bg_color=style["badge_bg"],
+        fg_color=style["badge_fg"],
+        font=badge_font
+    )
 
-    # 8. Save
+    # 3. Headline (голлодоо)
+    try:
+        headline_font = ImageFont.truetype(FONT_BOLD, FONT_SIZE_HEADLINE)
+    except:
+        headline_font = ImageFont.load_default()
+
+    max_width = WIDTH - 80  # 40px padding хоёр талаас
+    lines = wrap_text(headline, headline_font, max_width, draw)
+
+    # Text шугамын өндөр
+    line_height = FONT_SIZE_HEADLINE + 12
+
+    # Нийт text block өндөр
+    total_text_height = len(lines) * line_height
+
+    # Зүүн доод орхиж, дунд-доод талд байрлуул
+    start_y = HEIGHT - total_text_height - 140
+
+    for i, line in enumerate(lines):
+        # Shadow (гүн)
+        draw.text(
+            (42, start_y + i * line_height + 2),
+            line,
+            fill=(0, 0, 0, 180),
+            font=headline_font
+        )
+        # Main text
+        draw.text(
+            (40, start_y + i * line_height),
+            line,
+            fill=(255, 255, 255),
+            font=headline_font
+        )
+
+    # 4. Bottom bar (logo + URL)
+    bar_height = 70
+    draw.rectangle(
+        [0, HEIGHT - bar_height, WIDTH, HEIGHT],
+        fill=(10, 10, 10)
+    )
+
+    # Orange accent line дээр
+    draw.rectangle(
+        [0, HEIGHT - bar_height - 3, WIDTH, HEIGHT - bar_height],
+        fill=(255, 107, 26)
+    )
+
+    # Footer text
+    try:
+        footer_font = ImageFont.truetype(FONT_BOLD, FONT_SIZE_FOOTER)
+    except:
+        footer_font = ImageFont.load_default()
+
+    draw.text(
+        (40, HEIGHT - bar_height + 22),
+        "🟠 Orange News",
+        fill=(255, 107, 26),
+        font=footer_font
+    )
+
+    draw.text(
+        (WIDTH - 220, HEIGHT - bar_height + 24),
+        "orangenews.mn",
+        fill=(200, 200, 200),
+        font=footer_font
+    )
+
+    # 5. Хадгалах
     today = datetime.now().strftime("%Y%m%d")
-    out   = f"{OUTPUT_DIR}/post_{index:02d}_{today}.png"
-    base.save(out, "PNG", quality=95)
-    return out
+    filename = f"post_{index:02d}_{today}.png"
+    filepath = OUTPUT_DIR / filename
+    bg.save(filepath, "PNG", quality=95)
+
+    return str(filepath)
 
 
-# ── CLI ───────────────────────────────────────────────────────────────────────
+# =============================================================================
+# MAIN
+# =============================================================================
+
+def main():
+    print("🎨 Orange News Image Generator v5 эхэлж байна...\n")
+
+    if not os.path.exists(INPUT_FILE):
+        print(f"❌ {INPUT_FILE} файл олдсонгүй!")
+        return
+
+    with open(INPUT_FILE, "r", encoding="utf-8") as f:
+        posts = json.load(f)
+
+    print(f"📥 {len(posts)} пост боловсруулах...\n")
+
+    generated = []
+    for i, post in enumerate(posts, 1):
+        print(f"[{i}/{len(posts)}] {post['headline'][:60]}...")
+
+        try:
+            filepath = generate_image(post, i)
+            post["image_path"] = filepath
+            generated.append(post)
+            cat_emoji = CATEGORY_STYLES.get(
+                post.get("category", DEFAULT_CATEGORY),
+                CATEGORY_STYLES[DEFAULT_CATEGORY]
+            )["badge_text"]
+            print(f"  ✅ {cat_emoji} → {filepath}")
+        except Exception as e:
+            print(f"  ❌ Алдаа: {e}")
+            continue
+
+    # image_path-тай болсон posts-г буцаан хадгалах
+    with open(INPUT_FILE, "w", encoding="utf-8") as f:
+        json.dump(generated, f, ensure_ascii=False, indent=2)
+
+    print(f"\n{'='*60}")
+    print(f"✅ Амжилттай! {len(generated)}/{len(posts)} зураг үүсгэв")
+    print(f"📁 Хадгалсан: {OUTPUT_DIR}")
+    print(f"{'='*60}\n")
+
+
 if __name__ == "__main__":
-    import json
-
-    print("🎨 Orange News Image Generator v3")
-    print("=" * 50)
-
-    json_file = None
-    for c in ["translated_posts_v2.json", "translated_posts.json", "top_news.json"]:
-        if os.path.exists(c):
-            json_file = c
-            break
-
-    if not json_file:
-        path = generate_image("Apple компани эхний улирлын орлогоо зарлалаа", "TECH", index=0)
-        print(f"✅ Тест: {path}")
-    else:
-        with open(json_file, "r", encoding="utf-8") as f:
-            posts = json.load(f)
-        print(f"📂 {json_file} → {len(posts)} пост\n")
-        for i, p in enumerate(posts):
-            ptype = (p.get("type","") or p.get("category","")).lower()
-            if "market_watch" in ptype:
-                print(f"  [{i:02d}] ⏭️  Market Watch алгасав")
-                continue
-            headline    = extract_headline(p)
-            category    = p.get("category", "FINANCE")
-            img_url     = p.get("image_url","")
-            article_url = get_article_url(p)
-            print(f"  [{i:02d}] {headline[:55]}...")
-            path = generate_image(headline=headline, category=category,
-                                  image_url=img_url, article_url=article_url, index=i)
-            print(f"       ✅ {os.path.basename(path)}")
-
-    print("\n🍊 Дууслаа!")
+    main()
