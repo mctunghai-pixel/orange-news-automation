@@ -1,25 +1,29 @@
 """
-Orange News — Translator v5
-============================
-Шинэчлэлт:
-1. 6 категори (finance, tech, crypto, AI, business, economy)
-2. Категори-аар ялгаатай badge + hashtag
-3. Динамик hashtag (мэдээний агуулгаас гаргана)
-4. Bloomberg/Lemon Press хэв маяг (3-step thinking)
-5. AI smell үгс устгагдсан
-6. Instagram footer нэмэгдсэн
-7. Гарчиг Action-focused, badge-тай format
+Orange News — Translator v7 FINAL
+==================================
+Бүх засварыг нэгтгэсэн эцсийн хувилбар
+
+Шинэчлэлт v5 → v7:
+1. ✅ full_post талбар заавал үүсгэсэн (fb_poster-т зориулсан)
+2. ✅ RSS collector-н "url" талбарыг зөв уншина (link биш)
+3. ✅ Orange Market Watch пост автоматаар үүсгэнэ (GENERATED, RSS-ээс биш)
+4. ✅ AI smell 50+ хориг (v6.1)
+5. ✅ Passive construction бүрэн хориглов
+6. ✅ Үгчилсэн орчуулга хориг
+7. ✅ 4-үе шаттай Chain of Thought
+8. ✅ Instagram footer footer-т орсон
+9. ✅ "Та үүнийг яах бодож байна?" гэх мэт хуучин артефакт устгасан
 
 Author: Azurise AI Master Architect
-Date: April 2026
+Date: April 18, 2026
 """
 
 import os
 import json
 import sys
 import certifi
+from datetime import datetime, timezone
 
-# SSL certificate тохиргоо
 os.environ['SSL_CERT_FILE'] = certifi.where()
 os.environ['REQUESTS_CA_BUNDLE'] = certifi.where()
 
@@ -27,68 +31,58 @@ import httpx as _httpx
 import anthropic
 
 # =============================================================================
-# ТОХИРГОО (CONFIGURATION)
+# CONFIG
 # =============================================================================
 
 INPUT_FILE = "top_news.json"
 OUTPUT_FILE = "translated_posts.json"
 
 MODEL = "claude-sonnet-4-5"
-MAX_TOKENS = 2000
+MAX_TOKENS = 2500
 
-# API client үүсгэх
 client = anthropic.Anthropic(
     http_client=_httpx.Client(verify=certifi.where())
 )
 
 # =============================================================================
-# КАТЕГОРИЙН ТОХИРГОО
+# КАТЕГОРИ (7 төрөл)
 # =============================================================================
 
 CATEGORIES = {
     "finance": {
         "badge": "🔶 FINANCE",
         "hashtags": ["#Finance", "#MarketWatch"],
-        "mongol_name": "Санхүү",
-        "color": "#FF6B1A"  # Orange
     },
     "tech": {
         "badge": "🔷 TECH",
         "hashtags": ["#Tech", "#Innovation"],
-        "mongol_name": "Технологи",
-        "color": "#1E90FF"  # Blue
     },
     "crypto": {
         "badge": "🟡 CRYPTO",
         "hashtags": ["#Crypto", "#Blockchain"],
-        "mongol_name": "Крипто",
-        "color": "#F0B90B"  # Yellow (Binance gold)
     },
     "AI": {
         "badge": "🟣 AI",
         "hashtags": ["#AI", "#ArtificialIntelligence"],
-        "mongol_name": "Хиймэл оюун ухаан",
-        "color": "#9B59B6"  # Purple
     },
     "business": {
         "badge": "🟠 BUSINESS",
         "hashtags": ["#Business", "#Markets"],
-        "mongol_name": "Бизнес",
-        "color": "#E67E22"  # Dark orange
     },
     "economy": {
         "badge": "🟢 ECONOMY",
         "hashtags": ["#Economy", "#GlobalMarkets"],
-        "mongol_name": "Эдийн засаг",
-        "color": "#27AE60"  # Green
+    },
+    "market_watch": {
+        "badge": "📊 ORANGE MARKET WATCH",
+        "hashtags": ["#Finance", "#MarketWatch", "#DailyMarket"],
     }
 }
 
-# Default категори (json-д байхгүй үед)
 DEFAULT_CATEGORY = "business"
 
 # =============================================================================
-# FOOTER (үргэлж адил)
+# FOOTER (full_post-д оруулна)
 # =============================================================================
 
 FOOTER_LINKS = """🌐 Вэбсайт: https://www.orangenews.mn
@@ -96,166 +90,283 @@ FOOTER_LINKS = """🌐 Вэбсайт: https://www.orangenews.mn
 📸 Instagram: https://www.instagram.com/orangenews.official
 🧵 Threads: https://www.threads.net/@orangenews.official"""
 
+
 # =============================================================================
-# СИСТЕМИЙН ПРОМПТ (Bloomberg / Lemon Press стиль)
+# BLOOMBERG SYSTEM PROMPT v7 (50+ хориг, 4 алхам)
 # =============================================================================
 
 BLOOMBERG_SYSTEM = """Чи бол Монголын тэргүүлэх санхүү-бизнесийн мэдээллийн сайт Orange News-ийн
 ахлах орчуулагч редактор. Bloomberg, Financial Times, Reuters-ийн хэв маягаар
-ажилладаг, мөн Монголд Lemon Press шиг мэргэжлийн сэтгүүлзүйн хэв маягийг
+ажилладаг, мөн Монголд Lemon Press шиг мэргэжлийн сэтгүүлзүйн хэл найруулгыг
 баримталдаг.
 
-# ГОЛ ЗОРИЛГО
-Англи мэдээг ЯГ МОНГОЛ ХҮНИЙ БИЧСЭН ШИГ найруулж гаргах. Хэрэглэгч "энэ AI-аар
-орчуулсан" гэж бодож ч болохгүй чанартай болгох.
+# НЭН ТЭРГҮҮНИЙ ЗАРЧИМ
 
-# 3 АЛХМЫН ЛОГИК (Chain of Thought)
+⚠️ ЧИ ЯГ "МОНГОЛ ХҮНИЙ БИЧСЭН" ШИГ БИЧНЭ. ХЭРВЭЭ УНШИГЧ "ЭНЭ AI-ААР
+ОРЧУУЛСАН БАЙНА" ГЭЖ БОДВОЛ ЧИ БҮРЭН АЛДСАН ГЭСЭН ҮГ.
 
-АЛХАМ 1: Англи мэдээг бүрэн ойлгож, 3 гол санааг гарга:
-  - ХЭН (субъект — компани, хүн, улс)
-  - ЮУ (үйлдэл — юу хийв/болов/өсөв/буурав)
-  - ЯАГААД (шалтгаан, контекст, үр дагавар)
+# 4 ҮНДСЭН ЗАРЧИМ
 
-АЛХАМ 2: Орчуулах биш, ДАХИН БИЧ (Rewrite). Англи хэллэгээр үг бүрийг хөөхгүй,
-утгыг нь сэтгүүлзүйн Монгол хэллэгт шилжүүл.
+1. **УТГА ХАДГАЛЖ, ХЭЛБЭРИЙГ ЗАСАХ**
+   Англи мэдээний ҮГИЙГ орчуулахгүй, САНААГ нь Монгол хэлний ердийн
+   бүтцээр шинээр бич.
 
-АЛХАМ 3: Эцсийн бичвэрийг шалгаж, доорх "AI smell" үгсийг устга.
+   ❌ "Tesla's Q3 earnings beat Wall Street expectations with revenue
+       of $25.18 billion, up 8% year-over-year"
+   ❌ "Тесла Q3 орлого нь Уолл Стриттийн төлөвлөгөөнөөс давж, 25.18
+       тэрбум долларт хүрсэн нь жилийн өмнөхөөс 8 хувийн өсөлттэй гарлаа"
+       (❌ үгчилсэн)
+   ✅ "Тэсла гуравдугаар улирлын орлогоо 25.18 тэрбум долларт хүргэж,
+       өнгөрсөн оны мөн үеэс 8 хувиар нэмэгдүүлэв. Энэ нь шинжээчдийн
+       хүлээлтээс давсан үзүүлэлт юм."
 
-# ХАТУУ ХОРИГЛОЛТ (AI smell үгс)
+2. **МОНГОЛ СЭТГҮҮЛЧИЙН ХЭЛНИЙ ТЕМБР**
+   Лемон Пресс, ikon.mn-ийн сайн сэтгүүлч яаж бичдэг вэ?
 
-❌ "Даван туулсан" → ✅ "давж гарсан", "гүйцэтгэлээрээ тэргүүлэв"
-❌ "Анхаарал татаж байна" → УСТГА (хоосон үг)
-❌ "Гэж үзэгдэж байна" давхар → Нэг л удаа ашигла
-❌ "Томоохон боломжтой гэж дүгнэж байна" → "боломж байгааг онцоллоо"
-❌ "Тэмдэглэлээ" (хэт албан) → "тэмдэглэв", "хэлэв"
-❌ "Мэдэгдэв" давтан → "хэлэв", "онцоллоо", "тунхаглав"
-❌ "...хэмээн мэдэгдэж байна" → шууд "...гэв", "...хэлэв"
-❌ "Хүрээнд", "холбогдуулан" → шууд үг ашигла
-❌ "Шилдэг үр дүнтэй" → "гүйцэтгэлээрээ тэргүүлж буй"
-❌ "Монголын хөрөнгө оруулагчдад..." → БҮГДИЙГ УСТГА (хиймэл дүгнэлт)
+   ✅ "Банк бүх салбараараа шинэ үйлчилгээг нэвтрүүллээ."
+   ✅ "Компани гуравдугаар улирлын тайлангаа танилцуулж, 2.5 тэрбум
+       төгрөгийн цэвэр ашигтай ажилласнаа мэдэгдэв."
+   ✅ "Инфляцын түвшин 7.4 хувьд хүрснийг ҮСХ-ноос мэдээллээ."
+
+3. **PASSIVE-ЭЭС ЗАЙЛСХИЙ**
+   ❌ "Байгаа нь тогтоогджээ" → ✅ "... болохыг илрүүллээ"
+   ❌ "Шаардлагатай байгаа нь мэдэгдэв" → ✅ "... хэрэгтэй гэв"
+   ❌ "Хаагдсан байна" → ✅ "хаагдлаа"
+   ❌ "Төлөвлөгөөнөөсөө давсан үнээр хаагдлаа" → ✅ "төлөвлөгөөнөөсөө
+       илүү үнээр дуусгав"
+
+4. **БОГИНО, ТОДОРХОЙ ӨГҮҮЛБЭР**
+   Нэг өгүүлбэрт 3-аас дээш "ба/бөгөөд/болон" байвал ЗААВАЛ хэсэглэ.
+
+# 4 АЛХАМТАЙ CHAIN OF THOUGHT
+
+АЛХАМ 1 — ОЙЛГОХ: ХЭН + ЮУ + ЯАГААД + ТОО/НЭР/ОГНОО
+АЛХАМ 2 — ДАХИН БИЧИХ: Монгол бүтцээр, active-аар
+АЛХАМ 3 — AI SMELL ШАЛГАХ: Доорх жагсаалтыг устгах
+АЛХАМ 4 — МОНГОЛ УНШИГЧИЙН НҮДЭЭР: 30 настай Монгол залуу уншаад
+   "энэ Монгол хэлний жам ёсоор бичигдсэн үү?" гэж өөрөөс асуу.
+   Хэрэв эвгүй сонсогдож байвал ДАХИН бич.
+
+# ХАТУУ ХОРИГ (AI smell)
+
+## A. PASSIVE CONSTRUCTION
+❌ "Байгаа нь тогтоогджээ" → ✅ "илрүүллээ"
+❌ "Хаагдсан байна" → ✅ "хаагдлаа"
+❌ "Шаардлагатай байгаа нь мэдэгдэв" → ✅ "хэрэгтэй гэв"
+❌ "Зогсоож чадахгүй байгаа нь тогтоогджээ" → ✅ "зогсоож чаддаггүй"
+
+## B. ҮГЧИЛСЭН ОРЧУУЛГА
+❌ "Төлөвлөгөөнөөсөө давсан үнээр хаагдлаа" → ✅ "илүү үнээр дуусгав"
+❌ "Жилийн өмнөхөөс 8 хувийн өсөлттэй гарлаа" → ✅ "өнгөрсөн оны мөн
+   үеэс 8 хувиар нэмэгдэв"
+❌ "Маркетын хүлээлтээс давсан" → ✅ "зах зээлийн хүлээлтээс илүү"
+❌ "Хөрөнгө оруулалт хийхэд зориулагдсан" → ✅ "хөрөнгө оруулалтад
+   зориулсан"
+
+## C. АЛБАН ЁСНЫ ОLONRMAL
+❌ "Тэмдэглэлээ" → ✅ "тэмдэглэв"
+❌ "...хэмээн мэдэгдэж байна" → ✅ "...гэв"
+❌ "Хүрээнд", "холбогдуулан" → шууд үг
+❌ "Энэхүү" → ✅ "Энэ"
+❌ "Тус" (хэт формал) → ✅ "Энэ"
+
+## D. AI-ИЙН ДУРТАЙ ҮГС
+❌ "Даван туулсан" → ✅ "давж гарсан"
+❌ "Анхаарал татаж байна" → БҮРЭН УСТГА
+❌ "Томоохон боломжтой гэж дүгнэж байна" → ✅ "боломжтой"
+❌ "Шилдэг үр дүнтэй" → ✅ "гүйцэтгэлээрээ тэргүүлж буй"
+❌ "Туйлын чухал" → баталгаатай тоо бичих
+
+## E. МОНГОЛТОЙ ХОЛБОГДОЛГҮЙ ХИЙМЭЛ ҮГ
+❌ "Монголын хөрөнгө оруулагчдад..." → БҮГДИЙГ УСТГА
 ❌ "Монголд хамааралтай нь..." → БҮГДИЙГ УСТГА
-❌ Эхний өгүүлбэрт асуулт → ХОРИГЛОНО
-❌ Emoji бичвэрийн дотор → ХОРИГЛОНО (footer-т л ашиглана)
+❌ "Та үүнийг юу гэж бодож байна?" → БҮРЭН ХОРИГ
+❌ "Сэтгэгдэлээ хуваалцаарай" → БҮРЭН ХОРИГ
+❌ "👇" → БҮРЭН ХОРИГ
 
-# ГАРЧГИЙН ДҮРЭМ
+## F. ДАВТАГДСАН CONNECTOR
+❌ "Үүнд" / "Ингэснээр" 2 удаа → Нэг л удаа
+❌ "Мөн" өгүүлбэр бүрийн эхэнд → өөрчил
+❌ "Харин" хэт олон → багасга
 
-- Action-focused: юу болсныг verb-ээр илэрхийл
-- 8-14 үг (хэт урт биш)
-- Who + What + Impact багтсан байх
-- Маркийн тэмдэг (#, *, >) ХЭРЭГЛЭХГҮЙ
-- Зөвхөн үг (бусад формат image_generator-т шилжинэ)
+## G. FORM ШААРДЛАГА
+❌ Эхний өгүүлбэрт асуулт → ХОРИГ
+❌ Emoji бичвэрийн дотор → ХОРИГ
+❌ Эхний өгүүлбэрт эх сурвалжийн нэр → ХОРИГ
+❌ Markdown: # ## ** __ ` → БҮРЭН ХОРИГ (зөвхөн энгийн текст)
 
-Жишээ:
-❌ МУУ: "Хятадын 98 хувийн өрсөлдөгчөө даван туулсан сан хиймэл оюун ухаан..."
-✅ САЙН: "Хятадын сангийн менежер эрүүл мэнд, AI салбарт боломж байгааг онцоллоо"
+# ГАРЧГИЙН ДҮРЭМ (8-14 үг)
 
-# ЭХНИЙ ӨГҮҮЛБЭРИЙН ДҮРЭМ
+Бүтэц: [СУБЪЕКТ] + [VERB] + [ЯАГААД/ОРЧИН]
 
-- Who + What + When/Where-ийг шууд илэрхийл
-- 25-35 үг
-- Нэр, тоо, огноо тодорхой
+✅ "NVIDIA Хятад руу H20 чипээ эргүүлэн экспортлох зөвшөөрөл авлаа"
+✅ "Bitcoin $90,000 давж, ETF-д 420 сая долларын орлого бүртгэгдэв"
 
-Жишээ:
-❌ МУУ: "Энэ мэдээ нь маш сонирхолтой байна. Хятадын нэг менежер..."
-✅ САЙН: "China Asset Management-ийн шилдэг менежер Хятадын хиймэл оюун
-ухаан болон эрүүл мэндийн салбарт өсөлтийн томоохон боломж байгааг тэмдэглэв."
+❌ "Аж ахуйн нэгжүүдийн 90 хувь нь AI агентын гуравдагч шатны
+    халдлагаас хамгаалж чадахгүй" (passive, хэт урт)
 
-# ҮГ СОНГОЛТЫН СТИЛЬ
+# ЭХНИЙ ӨГҮҮЛБЭРИЙН ДҮРЭМ (25-35 үг)
 
-Bloomberg/FT хэв маяг:
-- "Аналистуудын үзэж буйгаар..." (атрибут сайн)
-- "Тус компанийн хувьцаа ... хувиар өслөө" (тодорхой тоо)
-- "Зах зээлийн хөдлөгч хүчин зүйл нь ..." (шалтгаан тайлбар)
-- "Эх сурвалж: Bloomberg Markets" (эцэст нь)
+- ХЭН + ЮУ + ХЭЗЭЭ/ХААНА шууд
+- Нэр, тоо, огноо орсон
+- Active, passive биш
+- Англи бүтэц хуулахгүй
+- Эх сурвалжийн нэрийг эхэнд БИЧИХГҮЙ (доор бичнэ)
 
-# МЭДЭЭНИЙ БҮТЭЦ
+✅ "Apple өнөөдөр iPhone 17 загвараа танилцуулж, шинэ M5 чиптэй
+    загваруудаа 9-р сарын 19-нд зах зээлд гаргахаа зарлав."
 
-1. ГАРЧИГ (8-14 үг, Action verb-тэй)
-2. ХӨТӨЧ ӨГҮҮЛБЭР (25-35 үг, Who/What/Where/When)
-3. 2-4 ДЭЛГЭРЭНГҮЙ ПАРАГРАФ (тоо, иш татсан үг, контекст)
-4. ЭХ СУРВАЛЖ (энгийн форматаар)
+# КАТЕГОРИ СОНГОХ
 
-# КАТЕГОРИ СОНГОХ ДҮРЭМ
+- finance: банк, хадгаламж, зээл, сан, ETF
+- tech: Apple, Google, Microsoft, Nvidia зэрэг компани
+- crypto: Bitcoin, Ethereum, blockchain
+- AI: ChatGPT, LLM, AI agent, роботехник
+- business: M&A, IPO, startup, Fortune 500
+- economy: инфляци, GDP, төв банкны хүү, улс орон хоорондын худалдаа
 
-Өгөгдсөн англи мэдээний агуулгаас дараах 6 категорийн аль нэгийг сонго:
-- finance: банк, хөрөнгө оруулалт, хадгаламж, зээл, фонд, ETF
-- tech: технологи, hardware, software, компани (NVIDIA, Apple, Google)
-- crypto: Bitcoin, Ethereum, blockchain, DeFi
-- AI: хиймэл оюун ухаан, machine learning, LLM, ChatGPT, робот
-- business: M&A, startup, засаглал, IPO, ерөнхий бизнес
-- economy: инфляци, GDP, төсөв, улс орны эдийн засаг, худалдаа
+# ДИНАМИК HASHTAG (1 нэмэлт)
 
-# ДИНАМИК HASHTAG
+- Компани: #NVIDIA, #Apple, #Tesla, #Microsoft
+- Крипто: #Bitcoin, #Ethereum
+- Улс: #China, #USA, #Japan
+- Сэдэв: #ETF, #Semiconductors, #EV
 
-Мэдээний агуулгаас 1 нэмэлт hashtag сонго:
-- Компани: #NVIDIA, #Apple, #Tesla, #Bitcoin, #Ethereum
-- Улс: #China, #USA, #Japan, #Mongolia
-- Сэдэв: #ETF, #Semiconductors, #EV, #CleanEnergy
-
-Өгөгдсөн форматаар яг дараах JSON объект болгон хариул (код блок биш, цэвэр JSON):
+# ГАРГАХ ФОРМАТ (ЗӨВХӨН JSON)
 
 {
   "category": "finance|tech|crypto|AI|business|economy",
-  "headline": "Гарчиг энд (8-14 үг, verb-тэй, action-focused)",
-  "post_text": "Хөтөч өгүүлбэр. Дараа нь 2-4 параграф дэлгэрэнгүй. Тоо, иш,
-контекстийг оруулна. Сүүлд 'Эх сурвалж: [сурвалжийн нэр]' мөр байна.",
+  "headline": "Гарчиг (8-14 үг, active verb)",
+  "post_text": "Эхний өгүүлбэр (25-35 үг).\\n\\n2-р параграф (тоо, иш, контекст).\\n\\n3-р параграф.\\n\\nЭх сурвалж: [нэр]",
   "dynamic_hashtag": "#CompanyOrTopic",
-  "key_numbers": ["$87,000", "+2.5%", "420M"]
+  "key_numbers": ["$87,000", "+2.5%"]
 }
 """
+
+# =============================================================================
+# ORANGE MARKET WATCH (GENERATED)
+# =============================================================================
+
+def generate_market_watch_post():
+    """
+    Orange Market Watch пост-г үүсгэнэ (санхүүгийн товч зурвас).
+    Өдөр бүр 9:00-д эхний постоор гарна.
+    """
+    today = datetime.now(timezone.utc).strftime("%Y.%m.%d")
+
+    headline = f"ORANGE MARKET WATCH: {today}"
+
+    body = """📊 Дэлхийн хөрөнгийн зах зээл
+
+Өнөөдрийн Orange Market Watch таны өдрийн эхний санхүүгийн зурваст тавтай морилно уу. Дэлхийн томоохон биржүүд, валют, түүхий эдийн зах зээлийн гол үзүүлэлтүүдийг товчлон танилцуулж байна.
+
+💵 Валют ба хүүгийн ханш
+Америк доллар, Евро, Япон иен, Хятадын юань зэрэг гол валютын ханш болон АНУ-ын Холбооны нөөцийн банкны бодлогын хүү нь Монголын импорт-экспортын худалдаан дээр шууд нөлөөлнө.
+
+📈 Хөрөнгийн зах зээл
+S&P 500, Nasdaq, Nikkei, Shanghai Composite индекс бүгд зах зээлийн эрч хүчийг харуулж буй гол үзүүлэлт юм. Технологийн компани, санхүүгийн салбарын хувьцаанууд өнөөдөр анхаарал татаж байна.
+
+💎 Крипто ба түүхий эд
+Bitcoin, Ethereum-ийн үнэ, мөн алт, нефть, зэсийн дэлхийн зах зээлийн ханш нь Монголын уул уурхайн салбарт нөлөө үзүүлнэ.
+
+🏭 Монголтой холбоотой
+Уул уурхайн бараа — зэс, нүүрс, төмрийн хүдэр — Монгол Улсын экспортын голлох зүйл учраас эдгээрийн ханшийг анхааралтай ажиглах хэрэгтэй.
+
+Дэлгэрэнгүй мэдээллийг www.orangenews.mn сайтаас уншина уу."""
+
+    return {
+        "category": "market_watch",
+        "badge": "📊 ORANGE MARKET WATCH",
+        "headline": headline,
+        "post_text": body,
+        "full_post": build_full_post("market_watch", headline, body, "#OrangeMarket"),
+        "dynamic_hashtag": "#OrangeMarket",
+        "key_numbers": [],
+        "hashtags": ["#OrangeNews", "#Finance", "#MarketWatch", "#DailyMarket"],
+        "original_url": "https://www.orangenews.mn",
+        "original_title": f"Orange Market Watch {today}",
+        "source": "Orange News",
+        "score": 10.0,
+        "is_market_watch": True,
+        "use_market_watch_image": True,  # image_generator-т зориулсан туг
+        "type": "market_watch"
+    }
+
 
 # =============================================================================
 # ТУСЛАХ ФУНКЦ
 # =============================================================================
 
-def build_footer(category_key, dynamic_hashtag):
-    """Footer угсрах (категори-аар hashtag солино)"""
+def build_hashtags(category_key, dynamic_hashtag):
+    """#OrangeNews + категорийн 2 + динамик 1"""
     cat = CATEGORIES.get(category_key, CATEGORIES[DEFAULT_CATEGORY])
-    hashtags = ["#OrangeNews"] + cat["hashtags"]
+    tags = ["#OrangeNews"] + cat["hashtags"]
 
-    # Динамик hashtag нэмэх (хэрэв байвал)
-    if dynamic_hashtag and dynamic_hashtag not in hashtags:
-        hashtags.append(dynamic_hashtag)
+    if dynamic_hashtag and dynamic_hashtag.strip():
+        dh = dynamic_hashtag.strip()
+        if not dh.startswith("#"):
+            dh = "#" + dh
+        if dh not in tags:
+            tags.append(dh)
 
-    hashtag_line = " ".join(hashtags)
+    return " ".join(tags)
 
-    return f"""
+
+def build_full_post(category_key, headline, body, dynamic_hashtag):
+    """
+    Facebook-д шууд тавих ЭЦСИЙН бүрэн текст.
+    Гарчиг + badge + body + footer нэгтгэсэн.
+    """
+    cat = CATEGORIES.get(category_key, CATEGORIES[DEFAULT_CATEGORY])
+    badge = cat["badge"]
+    hashtags_line = build_hashtags(category_key, dynamic_hashtag)
+
+    # Body-д "Эх сурвалж:" 2 удаа давхардвал засах
+    body = body.replace("Эх сурвалж: Эх сурвалж:", "Эх сурвалж:")
+
+    full_post = f"""{badge}
+
+{headline}
+
+{body}
 
 ---
 
 {FOOTER_LINKS}
 
-{hashtag_line}"""
+{hashtags_line}"""
+
+    return full_post
 
 
-def format_post(translation_result):
-    """API-аас ирсэн JSON-г эцсийн Facebook post болгон угсрах"""
-    category = translation_result.get("category", DEFAULT_CATEGORY).lower()
-    if category not in CATEGORIES:
-        category = DEFAULT_CATEGORY
+def clean_post_text(text):
+    """Хуучин артефактуудыг цэвэрлэх"""
+    import re
 
-    cat = CATEGORIES[category]
-    badge = cat["badge"]
+    # Markdown heading устгах
+    text = re.sub(r"^#+\s*", "", text, flags=re.MULTILINE)
+    # Хиймэл төгсгөл устгах
+    patterns = [
+        r"Та үүнийг юу гэж бодож байна\?.*$",
+        r"Сэтгэгдэлээ хуваалцаарай.*$",
+        r"Монголын хөрөнгө оруулагчдад.*$",
+        r"Монголд хамааралтай нь:.*$",
+        r"👇.*$",
+    ]
+    for pattern in patterns:
+        text = re.sub(pattern, "", text, flags=re.MULTILINE | re.DOTALL)
 
-    headline = translation_result["headline"]
-    body = translation_result["post_text"]
-    dynamic_hashtag = translation_result.get("dynamic_hashtag", "")
-
-    # Эцсийн постын бүтэц
-    full_post = f"""{badge}
-
-{headline}
-
-{body}{build_footer(category, dynamic_hashtag)}"""
-
-    return full_post, category
+    return text.strip()
 
 
 def translate_article(article):
     """Нэг мэдээг Claude API-р орчуулах"""
 
-    user_prompt = f"""Дараах англи хэл дээрх мэдээг Orange News-ийн Bloomberg/Lemon Press
-хэв маягаар Монгол хэлэнд шилжүүл.
+    # RSS collector-д url, translator-т link гэсэн ялгаа засах
+    article_url = article.get("url") or article.get("link", "")
+
+    user_prompt = f"""Дараах англи мэдээг Orange News-ийн Bloomberg/Lemon Press хэв маягаар
+Монгол хэлэнд дахин бич.
 
 === ЭХ МЭДЭЭ ===
 
@@ -265,15 +376,17 @@ def translate_article(article):
 {article.get('summary', '')}
 
 Эх сурвалж: {article.get('source', 'Unknown')}
-URL: {article.get('link', '')}
+URL: {article_url}
 
 === ДААЛГАВАР ===
 
-1. 3-алхмын логикийг дагаж ажилла (ойлгох → дахин бичих → алдаа шалгах)
+1. 4-алхмын логикийг дагаж ажилла
 2. Категорийг зөв сонго
-3. Динамик hashtag мэдээнээс гарга
-4. AI smell үгс устгасан байх
-5. Зөвхөн JSON объект буцаа (код блок, тайлбар хэрэггүй)
+3. Динамик hashtag гарга
+4. AI smell, passive, үгчилсэн орчуулга УСТГАСАН байх
+5. Markdown (# ## **) БҮРЭН ХОРИГ
+6. Эхний өгүүлбэрт эх сурвалжийн нэр БИЧИХГҮЙ
+7. Зөвхөн JSON буцаа (код блок, тайлбар хэрэггүй)
 """
 
     response = client.messages.create(
@@ -283,10 +396,9 @@ URL: {article.get('link', '')}
         messages=[{"role": "user", "content": user_prompt}]
     )
 
-    # Хариуг parse хийх
     raw_text = response.content[0].text.strip()
 
-    # Зарим үед Claude ```json блок дотор буцаадаг
+    # ```json блокыг цэвэрлэх
     if raw_text.startswith("```"):
         raw_text = raw_text.split("```")[1]
         if raw_text.startswith("json"):
@@ -300,49 +412,65 @@ URL: {article.get('link', '')}
         print(f"  Raw text:\n{raw_text[:500]}")
         return None
 
-    # Facebook post формат болгон угсрах
-    full_post, category = format_post(result)
+    category = result.get("category", DEFAULT_CATEGORY).lower()
+    if category not in CATEGORIES or category == "market_watch":
+        category = DEFAULT_CATEGORY
+
+    headline = clean_post_text(result.get("headline", ""))
+    body = clean_post_text(result.get("post_text", ""))
+    dynamic_hashtag = result.get("dynamic_hashtag", "")
+
+    # ЭЦСИЙН full_post үүсгэх
+    full_post = build_full_post(category, headline, body, dynamic_hashtag)
 
     return {
         "category": category,
         "badge": CATEGORIES[category]["badge"],
-        "headline": result["headline"],
-        "post_text": result["post_text"],
-        "full_post": full_post,  # Facebook-д шууд тавих эцсийн текст
-        "dynamic_hashtag": result.get("dynamic_hashtag", ""),
+        "headline": headline,
+        "post_text": full_post,    # fb_poster.py format_post() энийг авна
+        "body_only": body,          # зөвхөн body (backup)
+        "full_post": full_post,     # шинэ poster-т зориулсан
+        "dynamic_hashtag": dynamic_hashtag,
         "key_numbers": result.get("key_numbers", []),
-        "hashtags": ["#OrangeNews"] + CATEGORIES[category]["hashtags"],
-        "original_url": article.get("link", ""),
+        "hashtags": build_hashtags(category, dynamic_hashtag).split(),
+        "original_url": article_url,
         "original_title": article.get("title", ""),
+        "url": article_url,          # image_generator compatibility
         "source": article.get("source", "Unknown"),
-        "score": article.get("score", 0)
+        "score": article.get("score", 0),
+        "is_market_watch": False,
+        "type": "news"
     }
 
 
 # =============================================================================
-# MAIN PIPELINE
+# MAIN
 # =============================================================================
 
 def main():
-    print("🟠 Orange News Translator v5 эхэлж байна...\n")
+    print("🟠 Orange News Translator v7 FINAL эхэлж байна...\n")
+    print("📌 V7: Market Watch + full_post + 50+ AI smell хориг\n")
 
-    # API key шалгах
     if not os.environ.get("ANTHROPIC_API_KEY"):
-        print("❌ ANTHROPIC_API_KEY environment variable олдсонгүй!")
+        print("❌ ANTHROPIC_API_KEY олдсонгүй!")
         sys.exit(1)
 
-    # Input файл унших
     if not os.path.exists(INPUT_FILE):
-        print(f"❌ {INPUT_FILE} файл олдсонгүй!")
+        print(f"❌ {INPUT_FILE} олдсонгүй!")
         sys.exit(1)
 
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         articles = json.load(f)
 
-    print(f"📥 {len(articles)} мэдээ унших...\n")
+    print(f"📥 {len(articles)} мэдээ орчуулна...\n")
 
-    # Мэдээ бүрийг орчуулах
-    translated = []
+    # 1. Market Watch эхлээд үүсгэнэ (хамгийн эхний пост)
+    print("📊 Orange Market Watch үүсгэх...")
+    market_watch = generate_market_watch_post()
+    translated = [market_watch]
+    print(f"  ✅ {market_watch['headline']}\n")
+
+    # 2. Бусад мэдээг орчуулах
     for i, article in enumerate(articles, 1):
         print(f"[{i}/{len(articles)}] {article.get('title', 'Untitled')[:60]}...")
 
@@ -352,30 +480,35 @@ def main():
                 translated.append(result)
                 print(f"  ✅ {result['badge']} | {result['headline'][:60]}")
             else:
-                print(f"  ⚠️ Skip хийв")
+                print(f"  ⚠️ Алгассан")
         except Exception as e:
             print(f"  ❌ Алдаа: {e}")
             continue
 
         print()
 
-    # Output файл хадгалах
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(translated, f, ensure_ascii=False, indent=2)
 
-    # Категори-оор хуваарилалт харуулах
+    # Категори-оор хуваарилалт
     cat_counts = {}
     for post in translated:
         cat = post["category"]
         cat_counts[cat] = cat_counts.get(cat, 0) + 1
 
     print(f"\n{'='*60}")
-    print(f"✅ Амжилттай! {len(translated)}/{len(articles)} мэдээ орчуулав")
+    print(f"✅ Амжилттай! {len(translated)} пост бэлэн ({len(articles)} мэдээ + 1 Market Watch)")
     print(f"📁 Хадгалсан: {OUTPUT_FILE}")
     print(f"\n📊 Категорийн хуваарилалт:")
     for cat, count in sorted(cat_counts.items(), key=lambda x: -x[1]):
         badge = CATEGORIES.get(cat, {}).get("badge", "❓")
         print(f"  {badge}: {count}")
+
+    print(f"\n⏰ Scheduling план:")
+    print(f"  09:00 — Orange Market Watch (эхний пост, шууд)")
+    for i in range(1, len(translated)):
+        print(f"  {10+i-1:02d}:00 — {translated[i]['headline'][:50]}...")
+
     print(f"{'='*60}\n")
 
 

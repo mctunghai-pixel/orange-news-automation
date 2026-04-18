@@ -1,31 +1,105 @@
+# =============================================================================
+# Orange News Daily Pipeline v7 FINAL
+# =============================================================================
+# Цагийн тохиргоо:
+#   UTC 00:15 = Монгол цагаар 08:15
+#   Pipeline 30 минут ажиллаж дуусна
+#   Эхний пост (Market Watch) 09:00 Монгол цагт шууд нийтлэгдэнэ
+#   Бусад постууд 10:00, 11:00, 12:00 ... 17:00
+# =============================================================================
+
 name: Orange News Daily Pipeline
+
 on:
   schedule:
-    - cron: '0 0 * * *'
+    # UTC 00:15 = Монгол цагаар 08:15
+    - cron: '15 0 * * *'
+
   workflow_dispatch:
 
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
+    timeout-minutes: 60
+
+    env:
+      TZ: Asia/Ulaanbaatar
+      PYTHONIOENCODING: utf-8
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Mongolia timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Ulaanbaatar || true
+          echo "⏰ Current time: $(date '+%Y-%m-%d %H:%M:%S %Z')"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: Install fonts
+
+      - name: Install Mongolian fonts
         run: |
-          sudo apt-get update -qq
+          sudo apt-get update
           sudo apt-get install -y fonts-noto fonts-noto-cjk
-      - name: Install dependencies
-        run: pip install anthropic feedparser httpx certifi python-dateutil yfinance Pillow requests
-      - name: Run pipeline
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install anthropic feedparser httpx certifi python-dateutil yfinance Pillow requests
+
+      # -----------------------------------------------------------------
+      # Phase 1: RSS цуглуулах
+      # -----------------------------------------------------------------
+      - name: Phase 1 - Collect RSS news
+        run: |
+          echo "📡 RSS collector at $(date '+%H:%M:%S %Z')"
+          python3 orange_rss_collector.py
+
+      # -----------------------------------------------------------------
+      # Phase 2: Claude translator (Market Watch + орчуулга)
+      # -----------------------------------------------------------------
+      - name: Phase 2 - Claude translator
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "🤖 Translator at $(date '+%H:%M:%S %Z')"
+          python3 orange_translator.py
+
+      # -----------------------------------------------------------------
+      # Phase 2.5: Image generator
+      # -----------------------------------------------------------------
+      - name: Phase 2.5 - Image generator
+        run: |
+          echo "🎨 Image generator at $(date '+%H:%M:%S %Z')"
+          python3 image_generator.py
+
+      # -----------------------------------------------------------------
+      # Phase 3: Facebook poster (LIVE)
+      # -----------------------------------------------------------------
+      - name: Phase 3 - Facebook poster
+        env:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
-          PYTHONIOENCODING: utf-8
         run: |
-          python3 orange_rss_collector.py
-          python3 orange_translator.py
-          python3 image_generator.py
+          echo "📘 FB poster at $(date '+%H:%M:%S %Z')"
           python3 fb_poster.py --live
+
+      # -----------------------------------------------------------------
+      # Артифакт хадгалах (debugging)
+      # -----------------------------------------------------------------
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pipeline-outputs-${{ github.run_number }}
+          path: |
+            top_news.json
+            translated_posts.json
+            assets/generated/*.png
+            pipeline_log.txt
+          retention-days: 7
