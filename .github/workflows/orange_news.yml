@@ -61,6 +61,15 @@ jobs:
           python3 orange_rss_collector.py
 
       # -----------------------------------------------------------------
+      # Phase 1.5: Market Data татах (Монголбанк + Yahoo Finance)
+      # -----------------------------------------------------------------
+      - name: Phase 1.5 - Fetch market data
+        run: |
+          echo "📊 Market data fetcher at $(date '+%H:%M:%S %Z')"
+          python3 market_data_fetcher.py || echo "⚠️ Market data failed - translator will use fallback"
+        continue-on-error: true
+
+      # -----------------------------------------------------------------
       # Phase 2: Claude translator (Market Watch + орчуулга)
       # -----------------------------------------------------------------
       - name: Phase 2 - Claude translator
