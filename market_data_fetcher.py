@@ -1,12 +1,15 @@
 """
-Orange News — Market Data Fetcher v1
+Orange News — Market Data Fetcher v2
 =====================================
-Өдрийн зах зээлийн бодит мэдээллийг татах
+3 түвшинтэй fallback chain:
 
-Эх сурвалжууд:
-1. Монголбанк (mongolbank.mn) — албан валютын ханш
-2. Yahoo Finance (yfinance) — дэлхийн индекс, Bitcoin, алт, нефть
-3. Fallback: ханш татагдахгүй бол "мэдээлэл байхгүй" гэх эсвэл өмнөх утга
+ВАЛЮТЫН ХАНШ (MNT):
+  1. Монголбанк JSON API (хэрвээ ажиллавал)
+  2. ExchangeRate-API (free, MNT дэмжинэ)
+  3. Frankfurter + Yahoo Finance USDMNT ticker
+
+ИНДЕКС/КРИПТО/ТҮҮХИЙ ЭД:
+  1. Yahoo Finance
 
 Author: Azurise AI Master Architect
 Date: April 18, 2026
@@ -14,9 +17,11 @@ Date: April 18, 2026
 
 import json
 import os
+import warnings
 from datetime import datetime
 
-# yfinance шаардлагатай — pipeline-д аль хэдийн суулгасан байдаг
+warnings.filterwarnings("ignore", message="Unverified HTTPS request")
+
 try:
     import yfinance as yf
     YFINANCE_AVAILABLE = True
@@ -26,89 +31,158 @@ except ImportError:
 
 import requests
 
-
 # =============================================================================
-# МОНГОЛБАНК ВАЛЮТЫН ХАНШ
+# МОНГОЛБАНК ВАЛЮТЫН ХАНШ — 3 түвшинтэй fallback
 # =============================================================================
 
-def fetch_mongolbank_rates():
-    """
-    Монголбанкны албан валютын ханшийг татах.
-    API: https://www.mongolbank.mn/json/daily-rates.json
+def try_mongolbank_json():
+    """Түвшин 1: Монголбанкны JSON API"""
+    urls = [
+        "https://www.mongolbank.mn/json/daily-rates.json",
+        "https://www.mongolbank.mn/api/daily-rates",
+        "http://www.mongolbank.mn/json/daily-rates.json",
+    ]
 
-    Буцаадаг:
-        {
-            "USD": 3573.29,
-            "EUR": 4211.76,
-            "CNY": 493.50,
-            "JPY": 22.43,
-            "KRW": 2.48,  # Солонгос вон
-            "RUB": 37.85,  # Орос рубль
-        }
-    """
+    for url in urls:
+        try:
+            r = requests.get(url, timeout=10, verify=False, headers={
+                "User-Agent": "Mozilla/5.0 (compatible; OrangeNewsBot/1.0)",
+                "Accept": "application/json, text/plain, */*",
+            })
+            if r.status_code == 200 and r.text.strip():
+                data = r.json()
+                rates = {}
+
+                if isinstance(data, dict) and "data" in data:
+                    for item in data["data"]:
+                        code = item.get("Cur", "").upper()
+                        rate = item.get("Rate", 0)
+                        if code and rate:
+                            rates[code] = float(rate)
+                elif isinstance(data, list):
+                    for item in data:
+                        code = item.get("code", item.get("Cur", "")).upper()
+                        rate = item.get("rate", item.get("Rate", 0))
+                        if code and rate:
+                            rates[code] = float(rate)
+
+                if rates:
+                    print(f"  ✅ Монголбанк JSON: {len(rates)} валют")
+                    return rates
+        except Exception:
+            continue
+
+    return {}
+
+
+def try_exchangerate_api():
+    """Түвшин 2: ExchangeRate-API (free, no API key)"""
     try:
-        # Монголбанкны албан API
-        url = "https://www.mongolbank.mn/json/daily-rates.json"
-        r = requests.get(url, timeout=10, verify=False, headers={
-            "User-Agent": "Mozilla/5.0 (compatible; OrangeNewsBot/1.0)"
-        })
-        data = r.json()
+        r = requests.get("https://open.er-api.com/v6/latest/USD", timeout=10)
+        if r.status_code == 200:
+            data = r.json()
+            if data.get("result") == "success":
+                rates_per_usd = data.get("rates", {})
+                mnt_rate = rates_per_usd.get("MNT", 0)
 
-        rates = {}
-        for item in data.get("data", []):
-            code = item.get("Cur", "")
-            rate = item.get("Rate", 0)
-            if code and rate:
-                rates[code.upper()] = float(rate)
+                if mnt_rate > 0:
+                    result = {}
+                    result["USD"] = round(mnt_rate, 2)
 
-        return rates
+                    for code in ["EUR", "CNY", "JPY", "KRW", "RUB", "GBP"]:
+                        code_rate = rates_per_usd.get(code, 0)
+                        if code_rate > 0:
+                            result[code] = round(mnt_rate / code_rate, 2)
+
+                    print(f"  ✅ ExchangeRate-API: {len(result)} валют")
+                    return result
     except Exception as e:
-        print(f"  ⚠️ Монголбанк API алдаа: {e}")
+        print(f"  ⚠️ ExchangeRate-API: {e}")
+
+    return {}
+
+
+def try_yfinance_usdmnt():
+    """Түвшин 3: Yahoo Finance USDMNT ticker-аас авах"""
+    if not YFINANCE_AVAILABLE:
         return {}
 
+    try:
+        # USDMNT ticker-аас USD ханш
+        usdmnt = yf.Ticker("USDMNT=X")
+        hist = usdmnt.history(period="2d")
+        if len(hist) < 1:
+            return {}
+
+        usd_rate = float(hist["Close"].iloc[-1])
+
+        # Frankfurter-ээс бусад валют
+        r = requests.get("https://api.frankfurter.dev/v1/latest?base=USD", timeout=10)
+        rates_per_usd = {}
+        if r.status_code == 200:
+            rates_per_usd = r.json().get("rates", {})
+
+        result = {"USD": round(usd_rate, 2)}
+        for code in ["EUR", "CNY", "JPY", "GBP"]:
+            code_rate = rates_per_usd.get(code, 0)
+            if code_rate > 0:
+                result[code] = round(usd_rate / code_rate, 2)
+
+        if result:
+            print(f"  ✅ Frankfurter + yfinance USDMNT: {len(result)} валют")
+            return result
+    except Exception as e:
+        print(f"  ⚠️ yfinance USDMNT: {e}")
+
+    return {}
+
+
+def fetch_mongolbank_rates():
+    """3 түвшинтэй fallback chain"""
+    print("💱 Валютын ханш татаж байна...")
+
+    rates = try_mongolbank_json()
+    if rates:
+        return rates
+
+    rates = try_exchangerate_api()
+    if rates:
+        return rates
+
+    rates = try_yfinance_usdmnt()
+    if rates:
+        return rates
+
+    print("  ⚠️ Бүх валют API амжилтгүй")
+    return {}
+
 
 # =============================================================================
-# YAHOO FINANCE — ДЭЛХИЙН ИНДЕКС, КРИПТО, ТҮҮХИЙ ЭД
+# YAHOO FINANCE
 # =============================================================================
 
-# Yahoo Finance ticker-ууд
 TICKERS = {
-    # Индекс
     "S&P 500":     "^GSPC",
     "Nasdaq":      "^IXIC",
     "Dow Jones":   "^DJI",
     "Nikkei":      "^N225",
     "Shanghai":    "000001.SS",
-    "FTSE":        "^FTSE",
-
-    # Крипто
     "Bitcoin":     "BTC-USD",
     "Ethereum":    "ETH-USD",
     "Solana":      "SOL-USD",
-
-    # Түүхий эд
-    "Gold":        "GC=F",       # Алт
-    "Oil":         "CL=F",       # Brent нефть
-    "Copper":      "HG=F",       # Зэс
-    "Silver":      "SI=F",       # Мөнгө
+    "Gold":        "GC=F",
+    "Oil":         "CL=F",
+    "Copper":      "HG=F",
+    "Silver":      "SI=F",
 }
 
 
 def fetch_yfinance_data():
-    """
-    Yahoo Finance-ээс индекс, крипто, түүхий эдийн үнэ татах.
-
-    Буцаадаг:
-        {
-            "S&P 500": {"price": 7041.28, "change_pct": 0.26},
-            "Bitcoin": {"price": 74669.31, "change_pct": -0.32},
-            ...
-        }
-    """
     if not YFINANCE_AVAILABLE:
         return {}
 
     results = {}
+    print("📊 Yahoo Finance татаж байна...")
     for name, ticker_symbol in TICKERS.items():
         try:
             ticker = yf.Ticker(ticker_symbol)
@@ -123,157 +197,120 @@ def fetch_yfinance_data():
                     "price": round(current, 2),
                     "change_pct": round(change_pct, 2)
                 }
-        except Exception as e:
-            print(f"  ⚠️ {name} ({ticker_symbol}): {e}")
+        except Exception:
             continue
 
+    print(f"  ✅ {len(results)}/{len(TICKERS)} ticker амжилттай")
     return results
 
 
 # =============================================================================
-# МАРКЕТ ДАТА FORMATTER (Facebook пост-д зориулсан)
+# FORMATTER
 # =============================================================================
 
 def format_arrow(change_pct):
-    """Өөрчлөлтийн хувиар сум сонгох"""
-    if change_pct > 0:
+    if change_pct > 0.1:
         return "⬆"
-    elif change_pct < 0:
+    elif change_pct < -0.1:
         return "⬇"
     else:
         return "➡"
 
 
-def format_price(price, is_crypto=False, is_index=False):
-    """Үнэ format хийх"""
-    if price >= 10000:
-        return f"${price:,.2f}"
-    elif price >= 1:
-        return f"${price:,.2f}"
-    else:
-        return f"${price:.4f}"
+def format_price(price):
+    return f"${price:,.2f}" if price >= 1 else f"${price:.4f}"
 
 
 def format_currency_mnt(rate):
-    """Төгрөгийн ханш format"""
     return f"{rate:,.2f}₮"
 
 
 def build_market_watch_body():
-    """
-    Facebook пост-д зориулсан Market Watch body бэлдэх.
-    Бодит тоог татаж, formatted текст буцаана.
-    """
     today = datetime.now().strftime("%Y.%m.%d")
 
-    print("📊 Market Data татаж байна...")
+    print("\n📊 Market Data цуглуулж байна...\n")
     mb_rates = fetch_mongolbank_rates()
     yf_data = fetch_yfinance_data()
 
-    # Валютын хэсэг
-    currency_section = "💵 ВАЛЮТЫН ХАНШ (Монголбанк албан ханш)\n"
+    # Валют
     currency_lines = []
+    currency_map = [
+        ("🇺🇸", "USD", "USD"),
+        ("🇪🇺", "EUR", "EUR"),
+        ("🇨🇳", "CNY", "Юань"),
+        ("🇯🇵", "JPY", "JPY"),
+        ("🇰🇷", "KRW", "Вон"),
+        ("🇷🇺", "RUB", "Рубль"),
+    ]
+    for flag, code, name in currency_map:
+        if code in mb_rates:
+            currency_lines.append(f"{flag} {name}: {format_currency_mnt(mb_rates[code])}")
 
-    if mb_rates:
-        # USD
-        if "USD" in mb_rates:
-            currency_lines.append(f"🇺🇸 USD: {format_currency_mnt(mb_rates['USD'])}")
-        # EUR
-        if "EUR" in mb_rates:
-            currency_lines.append(f"🇪🇺 EUR: {format_currency_mnt(mb_rates['EUR'])}")
-        # CNY
-        if "CNY" in mb_rates:
-            currency_lines.append(f"🇨🇳 Юань: {format_currency_mnt(mb_rates['CNY'])}")
-        # JPY
-        if "JPY" in mb_rates:
-            currency_lines.append(f"🇯🇵 JPY: {format_currency_mnt(mb_rates['JPY'])}")
-        # KRW
-        if "KRW" in mb_rates:
-            currency_lines.append(f"🇰🇷 Вон: {format_currency_mnt(mb_rates['KRW'])}")
+    if currency_lines:
+        currency_section = "💵 ВАЛЮТЫН ХАНШ (төгрөгтэй харьцуулсан)\n" + " | ".join(currency_lines)
     else:
-        currency_lines.append("🇺🇸 USD: [мэдээлэл байхгүй]")
-        currency_lines.append("🇪🇺 EUR: [мэдээлэл байхгүй]")
+        currency_section = "💵 ВАЛЮТЫН ХАНШ\nӨгөгдөл түр хүртээмжгүй"
 
-    currency_section += " | ".join(currency_lines)
-
-    # Хөрөнгийн зах зээл (индекс)
-    stock_section = "\n\n🌐 ДЭЛХИЙН ХӨРӨНГИЙН ЗАХ ЗЭЭЛ\n"
+    # Индекс
     stock_lines = []
     for name in ["S&P 500", "Nasdaq", "Nikkei"]:
         if name in yf_data:
             d = yf_data[name]
-            arrow = format_arrow(d["change_pct"])
             flag = {"S&P 500": "🇺🇸", "Nasdaq": "🇺🇸", "Nikkei": "🇯🇵"}[name]
-            stock_lines.append(f"{flag} {name}: {d['price']:,.2f} {arrow} {d['change_pct']:+.2f}%")
+            stock_lines.append(f"{flag} {name}: {d['price']:,.2f} {format_arrow(d['change_pct'])} {d['change_pct']:+.2f}%")
 
-    if stock_lines:
-        stock_section += " | ".join(stock_lines)
-    else:
-        stock_section += "[зах зээлийн мэдээлэл одоохондоо байхгүй]"
+    stock_section = "🌐 ДЭЛХИЙН ХӨРӨНГИЙН ЗАХ ЗЭЭЛ\n"
+    stock_section += " | ".join(stock_lines) if stock_lines else "Өгөгдөл түр хүртээмжгүй"
 
     # Крипто
-    crypto_section = "\n\n💎 КРИПТО ЗАХ ЗЭЭЛ\n"
     crypto_lines = []
+    emojis = {"Bitcoin": "₿", "Ethereum": "Ξ", "Solana": "◎"}
     for name in ["Bitcoin", "Ethereum", "Solana"]:
         if name in yf_data:
             d = yf_data[name]
-            arrow = format_arrow(d["change_pct"])
-            emoji = {"Bitcoin": "₿", "Ethereum": "Ξ", "Solana": "◎"}[name]
-            crypto_lines.append(f"{emoji} {name}: {format_price(d['price'])} {arrow} {d['change_pct']:+.2f}%")
+            crypto_lines.append(f"{emojis[name]} {name}: {format_price(d['price'])} {format_arrow(d['change_pct'])} {d['change_pct']:+.2f}%")
 
-    if crypto_lines:
-        crypto_section += " | ".join(crypto_lines)
-    else:
-        crypto_section += "[крипто мэдээлэл байхгүй]"
+    crypto_section = "💎 КРИПТО ЗАХ ЗЭЭЛ\n"
+    crypto_section += " | ".join(crypto_lines) if crypto_lines else "Өгөгдөл түр хүртээмжгүй"
 
     # Түүхий эд
-    commodity_section = "\n\n🏗️ ТҮҮХИЙ ЭД\n"
     commodity_lines = []
-    commodity_emojis = {"Gold": "🥇 Алт", "Oil": "🛢️ Нефть", "Copper": "🔶 Зэс"}
+    labels = {"Gold": "🥇 Алт", "Oil": "🛢️ Нефть", "Copper": "🔶 Зэс"}
     for name in ["Gold", "Oil", "Copper"]:
         if name in yf_data:
             d = yf_data[name]
-            arrow = format_arrow(d["change_pct"])
-            label = commodity_emojis[name]
-            commodity_lines.append(f"{label}: ${d['price']:,.2f}/унц {arrow} {d['change_pct']:+.2f}%")
+            unit = {"Gold": "унц", "Oil": "баррель", "Copper": "фунт"}[name]
+            commodity_lines.append(f"{labels[name]}: ${d['price']:,.2f}/{unit} {format_arrow(d['change_pct'])} {d['change_pct']:+.2f}%")
 
-    if commodity_lines:
-        commodity_section += " | ".join(commodity_lines)
-    else:
-        commodity_section += "[түүхий эдийн мэдээлэл байхгүй]"
+    commodity_section = "🏗️ ТҮҮХИЙ ЭД\n"
+    commodity_section += " | ".join(commodity_lines) if commodity_lines else "Өгөгдөл түр хүртээмжгүй"
 
-    # Ерөнхий дүгнэлт
-    summary_section = f"""\n\n📰 ӨНӨӨДРИЙН ТОЙМ
-
-Америкийн хувьцааны зах зээл сүүлийн 24 цагийн хугацаанд"""
-
+    # Дүгнэлт
+    summary = "\n\n📰 ӨНӨӨДРИЙН ТОЙМ\n\n"
     if "S&P 500" in yf_data:
         sp500_change = yf_data["S&P 500"]["change_pct"]
         if sp500_change > 0.3:
-            summary_section += f" өсөлттэй ({sp500_change:+.2f}%)"
+            summary += f"Америкийн хувьцааны зах зээл өсөлттэй ({sp500_change:+.2f}%) байна."
         elif sp500_change < -0.3:
-            summary_section += f" бууралттай ({sp500_change:+.2f}%)"
+            summary += f"Америкийн хувьцааны зах зээл бууралттай ({sp500_change:+.2f}%) байна."
         else:
-            summary_section += " тогтвортой"
+            summary += "Америкийн хувьцааны зах зээл тогтвортой байна."
+    else:
+        summary += "Дэлхийн зах зээлийн чиглэлийг дэлгэрэнгүй мэдээнээс уншина уу."
 
-    summary_section += " байна. Ази болон түүхий эдийн зах зээлийн гол үзүүлэлтийг дэлгэрэнгүй мэдээнд уншина уу."
+    summary += " Ази болон түүхий эдийн зах зээлийн гол үзүүлэлтийг доорх мэдээнээс уншина уу."
 
-    # Бүгдийг нэгтгэх
-    header = f"""📊 Дэлхийн хөрөнгийн зах зээл — {today}
+    header = f"📊 Дэлхийн хөрөнгийн зах зээл — {today}\n\n"
+    header += "Өнөөдрийн Orange Market Watch таны өдрийн эхний санхүүгийн зурваст тавтай морилно уу. "
+    header += "Дэлхийн томоохон биржүүд, валют, түүхий эдийн зах зээлийн гол үзүүлэлтүүдийг товчлон танилцуулж байна."
 
-Өнөөдрийн Orange Market Watch таны өдрийн эхний санхүүгийн зурваст тавтай морилно уу. Дэлхийн томоохон биржүүд, валют, түүхий эдийн зах зээлийн гол үзүүлэлтүүдийг товчлон танилцуулж байна."""
-
-    body = header + "\n\n" + currency_section + stock_section + crypto_section + commodity_section + summary_section + "\n\nДэлгэрэнгүй мэдээллийг www.orangenews.mn сайтаас уншина уу."
+    body = f"{header}\n\n{currency_section}\n\n{stock_section}\n\n{crypto_section}\n\n{commodity_section}{summary}\n\nДэлгэрэнгүй мэдээллийг www.orangenews.mn сайтаас уншина уу."
 
     return body
 
 
-# =============================================================================
-# MAIN (тест)
-# =============================================================================
-
 if __name__ == "__main__":
-    print("🔍 Market Data Fetcher тест")
+    print("🔍 Market Data Fetcher v2 тест")
     print("=" * 60)
 
     body = build_market_watch_body()
@@ -283,7 +320,6 @@ if __name__ == "__main__":
     print(body)
     print("=" * 60)
 
-    # JSON-д хадгалах (debugging)
     mb = fetch_mongolbank_rates()
     yf_raw = fetch_yfinance_data()
 
