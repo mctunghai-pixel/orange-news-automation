@@ -304,13 +304,14 @@ def generate_image(
     draw.rectangle([(0, 0), (6, IMG_H)], fill=accent)
     draw.rectangle([(0, 0), (IMG_W, 5)], fill=accent)
 
-    # 4. Badge
+    # 4. Badge — mobile safe-zone (FB mobile crops top ~8%)
     cat_font = get_font(19, bold=True)
     badge_pad = 14
     bbox = draw.textbbox((0, 0), badge_text, font=cat_font)
     bw = bbox[2] - bbox[0] + badge_pad * 2
-    draw.rectangle([(22, 22), (22 + bw, 22 + 30)], fill=accent)
-    draw.text((22 + badge_pad, 27), badge_text, font=cat_font, fill=COLOR_WHITE)
+    BADGE_Y = 55  # was 22 — moved down to avoid mobile crop
+    draw.rectangle([(22, BADGE_Y), (22 + bw, BADGE_Y + 30)], fill=accent)
+    draw.text((22 + badge_pad, BADGE_Y + 5), badge_text, font=cat_font, fill=COLOR_WHITE)
 
     # 5. HEADLINE — fixed bottom-up layout
     BOTTOM_BAR = 50

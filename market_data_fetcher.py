@@ -205,6 +205,138 @@ def fetch_yfinance_data():
 
 
 # =============================================================================
+# CRYPTO FALLBACK — CoinGecko API (no key required)
+# =============================================================================
+
+COINGECKO_IDS = {
+    "Bitcoin":  "bitcoin",
+    "Ethereum": "ethereum",
+    "Solana":   "solana",
+}
+
+BINANCE_SYMBOLS = {
+    "Bitcoin":  "BTCUSDT",
+    "Ethereum": "ETHUSDT",
+    "Solana":   "SOLUSDT",
+}
+
+
+def fetch_coingecko_crypto():
+    """
+    Fallback #1 for yfinance: CoinGecko API (no key required).
+    Free tier: 10-30 calls/min.
+    Returns same format as yfinance: {name: {price, change_pct}}
+    """
+    try:
+        ids = ",".join(COINGECKO_IDS.values())
+        url = (
+            f"https://api.coingecko.com/api/v3/simple/price"
+            f"?ids={ids}&vs_currencies=usd&include_24hr_change=true"
+        )
+        r = requests.get(url, timeout=10, headers={
+            "User-Agent": "Mozilla/5.0 (OrangeNewsBot/1.0)",
+            "Accept": "application/json",
+        })
+        if r.status_code != 200:
+            print(f"  ⚠️ CoinGecko HTTP {r.status_code}")
+            return {}
+
+        data = r.json()
+        results = {}
+        for name, gecko_id in COINGECKO_IDS.items():
+            coin = data.get(gecko_id, {})
+            price = coin.get("usd")
+            change = coin.get("usd_24h_change")
+            if price is not None and change is not None:
+                results[name] = {
+                    "price": round(float(price), 2),
+                    "change_pct": round(float(change), 2),
+                }
+
+        if results:
+            print(f"  ✅ CoinGecko fallback: {len(results)} крипто")
+        return results
+    except Exception as e:
+        print(f"  ⚠️ CoinGecko алдаа: {e}")
+        return {}
+
+
+def fetch_binance_crypto():
+    """
+    Fallback #2: Binance public API (no key, no rate limit issues).
+    Uses /api/v3/ticker/24hr endpoint for price + 24h % change.
+    """
+    try:
+        results = {}
+        for name, symbol in BINANCE_SYMBOLS.items():
+            try:
+                r = requests.get(
+                    f"https://api.binance.com/api/v3/ticker/24hr?symbol={symbol}",
+                    timeout=8,
+                    headers={"User-Agent": "Mozilla/5.0"},
+                )
+                if r.status_code != 200:
+                    continue
+                data = r.json()
+                price = float(data.get("lastPrice", 0))
+                change = float(data.get("priceChangePercent", 0))
+                if price > 0:
+                    results[name] = {
+                        "price": round(price, 2),
+                        "change_pct": round(change, 2),
+                    }
+            except Exception:
+                continue
+
+        if results:
+            print(f"  ✅ Binance fallback: {len(results)} крипто")
+        return results
+    except Exception as e:
+        print(f"  ⚠️ Binance алдаа: {e}")
+        return {}
+
+
+def ensure_crypto_data(yf_data):
+    """
+    Check if crypto data from yfinance is complete.
+    Multi-tier fallback: yfinance → CoinGecko → Binance.
+    Guarantees crypto section is never empty unless ALL 3 sources fail.
+    """
+    crypto_names = ["Bitcoin", "Ethereum", "Solana"]
+    missing = [n for n in crypto_names if n not in yf_data]
+
+    if not missing:
+        return yf_data
+
+    print(f"  ⚠️ Yahoo Finance-ээс {len(missing)} крипто дутуу: {missing}")
+
+    # Tier 1: CoinGecko
+    print(f"  🔄 CoinGecko fallback...")
+    gecko_data = fetch_coingecko_crypto()
+    for name in crypto_names:
+        if name not in yf_data and name in gecko_data:
+            yf_data[name] = gecko_data[name]
+
+    # Tier 2: Binance (зөвхөн CoinGecko-оос татагдаагүй зүйлд)
+    still_missing = [n for n in crypto_names if n not in yf_data]
+    if still_missing:
+        print(f"  🔄 Binance fallback ({len(still_missing)} үлдсэн)...")
+        binance_data = fetch_binance_crypto()
+        for name in still_missing:
+            if name in binance_data:
+                yf_data[name] = binance_data[name]
+
+    # Эцсийн тайлан
+    final_missing = [n for n in crypto_names if n not in yf_data]
+    if final_missing:
+        print(f"  ❌ БҮХ fallback амжилтгүй: {final_missing}")
+    else:
+        print(f"  ✅ Крипто мэдээлэл бүрэн нөхөгдсөн")
+
+    return yf_data
+
+
+# =============================================================================
 # FORMATTER
 # =============================================================================
 
@@ -231,6 +363,9 @@ def build_market_watch_body():
     print("\n📊 Market Data цуглуулж байна...\n")
     mb_rates = fetch_mongolbank_rates()
     yf_data = fetch_yfinance_data()
+
+    # Крипто мэдээллийг заавал нөхөх (CoinGecko fallback)
+    yf_data = ensure_crypto_data(yf_data)
 
     # Валют
     currency_lines = []

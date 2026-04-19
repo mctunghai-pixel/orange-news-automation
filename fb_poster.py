@@ -244,9 +244,33 @@ def run(live, use_scheduling=True):
     else:
         page_id = access_token = "TEST"
 
-    # Scheduling: Эхний пост шууд, бусад нь 1 цагийн зайтай
-    # Facebook scheduled_publish_time нь UNIX timestamp (секунд)
+    # =========================================================================
+    # SCHEDULING v7.1 — Бүх постыг MNT fixed цагаар Facebook-д schedule
+    # =========================================================================
+    # Өмнөх зан төлөв: idx=0 шууд → GHA саатал шууд пост дээр тусна.
+    # Шинэ зан төлөв: бүх пост Facebook-д schedule → GHA саатал нөлөөлөхгүй.
+    #
+    # Хуваарь: Post 1 → 08:00 MNT, Post 2 → 09:00 MNT, ..., Post 10 → 17:00 MNT
+    # Pipeline-г 06:00 MNT гэх мэт эрт ажиллуулвал бүх пост цагтаа гарна.
+    # =========================================================================
+    FIRST_POST_HOUR_MNT = 8  # 08:00 MNT
+    HOUR_GAP = 1             # Постын хоорондох цагийн зай
+    MNT_OFFSET = timedelta(hours=8)
+
     now_utc = datetime.now(timezone.utc)
+    now_mnt = now_utc + MNT_OFFSET
+
+    # Өнөөдрийн 08:00 MNT (UTC форматаар)
+    first_post_mnt = now_mnt.replace(
+        hour=FIRST_POST_HOUR_MNT, minute=0, second=0, microsecond=0
+    )
+    # Хэрвээ 08:00 MNT өнгөрсөн бол (жишээ нь pipeline 11:00-д ажилласан),
+    # маргаашын 08:00 MNT-ээр эхлүүлнэ. Иначе өнөөдрийн 08:00-аас.
+    if first_post_mnt <= now_mnt + timedelta(minutes=11):
+        first_post_mnt = first_post_mnt + timedelta(days=1)
+        log(f"⚠️ 08:00 MNT өнгөрсөн → маргаашаар schedule хийнэ")
+
+    first_post_utc = first_post_mnt - MNT_OFFSET
     success = failed = 0
 
     for idx, post in enumerate(posts):
@@ -261,21 +285,19 @@ def run(live, use_scheduling=True):
                  idx == 0)
         label = "📊 MARKET WATCH" if is_mw else "📰 NEWS"
 
-        # Scheduling time (Facebook-т scheduled post оруулна)
-        if idx == 0:
-            # Эхний пост шууд
-            scheduled_time = None
-            schedule_label = "⚡ Шууд"
+        # Бүх постыг schedule хийнэ (шууд биш)
+        scheduled_utc = first_post_utc + timedelta(hours=idx * HOUR_GAP)
+        # Facebook minimum = 10 минут ирээдүй (safety check)
+        min_future = now_utc + timedelta(minutes=11)
+        if scheduled_utc < min_future:
+            scheduled_utc = min_future
+
+        scheduled_time = scheduled_utc.timestamp() if use_scheduling else None
+        if scheduled_time:
+            mnt_display = (scheduled_utc + MNT_OFFSET).strftime("%m-%d %H:%M")
+            schedule_label = f"⏰ {mnt_display} MNT"
         else:
-            # +idx * 1 цаг
-            scheduled_dt = now_utc + timedelta(hours=idx)
-            # Facebook minimum = 10 минут ирээдүй
-            min_future = now_utc + timedelta(minutes=11)
-            if scheduled_dt < min_future:
-                scheduled_dt = min_future
-            scheduled_time = scheduled_dt.timestamp()
-            mn_time = scheduled_dt + timedelta(hours=8)
-            schedule_label = f"⏰ {mn_time.strftime('%H:%M')} MNT"
+            schedule_label = "⚡ Шууд"
 
         log(f"")
         log(f"[{idx+1}/{len(posts)}] {label} | {schedule_label}")
