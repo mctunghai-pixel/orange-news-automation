@@ -1,0 +1,106 @@
+# =============================================================================
+# Orange News Market Watch — LIVE Publisher
+# =============================================================================
+# Hybrid architecture:
+#   - Энэ workflow: 07:45 MNT cron → ~08:00 MNT шууд LIVE publish (Market Watch x1)
+#   - orange_news.yml:   06:00 MNT cron → 09:00-17:00 MNT scheduled (News x9)
+#
+# Scripts:
+#   - fb_poster_live.py --live  → Market Watch шууд publish (scheduled_publish_time=None)
+# =============================================================================
+
+name: Market Watch Live
+
+on:
+  schedule:
+    # UTC 23:45 = Монгол цагаар 07:45 → pipeline ~15 мин → 08:00 MNT publish
+    - cron: '45 23 * * *'
+
+  workflow_dispatch:
+
+# Manual + cron давхцлаас сэргийлнэ (хоёр run зэрэг ажиллах нь аюултай)
+concurrency:
+  group: market-watch-live
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    env:
+      TZ: Asia/Ulaanbaatar
+      PYTHONIOENCODING: utf-8
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set Mongolia timezone
+        run: |
+          sudo timedatectl set-timezone Asia/Ulaanbaatar || true
+          echo "⏰ Current time: $(date '+%Y-%m-%d %H:%M:%S %Z')"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install anthropic feedparser httpx certifi python-dateutil yfinance Pillow requests
+
+      # -----------------------------------------------------------------
+      # Phase 1: RSS цуглуулах (translator-ийн INPUT_FILE = top_news.json)
+      # -----------------------------------------------------------------
+      - name: Phase 1 - Collect RSS news
+        run: |
+          echo "📡 RSS collector at $(date '+%H:%M:%S %Z')"
+          python3 orange_rss_collector.py
+
+      # -----------------------------------------------------------------
+      # Phase 1.5: Шинэ market data (MW контентийн гол эх үүсвэр)
+      # -----------------------------------------------------------------
+      - name: Phase 1.5 - Fetch market data
+        run: |
+          echo "📊 Market data at $(date '+%H:%M:%S %Z')"
+          python3 market_data_fetcher.py || echo "⚠️ Market data failed - translator will use fallback"
+        continue-on-error: true
+
+      # -----------------------------------------------------------------
+      # Phase 2: Translator (Option A — бүх 10 постыг translate, MW-г fb_poster_live.py сонгоно)
+      # -----------------------------------------------------------------
+      - name: Phase 2 - Claude translator
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: |
+          echo "🤖 Translator at $(date '+%H:%M:%S %Z')"
+          python3 orange_translator.py
+
+      # -----------------------------------------------------------------
+      # Phase 3: Market Watch LIVE publish (scheduled_publish_time=None)
+      # -----------------------------------------------------------------
+      - name: Phase 3 - Market Watch LIVE publish
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
+        run: |
+          echo "📘 MW LIVE poster at $(date '+%H:%M:%S %Z')"
+          python3 fb_poster_live.py --live
+
+      # -----------------------------------------------------------------
+      # Артифакт (debug/audit)
+      # -----------------------------------------------------------------
+      - name: Upload artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: market-watch-live-${{ github.run_number }}
+          path: |
+            top_news.json
+            translated_posts.json
+            pipeline_log.txt
+          retention-days: 7

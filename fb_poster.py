@@ -219,7 +219,7 @@ def format_post(post):
 # MAIN
 # =============================================================================
 
-def run(live, use_scheduling=True):
+def run(live, use_scheduling=True, skip_market_watch=False):
     mode = "LIVE" if live else "TEST"
     log(f"{'='*50}")
     log(f"🍊 Orange News FB Poster v7 FINAL | Mode: {mode}")
@@ -283,6 +283,9 @@ def run(live, use_scheduling=True):
                  post.get("category") == "market_watch" or
                  post.get("type") == "market_watch" or
                  idx == 0)
+        if skip_market_watch and is_mw:
+            log(f"[{idx+1}/{len(posts)}] ⏭️ Skipped Market Watch (handled by fb_poster_live.py)")
+            continue
         label = "📊 MARKET WATCH" if is_mw else "📰 NEWS"
 
         # Бүх постыг schedule хийнэ (шууд биш)
@@ -350,5 +353,10 @@ def run(live, use_scheduling=True):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--live", action="store_true", help="Бодит нийтлэх")
+    parser.add_argument(
+        "--skip-market-watch",
+        action="store_true",
+        help="Market Watch постыг алгасах (fb_poster_live.py-д үлдээх)"
+    )
     args = parser.parse_args()
-    run(live=args.live)
+    run(live=args.live, skip_market_watch=args.skip_market_watch)
