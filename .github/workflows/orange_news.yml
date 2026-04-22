@@ -50,7 +50,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install anthropic feedparser httpx certifi python-dateutil yfinance Pillow requests
+          pip install anthropic google-genai python-dotenv feedparser httpx certifi python-dateutil yfinance Pillow requests
 
       # -----------------------------------------------------------------
       # Phase 1: RSS цуглуулах
@@ -70,10 +70,11 @@ jobs:
         continue-on-error: true
 
       # -----------------------------------------------------------------
-      # Phase 2: Claude translator (Market Watch + орчуулга)
+      # Phase 2: Gemini translator (Claude fallback) — Market Watch + орчуулга
       # -----------------------------------------------------------------
-      - name: Phase 2 - Claude translator
+      - name: Phase 2 — Gemini translator (Claude fallback)
         env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
         run: |
           echo "🤖 Translator at $(date '+%H:%M:%S %Z')"

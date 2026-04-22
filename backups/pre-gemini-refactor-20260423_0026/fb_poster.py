@@ -29,16 +29,11 @@ DELAY_SECS = 3600  # 1 цаг
 FB_API_URL = "https://graph.facebook.com/v19.0"
 MARKET_WATCH_IMAGE = "assets/market_watch_thumbnail.png"
 
-# Footer template (v8 Bloomberg-style — fallback-д ашиглана)
-FOOTER_LINKS = """
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-🌐 www.orangenews.mn
-
-📘 facebook.com/orangenews.mn
-📷 instagram.com/orangenews.official
-🧵 threads.net/@orangenews.official"""
+# Footer template (fallback-д ашиглана)
+FOOTER_LINKS = """🌐 Вэбсайт: https://www.orangenews.mn
+📘 Facebook: https://www.facebook.com/orangenews.mn
+📸 Instagram: https://www.instagram.com/orangenews.official
+🧵 Threads: https://www.threads.net/@orangenews.official"""
 
 # =============================================================================
 # image_generator холболт
@@ -137,38 +132,6 @@ def get_page_token(user_token, page_id):
     return user_token
 
 
-def check_market_watch_exists_today(page_id, access_token) -> bool:
-    """
-    v8: Query FB Page posts in the last 24h.
-    Return True if an Orange Market Watch post already published today.
-
-    Fail-open: on any API/network error, return False so the pipeline
-    proceeds and schedules a new MW rather than silently missing a day.
-    """
-    since_epoch = int((datetime.now(timezone.utc) - timedelta(hours=24)).timestamp())
-    url = f"{FB_API_URL}/{page_id}/posts"
-    params = {
-        "fields": "message,created_time",
-        "since": since_epoch,
-        "access_token": access_token,
-    }
-    try:
-        r = requests.get(url, params=params, timeout=10)
-        r.raise_for_status()
-        posts = r.json().get("data", [])
-        for post in posts:
-            msg = post.get("message", "") or ""
-            if "ORANGE MARKET WATCH" in msg:
-                created = post.get("created_time", "?")
-                log(f"  ⏭️  MW already published in last 24h (created: {created})")
-                return True
-        log(f"  ✅ No MW in last 24h — OK to schedule new MW")
-        return False
-    except Exception as e:
-        log(f"  ⚠️  MW de-dupe check failed ({type(e).__name__}: {e}) — fail-open, proceeding")
-        return False
-
-
 def post_to_facebook(text, page_id, access_token, scheduled_time=None):
     """Зураггүй текст пост"""
     url = f"{FB_API_URL}/{page_id}/feed"
@@ -244,6 +207,9 @@ def format_post(post):
 {headline}
 
 {body}
+
+---
+
 {FOOTER_LINKS}
 
 {hashtag_line}""".strip()
@@ -320,12 +286,6 @@ def run(live, use_scheduling=True, skip_market_watch=False):
         if skip_market_watch and is_mw:
             log(f"[{idx+1}/{len(posts)}] ⏭️ Skipped Market Watch (handled by fb_poster_live.py)")
             continue
-
-        # v8: MW de-dupe — avoid double-posting if fb_poster_live.py already ran today
-        if live and is_mw and check_market_watch_exists_today(page_id, access_token):
-            log(f"[{idx+1}/{len(posts)}] ⏭️  MW already exists today — skipping this slot")
-            continue
-
         label = "📊 MARKET WATCH" if is_mw else "📰 NEWS"
 
         # Бүх постыг schedule хийнэ (шууд биш)
