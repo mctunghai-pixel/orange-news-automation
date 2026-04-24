@@ -247,7 +247,6 @@ def generate_image(
     image_url: str = None,
     article_url: str = None,
     index: int = 0,
-    image_caption: str = None,
 ) -> str:
     """
     FIXED LAYOUT (давхцалгүй):
@@ -263,14 +262,7 @@ def generate_image(
     │ [LOGO]  orangenews.mn                  │ BOTTOM_BAR (50px)
     └────────────────────────────────────────┘
     """
-    # v8.1: prefer short image_caption over full headline for overlay readability.
-    raw_caption = (image_caption or "").strip()
-    if raw_caption:
-        overlay_text = clean_headline(raw_caption)
-    else:
-        overlay_text = clean_headline(headline)[:50]
-    if len(overlay_text) > 40:
-        overlay_text = overlay_text[:37].rstrip() + "…"
+    headline = clean_headline(headline)
     cat_upper = category.upper() if category else "DEFAULT"
     if cat_upper not in CATEGORIES:
         cat_upper = "DEFAULT"
@@ -321,24 +313,17 @@ def generate_image(
     draw.rectangle([(22, BADGE_Y), (22 + bw, BADGE_Y + 30)], fill=accent)
     draw.text((22 + badge_pad, BADGE_Y + 5), badge_text, font=cat_font, fill=COLOR_WHITE)
 
-    # 5. OVERLAY TEXT — short caption (3-5 words), bold, high-contrast stroke.
-    # v8.1: bumped font 50→78; use stroke instead of dual-draw drop shadow.
+    # 5. HEADLINE — fixed bottom-up layout
     BOTTOM_BAR = 50
-    LINE_H = 92
-    h_font = get_font(78, bold=True)
-    wrapped = textwrap.wrap(overlay_text, width=18)[:2]
+    LINE_H = 62
+    h_font = get_font(50, bold=True)
+    wrapped = textwrap.wrap(headline, width=30)[:3]
 
     # Доороос дээш
     for i, line in enumerate(reversed(wrapped)):
         y = IMG_H - BOTTOM_BAR - 12 - (i * LINE_H) - LINE_H + 10
-        draw.text(
-            (30, y),
-            line,
-            font=h_font,
-            fill=COLOR_WHITE,
-            stroke_width=4,
-            stroke_fill=(0, 0, 0),
-        )
+        draw.text((32, y + 2), line, font=h_font, fill=(0, 0, 0))  # shadow
+        draw.text((30, y), line, font=h_font, fill=COLOR_WHITE)
 
     # 6. Separator
     sep_y = IMG_H - BOTTOM_BAR
@@ -401,7 +386,6 @@ def main():
 
         category = "MARKET_WATCH" if is_mw else p.get("category", "FINANCE")
         headline = extract_headline(p)
-        caption = p.get("image_caption", "")
         img_url = p.get("image_url", "")
         article_url = get_article_url(p)
 
@@ -409,8 +393,7 @@ def main():
         try:
             path = generate_image(
                 headline=headline, category=category,
-                image_url=img_url, article_url=article_url, index=i,
-                image_caption=caption,
+                image_url=img_url, article_url=article_url, index=i
             )
             # JSON-д image_path нэмэх
             p["image_path"] = path

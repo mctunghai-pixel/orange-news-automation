@@ -37,9 +37,7 @@ FOOTER_LINKS = """
 🌐 www.orangenews.mn
 
 📘 facebook.com/orangenews.mn
-
 📷 instagram.com/orangenews.official
-
 🧵 threads.net/@orangenews.official"""
 
 # =============================================================================
@@ -103,7 +101,6 @@ def get_post_image(post: dict, idx: int):
     if IMAGE_GEN_AVAILABLE:
         try:
             headline = post.get("headline") or post.get("title", "")
-            caption = post.get("image_caption", "")
             category = post.get("category", "FINANCE").upper()
             img_url = post.get("image_url", "")
             article_url = post.get("original_url") or post.get("url", "")
@@ -113,7 +110,6 @@ def get_post_image(post: dict, idx: int):
                 image_url=img_url,
                 article_url=article_url,
                 index=idx,
-                image_caption=caption,
             )
             if path and os.path.exists(path):
                 return path
@@ -243,17 +239,9 @@ def format_post(post):
     hashtags = post.get("hashtags", ["#OrangeNews", "#Finance"])
     hashtag_line = " ".join(hashtags) if isinstance(hashtags, list) else hashtags
 
-    # Empty headline (Market Watch) → skip the headline block; body header carries context.
-    if headline and headline.strip():
-        return f"""{badge}
+    return f"""{badge}
 
 {headline}
-
-{body}
-{FOOTER_LINKS}
-
-{hashtag_line}""".strip()
-    return f"""{badge}
 
 {body}
 {FOOTER_LINKS}

@@ -19,9 +19,6 @@ import json
 import os
 import warnings
 from datetime import datetime
-from zoneinfo import ZoneInfo
-
-MNT_TZ = ZoneInfo("Asia/Ulaanbaatar")
 
 warnings.filterwarnings("ignore", message="Unverified HTTPS request")
 
@@ -361,8 +358,7 @@ def format_currency_mnt(rate):
 
 
 def build_market_watch_body():
-    mnt_now = datetime.now(MNT_TZ)
-    today = mnt_now.strftime("%Y.%m.%d")
+    today = datetime.now().strftime("%Y.%m.%d")
 
     print("\n📊 Market Data цуглуулж байна...\n")
     mb_rates = fetch_mongolbank_rates()
@@ -440,7 +436,7 @@ def build_market_watch_body():
     summary += " Ази болон түүхий эдийн зах зээлийн гол үзүүлэлтийг доорх мэдээнээс уншина уу."
 
     header = f"📊 Дэлхийн хөрөнгийн зах зээл — {today}\n\n"
-    header += "Өнөөдрийн Orange Market Watch- Та манай энэ өдрийн санхүүгийн зурваст тавтай морилно уу. "
+    header += "Өнөөдрийн Orange Market Watch таны өдрийн эхний санхүүгийн зурваст тавтай морилно уу. "
     header += "Дэлхийн томоохон биржүүд, валют, түүхий эдийн зах зээлийн гол үзүүлэлтүүдийг товчлон танилцуулж байна."
 
     body = f"{header}\n\n{currency_section}\n\n{stock_section}\n\n{crypto_section}\n\n{commodity_section}{summary}\n\nДэлгэрэнгүй мэдээллийг www.orangenews.mn сайтаас уншина уу."
@@ -463,7 +459,7 @@ if __name__ == "__main__":
     yf_raw = fetch_yfinance_data()
 
     output = {
-        "date": datetime.now(MNT_TZ).isoformat(),
+        "date": datetime.now().isoformat(),
         "mongolbank": mb,
         "markets": yf_raw,
         "facebook_body": body
