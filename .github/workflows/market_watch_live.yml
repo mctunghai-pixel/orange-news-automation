@@ -13,8 +13,8 @@ name: Market Watch Live
 
 on:
   schedule:
-    # UTC 23:45 = Монгол цагаар 07:45 → pipeline ~15 мин → 08:00 MNT publish
-    - cron: '45 23 * * *'
+    # UTC 23:00 = Монгол цагаар 07:00 → pipeline ~15 мин → 07:15 MNT publish (60-min buffer)
+    - cron: '0 23 * * *'
 
   workflow_dispatch:
 

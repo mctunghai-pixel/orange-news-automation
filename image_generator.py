@@ -322,10 +322,10 @@ def generate_image(
     draw.text((22 + badge_pad, BADGE_Y + 5), badge_text, font=cat_font, fill=COLOR_WHITE)
 
     # 5. OVERLAY TEXT — short caption (3-5 words), bold, high-contrast stroke.
-    # v8.1: bumped font 50→78; use stroke instead of dual-draw drop shadow.
+    # v8.2: tuned font 78→66 for mobile FB story view; use stroke instead of dual-draw drop shadow.
     BOTTOM_BAR = 50
     LINE_H = 92
-    h_font = get_font(78, bold=True)
+    h_font = get_font(66, bold=True)
     wrapped = textwrap.wrap(overlay_text, width=18)[:2]
 
     # Доороос дээш
