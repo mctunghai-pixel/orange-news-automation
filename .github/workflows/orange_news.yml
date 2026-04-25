@@ -17,6 +17,9 @@ on:
 
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   run-pipeline:
     runs-on: ubuntu-latest
@@ -98,6 +101,23 @@ jobs:
         run: |
           echo "📘 FB poster at $(date '+%H:%M:%S %Z')"
           python3 fb_poster.py --live
+      # ----------------------------------------------------------------
+      # Phase 4: Commit translated_posts.json (website-руу feed хийх)
+      # ----------------------------------------------------------------
+      - name: Phase 4 — Commit translated_posts.json
+        if: always()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add translated_posts.json
+          if git diff --staged --quiet; then
+            echo "ℹ️  No changes to translated_posts.json"
+          else
+            git commit -m "data: update translated_posts.json [skip ci]"
+            git push
+            echo "✅ translated_posts.json committed and pushed"
+          fi
+
 
       # -----------------------------------------------------------------
       # Артифакт хадгалах (debugging)
