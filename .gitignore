@@ -5,3 +5,20 @@ __pycache__/
 .env
 files.zip
 logs/
+
+# macOS system files
+.DS_Store
+**/.DS_Store
+
+# Documentation folders (local only)
+Claude Conversations/
+Chat conversations/
+
+# Backup folders and files
+backups/
+*.backup
+*.bak
+*.save
+
+# Old workflow backups
+.github/workflows/*.backup
