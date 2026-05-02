@@ -398,6 +398,81 @@ Examples of good image_caption:
 
 ХАРАМЖ: Эргэлзэх нэр томьёотой танилцвал АНГЛИАР Latin-аар үлдээ —
 энэ бол ОРЧУУЛАГЧИЙН АЛДАА БИШ, ХАРИН МЭРГЭЖЛИЙН ТЭМДЭГ.
+
+## Rule 11 — PRODUCTION HALLUCINATIONS TO NEVER REPEAT (Phase 6.1.7)
+
+Доорх үгсийг ХЭЗЭЭ Ч битгий хэрэглэ. Эдгээр нь бодит Монгол үг БИШ —
+production-д сэжигтэй гарсан зохиомол үгс. Орчуулга бичихдээ доорх
+жагсаалтыг шалгаад, тэдгээрийг гаргахгүй байх ёстой:
+
+❌ ЗОХИОМОЛ ҮГСИЙН ХАР ЖАГСААЛТ (хэзээ ч хэрэглэхгүй):
+- "сүхэл"           → utга алга, "evasion"-ы үгчилсэн орчуулга. Зөв: татвараас зайлсхийх
+- "зачих"           → utга алга. Зөв: зайлсхийх / татвар үл төлөх
+- "хүнхэл"          → utга алга. Зөв: хууль сахиулах байгууллага
+- "байлалт"         → utга алга. Зөв: тогтоц / стратеги / бодлого
+- "магадлал хүлээх" → "plead guilty"-ийн БУРУУ орчуулга. Зөв: гэм буруугаа хүлээн зөвшөөрөх
+- "сэвэн ашиглах"   → utга алга. Зөв: ашиглан / тулгуурлан
+- "сүрвэлжүүлэх"    → utга алга. Зөв: үл биелүүлэх / зайлсхийх
+- "сүүдэрлэж байна" → энэ контекстэд утгагүй. Зөв: илрэв / тодорхой болов
+
+ШАЛГУУР: Орчуулга бичсэний дараа дотроо унш — ямар нэг "санагдсан"
+эсвэл "буурайвчлан зохиосон" Монгол үг байвал ЭНЭ ҮГИЙГ ХАСААД
+англиар Latin-аар орхи эсвэл стандарт Монгол толь бичигт байх үгээр
+сольж бич.
+
+## Rule 12 — LEGAL / REGULATORY GLOSSARY (мэргэжлийн нэр томьёо — хууль зүй)
+
+Rule 9-ийн санхүүгийн glossary-г нэмж, хууль зүй / зохицуулалтын
+нэр томьёог дараах байдлаар орчуул:
+
+### Эрүүгийн / иргэний хэрэг
+- tax evasion          → татвараас зайлсхийх
+- plead guilty         → гэм буруугаа хүлээн зөвшөөрөх
+- guilty plea          → гэм буруугаа хүлээн зөвшөөрөх
+- pleaded guilty       → гэм буруугаа хүлээн зөвшөөрөв
+- indictment           → буруутгал, яллах акт
+- charged with         → хэргээр буруутгалаа
+- prosecutors          → прокурорын газар
+- law enforcement      → хууль сахиулах байгууллага
+- fraud                → залилан
+- securities fraud     → үнэт цаасны залилан
+- money laundering     → мөнгө угаалт
+- settlement           → тохиролцоо / төлбөр (court context)
+
+### Зохицуулагч, дүрэм
+- regulator            → зохицуулагч (байгууллага)
+- regulatory action    → зохицуулалтын арга хэмжээ
+- compliance           → хууль баримтлал
+- SEC                  → АНУ-ын Үнэт цаасны хороо (SEC)
+- subsidiary           → охин компани
+- offshore             → офшор
+- offshore account     → офшор данс
+- shell company        → бүрхүүл компани
+
+ХАТУУ ДҮРЭМ: Glossary-д байхгүй хууль зүйн нэр томьёог МАШ
+БОЛГООМЖТОЙ — англиар Latin-аар үлдээ, эсвэл "буруутгасан хэрэг",
+"хууль зөрчсөн" гэх мэт ерөнхий найрулагаар утгыг тайлбарла.
+Зохиомол legal-style үг ҮҮСГЭХГҮЙ.
+
+# ADDITIONAL FEW-SHOT EXAMPLES (Phase 6.1.7 — legal/regulatory blind spot)
+
+EXAMPLE 7 (Tax case — the cc880cd article that triggered Phase 6.1.7):
+ENGLISH INPUT: "A British man pleaded guilty to helping U.S. taxpayers evade taxes through offshore accounts in Singapore as part of the so-called 'Singapore Solution' scheme."
+WRONG MONGOLIAN: "Британийн иргэн АНУ-ын татвар төлөгчдөд Сингапурын офшор дансаар татвар сүхэл хийхэд туслахдаа магадлал хүлээж тэрсэлсэн. Хүнхэл эрх баригчид энэхүү байлалтыг сүрвэлжүүлэх хэрэгцээтэй."
+CORRECT MONGOLIAN: "Британийн нэгэн иргэн АНУ-ын татвар төлөгчдөд Сингапур дахь офшор дансыг ашиглан татвараас зайлсхийхэд тусалсан хэргээр гэм буруугаа хүлээн зөвшөөрсөн талаар АНУ-ын прокурорын газраас мэдэгдлээ. Энэхүү 'Сингапурын шийдэл' хэмээх схем нь гадаадын банкуудыг ашиглан АНУ-ын татварын үүргээс зайлсхийх төлөвлөгөө байжээ."
+WHY: "сүхэл / магадлал хүлээх / хүнхэл / байлалт / сүрвэлжүүлэх" — ВСЕ зохиомол. Standard legal vocabulary used: "татвараас зайлсхийх", "гэм буруугаа хүлээн зөвшөөрөв", "прокурорын газар", "схем".
+
+EXAMPLE 8 (Market movement — natural Mongolian flow):
+ENGLISH INPUT: "S&P 500 surged 1.5% as investors digested strong corporate earnings and signs of cooling inflation."
+WRONG MONGOLIAN: "S&P 500 индекс хөрөнгө оруулагчид хүчтэй ашгийг шингээх явцад 1.5%-иар цацарчээ."
+CORRECT MONGOLIAN: "Хөрөнгө оруулагчид компаниудын эерэг санхүүгийн үр дүн болон инфляц зөөлөрч буй шинж тэмдгийг таатайгаар хүлээн авч, S&P 500 индекс өнөөдөр 1.5%-иар өсөв."
+WHY: "цацарчээ" (хэрэглэгддэггүй verb) → "өсөв". "Digested"-ийг "шингээх" гэж үгчлэн орчуулахгүй — utgaийг "таатайгаар хүлээн авч" гэж дамжуулах. Active past tense, lead with the cause.
+
+EXAMPLE 9 (Regulatory enforcement — SEC charges):
+ENGLISH INPUT: "The SEC charged the firm with securities fraud, alleging it misled investors about its revenue projections for three consecutive quarters."
+WRONG MONGOLIAN: "SEC уг фирмийг үнэт цаасны залилангаар цэнэглэв, гурван улирлын турш орлогын тооцооны талаар хөрөнгө оруулагчдад буруу мэдээлэл өгсөн гэжээ."
+CORRECT MONGOLIAN: "АНУ-ын Үнэт цаасны хороо (SEC) тус компанийг үнэт цаасны залилан үйлдсэн хэргээр буруутгалаа. Зохицуулагчийн мэдэгдлээр компани нь дараалсан гурван улирлын орлогын тооцооныхоо талаар хөрөнгө оруулагчдыг төөрөгдүүлсэн байна."
+WHY: "цэнэглэв" нь "charge battery"-н орчуулга — энэ контекстэд "хэргээр буруутгалаа" зөв. SEC-ийн нэрийг бүрэн өгөх. "Misled" → "төөрөгдүүлсэн", "alleging" → "мэдэгдлээр".
 """
 
 # =============================================================================
@@ -662,7 +737,7 @@ def translate_with_gemini(article):
         contents=user_prompt,
         config=genai.types.GenerateContentConfig(
             system_instruction=MONGOLIAN_EDITOR_SYSTEM_PROMPT,
-            temperature=0.3,
+            temperature=0.15,  # Phase 6.1.7: lower from 0.3 to suppress hallucination
             response_mime_type="application/json",
         ),
     )
@@ -690,6 +765,7 @@ def translate_with_claude(article):
     response = claude_client.messages.create(
         model=CLAUDE_MODEL,
         max_tokens=CLAUDE_MAX_TOKENS,
+        temperature=0.15,  # Phase 6.1.7: explicit (was implicit 1.0 — root cause of cc880cd)
         system=MONGOLIAN_EDITOR_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}]
     )
@@ -1020,6 +1096,7 @@ def claude_quality_gate(title: str, body: str) -> tuple:
         response = claude_client.messages.create(
             model=CLAUDE_MODEL,
             max_tokens=120,
+            temperature=0.0,  # Phase 6.1.7: deterministic, mirrors gemini_quality_gate
             messages=[{"role": "user", "content": prompt}],
         )
         raw = _strip_json_fences(response.content[0].text.strip())
@@ -1087,7 +1164,7 @@ def gemini_editorial_polish(title: str, body: str, source_domain: str):
         contents=user_prompt,
         config=genai.types.GenerateContentConfig(
             system_instruction=MONGOLIAN_EDITOR_SYSTEM_PROMPT,
-            temperature=0.3,
+            temperature=0.15,  # Phase 6.1.7: lower from 0.3 to suppress hallucination
             response_mime_type="application/json",
         ),
     )
@@ -1112,6 +1189,7 @@ def claude_editorial_polish(title: str, body: str, source_domain: str):
     response = claude_client.messages.create(
         model=CLAUDE_MODEL,
         max_tokens=CLAUDE_MAX_TOKENS,
+        temperature=0.15,  # Phase 6.1.7: explicit (was implicit 1.0)
         system=MONGOLIAN_EDITOR_SYSTEM_PROMPT,
         messages=[{"role": "user", "content": user_prompt}],
     )
