@@ -69,8 +69,8 @@ LOG_DIR     = Path("logs")
 NEWS_OUTPUT_LIMIT = 9
 
 # Gemini primary (google-genai SDK)
-GEMINI_MODEL_PRIMARY   = "gemini-2.0-flash"
-GEMINI_MODEL_FALLBACKS = ["gemini-2.5-flash", "gemini-1.5-flash"]
+GEMINI_MODEL_PRIMARY   = "gemini-2.5-pro"
+GEMINI_MODEL_FALLBACKS = []
 ACTIVE_GEMINI_MODEL    = None  # set by get_working_gemini_model()
 _GEMINI_CLIENT         = None  # genai.Client instance, set at probe time
 
@@ -627,9 +627,8 @@ def get_working_gemini_model():
     v8.1: google-genai SDK client pattern (old google-generativeai deprecated).
 
     Priority:
-      1. gemini-2.0-flash (primary, stable)
-      2. gemini-2.5-flash
-      3. gemini-1.5-flash
+      1. gemini-2.5-pro (primary — production-grade quality)
+      (no Gemini fallbacks — cascade to Claude on Pro outage)
 
     Returns the model name (str) or None if all fail / key missing.
     """
