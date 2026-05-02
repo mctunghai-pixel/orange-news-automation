@@ -125,6 +125,12 @@ TOPIC_NEIGHBOR_FALLBACK = {
 # V7: 9 мэдээ буцаана (1 Market Watch + 9 news = 10 пост)
 TOP_N = 9
 
+# Phase 6.1.6c: extra "other" candidates beyond TOP_N. The translator caps
+# successful outputs at TOP_N — spillover only gets translated when earlier
+# candidates are dropped (e.g. mongolia coarse/gate rejections). Steady-state
+# cost impact: $0 (untranslated). Worst-case (3 drops): +$0.03/day.
+SPILLOVER_N = 3
+
 
 # =============================================================================
 # DATA MODEL
@@ -348,7 +354,9 @@ def collect_top_news(top_n: int = TOP_N):
             scored.append(entry)
             seen_urls.add(entry["url"])
 
-    selected, breakdown = _select_top_news_quota(scored, top_n=top_n)
+    # Pull TOP_N + SPILLOVER_N candidates so the translator can backfill
+    # rejected articles without dropping below TOP_N successful outputs.
+    selected, breakdown = _select_top_news_quota(scored, top_n=top_n + SPILLOVER_N)
 
     items = [
         NewsItem(

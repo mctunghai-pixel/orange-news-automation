@@ -62,6 +62,12 @@ INPUT_FILE  = "top_news.json"
 OUTPUT_FILE = "translated_posts.json"
 LOG_DIR     = Path("logs")
 
+# Phase 6.1.6c: cap successful news outputs at this count. Collector now
+# writes TOP_N + SPILLOVER_N (9 + 3 = 12) candidates; translator stops
+# processing once it has NEWS_OUTPUT_LIMIT successful outputs. Mirrors
+# orange_rss_collector.TOP_N — keep in sync.
+NEWS_OUTPUT_LIMIT = 9
+
 # Gemini primary (google-genai SDK)
 GEMINI_MODEL_PRIMARY   = "gemini-2.0-flash"
 GEMINI_MODEL_FALLBACKS = ["gemini-2.5-flash", "gemini-1.5-flash"]
@@ -1525,14 +1531,22 @@ def main():
     article_logs = []
     print(f"  ✅ {market_watch['badge']} | {market_watch.get('image_caption', '')}\n")
 
-    # Translate each news article
+    # Translate each news article. Collector ships TOP_N + SPILLOVER_N candidates;
+    # we stop processing once NEWS_OUTPUT_LIMIT successful outputs are collected
+    # so we don't burn LLM tokens on spillover when not needed.
+    news_count = 0
     for i, article in enumerate(articles):
+        if news_count >= NEWS_OUTPUT_LIMIT:
+            print(f"[{i+1}/{len(articles)}] ⏭️  spillover skip — {NEWS_OUTPUT_LIMIT} news posts already collected")
+            print()
+            continue
         title_preview = article.get('title', 'Untitled')[:60]
         print(f"[{i+1}/{len(articles)}] {title_preview}...")
         output, log_entry = translate_article(article, i)
         article_logs.append(log_entry)
         if output:
             translated.append(output)
+            news_count += 1
             print(f"  ✅ {log_entry['api_used']:6s} | {output['badge']} | {output['headline'][:60]}")
         else:
             print("  ❌ Skipped (both APIs failed)")
