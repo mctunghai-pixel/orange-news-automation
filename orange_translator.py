@@ -812,6 +812,63 @@ FULLTEXT_MAX_CHARS      = 1500
 # Anything from this marker onward is boilerplate and gets stripped.
 IKON_BOILERPLATE_MARKER = "Анхааруулга"
 
+# =============================================================================
+# Phase 6.1.6: Mongolian editorial pipeline — coarse filter + Gemini gate + polish
+# =============================================================================
+# Three-layer defense for "Bloomberg-style only" editorial standards:
+#   1. coarse_filter()          — cheap keyword/URL filter, drops obvious junk
+#   2. gemini_quality_gate()    — LLM yes/no, drops subtler off-topic content
+#   3. gemini_editorial_polish()— LLM rewrite for Bloomberg-tone uniformity
+# Each step can drop the article. Result: cleaner /category/mongol than
+# passthrough but with smaller daily volume on noisy days.
+# =============================================================================
+
+REJECT_TITLE_KEYWORDS = [
+    "СОНГОН ШАЛГАРУУЛАЛТ",   # tender
+    "ТЕНДЕР",                 # tender
+    "УРИЛГА",                 # invitation/notice
+    "БАРИМТ БИЧИГ",           # paperwork notice
+    "ХУРААМЖ",                # fee schedule
+    "ТЭМЦЭЭН",                # competition
+    "ӨГӨӨЖ",                  # gift / charity
+    "ХҮНДЭТГЭЛ",              # ceremony
+    "БАЯРЫН",                 # festival
+    "СОНГУУЛЬ",               # election (filter out unless economic angle)
+]
+
+REJECT_URL_PATTERNS = [
+    "/society/",
+    "/sport/",
+    "/lifestyle/",
+    "/culture/",
+    "/announcements/",
+    "/tenders/",
+]
+
+ACCEPT_URL_PATTERNS = [
+    "/business/",
+    "/economy/",
+    "/finance/",
+    "/world/economy/",
+]
+
+
+def coarse_filter(title: str, url: str) -> bool:
+    """
+    Cheap pre-filter: True = passes (proceed), False = drop.
+    Reject takes priority over accept. ikon.mn URLs lack category segments
+    so URL filters are a no-op for it; useful for Phase 6.1.5+ scrapers.
+    """
+    upper = (title or "").upper()
+    if any(kw in upper for kw in REJECT_TITLE_KEYWORDS):
+        return False
+    lower_url = (url or "").lower()
+    if any(p in lower_url for p in REJECT_URL_PATTERNS):
+        return False
+    if any(p in lower_url for p in ACCEPT_URL_PATTERNS):
+        return True
+    return True  # ambiguous — let downstream stages decide
+
 
 def _source_domain(article_url: str, fallback: str) -> str:
     try:
@@ -862,6 +919,242 @@ def fetch_full_article_body(url: str, fallback_summary: str) -> str:
     except Exception as e:
         print(f"  ⚠️ full-body fetch failed for {url}: {type(e).__name__}: {str(e)[:120]}")
         return fallback_summary
+
+
+# -----------------------------------------------------------------------------
+# Gemini quality gate — LLM yes/no on whether the article is Bloomberg-tier
+# -----------------------------------------------------------------------------
+
+QUALITY_GATE_PROMPT = """Та санхүү, эдийн засгийн анализын мэргэжилтэн.
+
+Дараах Mongolian статья нь Bloomberg-style financial portal-нд тохирох эсэхийг үнэл.
+
+ЗӨВ (verdict=yes):
+- Бизнесийн мэдээ (компанийн санхүүгийн үр дүн, M&A, executive moves)
+- Эдийн засгийн мэдээ (макро эдийн засаг, инфляц, валют, төсөв)
+- Санхүүгийн зах зээл (хувьцаа, бонд, хөрөнгө оруулалт)
+- Уул уурхай, эрчим хүчний салбар (Mongolia-нд чухал)
+- Гадаад хөрөнгө оруулалт (FDI), худалдааны бодлого
+- Банк, санхүүгийн байгууллагууд
+- Технологи (бизнес angle)
+- Гадаад орны эдийн засгийн чухал мэдээ (татвар, тарифф, geopolitical → markets)
+
+БУРУУ (verdict=no):
+- Тендер зар, олон нийтийн зар, сонгон шалгаруулалт
+- PR, marketing, амралтын зар
+- Спорт, тамирчин, марафон
+- Социаль, соёл, урлаг, кино, наадам
+- Зам, автобус, хотын дэд бүтцийн өдөр тутмын мэдээ
+- Эрүүгийн хэрэг, шүүхийн хурал, золгүй тохиолдол
+- Хүнсний жор, цаг агаар, амралтын зөвлөгөө
+
+Title: {title}
+Body (first 500 chars): {body}
+
+Output JSON only:
+{{"verdict": "yes" | "no", "reason": "<10 words max>"}}
+"""
+
+
+def gemini_quality_gate(title: str, body: str) -> tuple:
+    """
+    Returns (verdict_bool, reason_str). On API or parse failure, returns
+    (False, "gate_error: ...") — conservative reject, never crashes pipeline.
+    """
+    if not ACTIVE_GEMINI_MODEL or _GEMINI_CLIENT is None:
+        return False, "no_gemini_client"
+    prompt = QUALITY_GATE_PROMPT.format(title=title or "", body=(body or "")[:500])
+    try:
+        response = _GEMINI_CLIENT.models.generate_content(
+            model=ACTIVE_GEMINI_MODEL,
+            contents=prompt,
+            config=genai.types.GenerateContentConfig(
+                temperature=0.0,
+                response_mime_type="application/json",
+                max_output_tokens=120,
+            ),
+        )
+        raw = (response.text or "").strip()
+        if not raw:
+            return False, "gate_empty_response"
+        result = json.loads(raw)
+        verdict = (result.get("verdict") or "").strip().lower() == "yes"
+        reason = (result.get("reason") or "").strip()[:80]
+        return verdict, reason
+    except Exception as e:
+        return False, f"gate_error: {type(e).__name__}: {str(e)[:60]}"
+
+
+# -----------------------------------------------------------------------------
+# Gemini editorial polish — Bloomberg-style rewrite of the article
+# -----------------------------------------------------------------------------
+
+POLISH_USER_PROMPT_TEMPLATE = """Доорх нийтлэл нь аль хэдийн Монгол хэлээр бичигдсэн. ОРЧУУЛГА биш — editorial polish хийх ёстой. Bloomberg-стилийн санхүүгийн редакторын дүрмийг (system prompt-д өгөгдсөн) баримтлан гарчиг, биеийг цэгцэл.
+
+Нэмэлт дүрэм (Phase 6.1.6 polish-only):
+- Гадаад нэр (Google, Apple, Rio Tinto, Anthropic) Latin үлдээ. Brand-ыг "Гүүгл" гэж кирилл бичихгүй.
+- Бие 500-1000 тэмдэгт, lead → details → context.
+- Гарчиг 60-80 тэмдэгт, action verb past tense.
+- "аж ахуйн нэгж" хориотой. Шинэ Монгол үг ЗОХИОХГҮЙ — эргэлзэх нэр томьёо англиар Latin үлдээ.
+- Ярианы дугаар, хувь, тикер preserve хийх.
+
+ENGLISH TITLE: {title}
+
+ARTICLE BODY (Mongolian source text):
+{body}
+
+SOURCE: {source_domain}
+
+Return JSON ONLY with these exact keys:
+{{
+  "headline":        "<60-80 char Mongolian headline, action verb past tense>",
+  "image_caption":   "<3-5 word punchy phrase for image overlay>",
+  "body":            "<500-1000 char Mongolian body, ends with blank line then 'Эх сурвалж: {source_domain}'>",
+  "key_numbers":     ["<extracted numbers, percentages, or tickers>"],
+  "dynamic_hashtag": "<single hashtag like #Mongolbank or #Erdenes>"
+}}
+
+No markdown, no code fences, no commentary. Pure JSON only.
+"""
+
+
+def gemini_editorial_polish(title: str, body: str, source_domain: str):
+    """
+    Returns (parsed_dict, latency_ms) or raises on API/JSON failure.
+    Reuses MONGOLIAN_EDITOR_SYSTEM_PROMPT — same Bloomberg editorial bar
+    as the English→Mongolian translation path.
+    """
+    if not ACTIVE_GEMINI_MODEL or _GEMINI_CLIENT is None:
+        raise RuntimeError("No active Gemini client for polish")
+    user_prompt = POLISH_USER_PROMPT_TEMPLATE.format(
+        title=title or "",
+        body=body or "",
+        source_domain=source_domain or "",
+    )
+    t0 = time.time()
+    response = _GEMINI_CLIENT.models.generate_content(
+        model=ACTIVE_GEMINI_MODEL,
+        contents=user_prompt,
+        config=genai.types.GenerateContentConfig(
+            system_instruction=MONGOLIAN_EDITOR_SYSTEM_PROMPT,
+            temperature=0.3,
+            response_mime_type="application/json",
+        ),
+    )
+    latency_ms = int((time.time() - t0) * 1000)
+    parsed = json.loads(response.text)
+    return parsed, latency_ms
+
+
+# -----------------------------------------------------------------------------
+# Mongolian editorial pipeline orchestrator (replaces passthrough_mongolian
+# at the call site in translate_article())
+# -----------------------------------------------------------------------------
+
+def process_mongolian_article(article, idx):
+    """
+    Full Mongolian editorial pipeline:
+      1. coarse filter (drop obvious tenders/sports/etc)
+      2. fetch full body
+      3. Gemini quality gate (LLM yes/no)
+      4. Gemini editorial polish (Bloomberg-style rewrite)
+    Returns (output_dict_or_None, log_entry).
+
+    Each rejection point produces a None output with a descriptive
+    api_used tag for the run-summary breakdown.
+    """
+    title       = clean_post_text(article.get("title", "") or "")
+    summary     = clean_post_text(article.get("summary", "") or "")
+    source      = article.get("source", "Unknown")
+    article_url = article.get("url") or article.get("link", "")
+    domain      = _source_domain(article_url, source)
+
+    def _reject_log(reason_tag, reason_text=""):
+        return None, build_article_log_entry(
+            idx, title, reason_tag,
+            gemini_attempted=False, gemini_success=False, gemini_error=reason_text or None,
+            gemini_latency_ms=None, claude_fallback_used=False, claude_latency_ms=None,
+            prompt_text="", response_text="",
+            validation_warnings=[reason_text] if reason_text else [],
+        )
+
+    # --- Step 1: coarse filter
+    if not coarse_filter(title, article_url):
+        print(f"  ⛔ coarse-filter rejected: {title[:80]}")
+        return _reject_log("mn_filter_rejected", "coarse filter: keyword/url match")
+
+    # --- Step 2: full article body fetch
+    full_body = fetch_full_article_body(article_url, summary or title)
+
+    # --- Step 3: Gemini quality gate
+    verdict, reason = gemini_quality_gate(title, full_body)
+    if not verdict:
+        print(f"  ⛔ gate rejected ({reason}): {title[:80]}")
+        return _reject_log("mn_gate_rejected", f"gate: {reason}")
+
+    # --- Step 4: Gemini editorial polish
+    try:
+        parsed, latency_ms = gemini_editorial_polish(title, full_body, domain)
+    except Exception as e:
+        err = f"{type(e).__name__}: {str(e)[:120]}"
+        print(f"  ❌ polish failed ({err}): {title[:80]}")
+        return _reject_log("mn_polish_failed", err)
+
+    # --- Extract polished fields
+    headline        = clean_post_text(parsed.get("headline", "") or title)
+    body            = clean_post_text(parsed.get("body", "") or full_body)
+    image_caption   = (parsed.get("image_caption") or "").strip() or headline[:40]
+    dynamic_hashtag = parsed.get("dynamic_hashtag", "") or "#Mongolia"
+    key_numbers     = parsed.get("key_numbers", []) or []
+
+    # Defensive: guarantee blank line before "Эх сурвалж:"
+    body = ensure_source_spacing(body, domain)
+
+    # Validate
+    validation_warnings = validate_translation(headline, body)
+
+    category  = "mongolia"
+    full_post = build_full_post(category, headline, body, dynamic_hashtag)
+
+    output = {
+        "category":        category,
+        "badge":           CATEGORIES[category]["badge"],
+        "headline":        headline,
+        "image_caption":   image_caption,
+        "post_text":       full_post,
+        "body_only":       body,
+        "full_post":       full_post,
+        "dynamic_hashtag": dynamic_hashtag,
+        "key_numbers":     key_numbers,
+        "hashtags":        build_hashtags(category, dynamic_hashtag).split(),
+        "original_url":    article_url,
+        "original_title":  title,
+        "url":             article_url,
+        "source":          source,
+        "score":           article.get("score", 0),
+        "is_market_watch": False,
+        "type":            "news",
+    }
+
+    log_entry = build_article_log_entry(
+        idx, title, "gemini_mn_polish",
+        gemini_attempted=True, gemini_success=True, gemini_error=None,
+        gemini_latency_ms=latency_ms,
+        claude_fallback_used=False, claude_latency_ms=None,
+        prompt_text=user_prompt_preview(title, full_body, domain),
+        response_text=json.dumps(parsed, ensure_ascii=False)[:2000],
+        validation_warnings=validation_warnings,
+    )
+    return output, log_entry
+
+
+def user_prompt_preview(title, body, source_domain):
+    """Truncated prompt for log capture (full prompt is ~2K, log only 800)."""
+    return POLISH_USER_PROMPT_TEMPLATE.format(
+        title=title or "",
+        body=(body or "")[:400] + ("..." if body and len(body) > 400 else ""),
+        source_domain=source_domain or "",
+    )[:800]
 
 
 def passthrough_mongolian(article, idx):
@@ -927,10 +1220,12 @@ def translate_article(article, idx):
     """
     Returns: (output_dict_or_None, log_entry)
     """
-    # Native-Mongolian sources skip the LLM entirely — feed-level category
-    # set by orange_rss_collector marks the source language.
+    # Native-Mongolian sources flow through the Phase 6.1.6 editorial pipeline:
+    # coarse filter → full-body fetch → Gemini quality gate → Gemini polish.
+    # Returns (None, log) on any rejection — fewer-mongolia-posts days are
+    # acceptable per editorial standards.
     if article.get("category") == "mongolia":
-        return passthrough_mongolian(article, idx)
+        return process_mongolian_article(article, idx)
 
     article_url = article.get("url") or article.get("link", "")
     title_en    = article.get("title", "")
@@ -1071,10 +1366,14 @@ def print_run_summary(run_data):
     print(f"Duration:     {run_data['duration_s']:.1f} seconds\n")
 
     print(f"Articles processed: {n}")
-    print(f"  Gemini success:    {totals['gemini_success']}  ({pct(totals['gemini_success'])})")
-    print(f"  Claude fallback:   {totals['claude_fallback']}  ({pct(totals['claude_fallback'])})")
-    print(f"  Passthrough (MN):  {totals.get('passthrough_mn', 0)}  ({pct(totals.get('passthrough_mn', 0))})")
-    print(f"  Both failed:       {totals['both_failed']}  ({pct(totals['both_failed'])})\n")
+    print(f"  Gemini success:        {totals['gemini_success']}  ({pct(totals['gemini_success'])})")
+    print(f"  Claude fallback:       {totals['claude_fallback']}  ({pct(totals['claude_fallback'])})")
+    print(f"  MN polish success:     {totals.get('mn_polish_success', 0)}  ({pct(totals.get('mn_polish_success', 0))})")
+    print(f"  MN filter rejected:    {totals.get('mn_filter_drops', 0)}")
+    print(f"  MN gate rejected:      {totals.get('mn_gate_drops', 0)}")
+    print(f"  MN polish failed:      {totals.get('mn_polish_drops', 0)}")
+    print(f"  Passthrough (MN):      {totals.get('passthrough_mn', 0)}")
+    print(f"  Both failed:           {totals['both_failed']}  ({pct(totals['both_failed'])})\n")
 
     print("Latency:")
     print(f"  Gemini avg: {gemini_avg:.1f}s")
@@ -1151,11 +1450,15 @@ def main():
     finished_utc = datetime.now(timezone.utc)
     duration_s   = (finished_utc - started_utc).total_seconds()
 
-    gemini_success  = sum(1 for a in article_logs if a["api_used"] == "gemini")
-    claude_fallback = sum(1 for a in article_logs if a["api_used"] == "claude")
-    passthrough_mn  = sum(1 for a in article_logs if a["api_used"] == "passthrough_mn")
-    both_failed     = sum(1 for a in article_logs if a["api_used"] == "failed")
-    cost_usd        = claude_fallback * COST_PER_CLAUDE_USD
+    gemini_success    = sum(1 for a in article_logs if a["api_used"] == "gemini")
+    claude_fallback   = sum(1 for a in article_logs if a["api_used"] == "claude")
+    passthrough_mn    = sum(1 for a in article_logs if a["api_used"] == "passthrough_mn")
+    mn_polish_success = sum(1 for a in article_logs if a["api_used"] == "gemini_mn_polish")
+    mn_filter_drops   = sum(1 for a in article_logs if a["api_used"] == "mn_filter_rejected")
+    mn_gate_drops     = sum(1 for a in article_logs if a["api_used"] == "mn_gate_rejected")
+    mn_polish_drops   = sum(1 for a in article_logs if a["api_used"] == "mn_polish_failed")
+    both_failed       = sum(1 for a in article_logs if a["api_used"] == "failed")
+    cost_usd          = claude_fallback * COST_PER_CLAUDE_USD
 
     run_data = {
         "run_id":        run_id,
@@ -1165,12 +1468,16 @@ def main():
         "model_primary": ACTIVE_GEMINI_MODEL or "none",
         "model_fallback": CLAUDE_MODEL,
         "totals": {
-            "articles":        len(article_logs),
-            "gemini_success":  gemini_success,
-            "claude_fallback": claude_fallback,
-            "passthrough_mn":  passthrough_mn,
-            "both_failed":     both_failed,
-            "cost_usd":        cost_usd,
+            "articles":          len(article_logs),
+            "gemini_success":    gemini_success,
+            "claude_fallback":   claude_fallback,
+            "passthrough_mn":    passthrough_mn,
+            "mn_polish_success": mn_polish_success,
+            "mn_filter_drops":   mn_filter_drops,
+            "mn_gate_drops":     mn_gate_drops,
+            "mn_polish_drops":   mn_polish_drops,
+            "both_failed":       both_failed,
+            "cost_usd":          cost_usd,
         },
         "articles": article_logs,
     }
