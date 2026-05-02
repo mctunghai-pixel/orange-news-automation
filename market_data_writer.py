@@ -15,12 +15,14 @@ Output: ./market_data.json (repo root, alongside this script)
 """
 
 import json
+import re
 import sys
 import warnings
 from datetime import datetime, timezone
 from pathlib import Path
 
 import requests
+from bs4 import BeautifulSoup
 
 warnings.filterwarnings("ignore", message="Unverified HTTPS request")
 
@@ -51,6 +53,22 @@ MNTUSD_META = {
     "assetClass": "forex",
     "currency": "MNT",
 }
+
+# Phase 6.2a: MSE TOP 20 index scraped from TradingEconomics.
+# No public MSE API exists (Phase 6.2 discovery 2026-05-02). TE robots.txt
+# only blocks GPTBot/CCBot — generic identified UA is allowed. Page is static
+# HTML; row in the indexes table has cells with id="p" (price), id="nch"
+# (numeric change), id="pch" (percent change), id="date".
+MSETOP20_META = {
+    "slug": "msetop20",
+    "symbol": "MSE TOP-20",
+    "name": "MSE Top 20 Index",
+    "assetClass": "index",
+    "currency": "MNT",
+}
+MSETOP20_URL    = "https://tradingeconomics.com/mongolia/stock-market"
+MSETOP20_UA     = "Mozilla/5.0 (compatible; OrangeNews/1.0; +https://www.orangenews.mn)"
+MSETOP20_LABEL  = "MSE 20"  # row identifier in the TE Indexes table
 
 
 def _series(series, n):
@@ -150,6 +168,86 @@ def fetch_mntusd(existing):
     }
 
 
+def _parse_te_number(text: str) -> float:
+    """Parse a TradingEconomics-formatted number, e.g. '51,397.55' or '-188.31'."""
+    cleaned = re.sub(r"[^\d.\-]", "", (text or "").replace(",", ""))
+    if not cleaned or cleaned in ("-", "."):
+        raise ValueError(f"unparseable number: {text!r}")
+    return float(cleaned)
+
+
+def fetch_msetop20(existing):
+    """
+    Scrape MSE TOP 20 index from TradingEconomics. History grows organically
+    (one point per UTC day, capped at 30) — same pattern as fetch_mntusd.
+    Raises on failure; caller catches so missing data leaves the slot empty.
+    """
+    response = requests.get(MSETOP20_URL, headers={"User-Agent": MSETOP20_UA}, timeout=15)
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # Locate the row whose first cell text is "MSE 20"
+    target_row = None
+    for tr in soup.find_all("tr"):
+        cells = tr.find_all("td")
+        if cells and cells[0].get_text(strip=True) == MSETOP20_LABEL:
+            target_row = cells
+            break
+    if not target_row:
+        raise ValueError("MSE 20 row not found on TE page (HTML structure may have changed)")
+
+    # Cells (verified 2026-05-02): [0]=symbol [1]=price (id=p) [2]=triangle
+    # [3]=numeric change (id=nch) [4]=percent change (id=pch) [5]=month%
+    # [6]=year% [7]=date (id=date). We use id-anchored lookup with positional
+    # fallback for resilience.
+    def _cell(cells, target_id, fallback_idx):
+        for c in cells:
+            if c.get("id") == target_id:
+                return c.get_text(strip=True)
+        return cells[fallback_idx].get_text(strip=True) if fallback_idx < len(cells) else ""
+
+    price      = _parse_te_number(_cell(target_row, "p",   1))
+    change     = _parse_te_number(_cell(target_row, "nch", 3))
+    change_pct = _parse_te_number(_cell(target_row, "pch", 4))
+
+    # Sanity: TOP 20 has historically traded between ~10K and ~100K. Reject
+    # anything outside [1, 1_000_000] as a parse error.
+    if not (1 <= price <= 1_000_000):
+        raise ValueError(f"price out of expected range: {price}")
+    if not (-50 <= change_pct <= 50):
+        raise ValueError(f"changePct out of expected range: {change_pct}")
+
+    today = datetime.now(timezone.utc).strftime("%Y-%m-%d")
+    prior = existing.get("msetop20", {}) if existing else {}
+    history = list(prior.get("history1m") or [])
+
+    # Replace today's entry if already present, else append (matches fetch_mntusd)
+    if history and history[-1].get("date") == today:
+        history[-1] = {"date": today, "close": round(price, 4)}
+    else:
+        history.append({"date": today, "close": round(price, 4)})
+    history = history[-30:]
+
+    closes = [h["close"] for h in history]
+    prev_close = round(price - change, 4)
+
+    return {
+        **MSETOP20_META,
+        "price":       round(price, 4),
+        "change":      round(change, 4),
+        "changePct":   round(change_pct, 4),
+        "open":        round(price, 4),
+        "prevClose":   prev_close,
+        "dayHigh":     round(price, 4),
+        "dayLow":      round(price, 4),
+        "high52w":     round(max(closes), 4) if closes else round(price, 4),
+        "low52w":      round(min(closes), 4) if closes else round(price, 4),
+        "history1w":   history[-7:],
+        "history1m":   history,
+        "lastUpdated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+    }
+
+
 def main():
     print(f"Market data writer — {datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')}")
 
@@ -177,6 +275,13 @@ def main():
         print(f"  ok   {'mntusd':7s}  {m['price']:>14,.4f}  {m['changePct']:+.2f}%  (history: {len(m['history1m'])}d)")
     except Exception as e:
         print(f"  fail {'mntusd':7s}  {e}")
+
+    try:
+        fresh["msetop20"] = fetch_msetop20(existing)
+        m = fresh["msetop20"]
+        print(f"  ok   {'msetop20':7s} {m['price']:>14,.4f}  {m['changePct']:+.2f}%  (history: {len(m['history1m'])}d)")
+    except Exception as e:
+        print(f"  fail {'msetop20':7s} {e}")
 
     if not fresh:
         print("No instruments fetched. Leaving existing market_data.json untouched.")

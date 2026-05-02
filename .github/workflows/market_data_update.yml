@@ -44,7 +44,7 @@ jobs:
       - name: Install dependencies
         run: |
           pip install --upgrade pip
-          pip install yfinance requests
+          pip install yfinance requests beautifulsoup4
 
       - name: Fetch market data
         run: python3 market_data_writer.py
