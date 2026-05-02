@@ -21,9 +21,13 @@ import json
 import time
 import re
 import certifi
+import requests
+from html import unescape
 from datetime import datetime, timezone
 from zoneinfo import ZoneInfo
 from pathlib import Path
+from readability import Document
+from bs4 import BeautifulSoup
 
 MNT_TZ = ZoneInfo("Asia/Ulaanbaatar")
 
@@ -800,12 +804,64 @@ def build_article_log_entry(
 from urllib.parse import urlparse
 
 
+# Phase 6.1.5: full-article fetch config.
+FULLTEXT_FETCH_UA       = "Mozilla/5.0 (compatible; OrangeNews/1.0; +https://www.orangenews.mn)"
+FULLTEXT_FETCH_TIMEOUT  = 10
+FULLTEXT_MAX_CHARS      = 1500
+# ikon.mn appends a reserved-rights footer beginning with this exact word.
+# Anything from this marker onward is boilerplate and gets stripped.
+IKON_BOILERPLATE_MARKER = "Анхааруулга"
+
+
 def _source_domain(article_url: str, fallback: str) -> str:
     try:
         host = urlparse(article_url).netloc.replace("www.", "")
         return host or fallback
     except Exception:
         return fallback
+
+
+def _smart_truncate(text: str, limit: int) -> str:
+    """Truncate at the last paragraph break or sentence end within `limit`."""
+    if len(text) <= limit:
+        return text
+    cut = text[:limit]
+    boundary = max(cut.rfind("\n"), cut.rfind(". "), cut.rfind("."))
+    if boundary > int(limit * 0.7):
+        return cut[:boundary + 1].rstrip()
+    return cut.rstrip()
+
+
+def fetch_full_article_body(url: str, fallback_summary: str) -> str:
+    """
+    Fetch URL → readability extracts main content → BeautifulSoup strips tags
+    → strip ikon.mn footer → smart-truncate to FULLTEXT_MAX_CHARS.
+    Falls back to fallback_summary on any error or implausibly short parse.
+    """
+    if not url:
+        return fallback_summary
+    try:
+        r = requests.get(
+            url,
+            headers={"User-Agent": FULLTEXT_FETCH_UA},
+            timeout=FULLTEXT_FETCH_TIMEOUT,
+        )
+        r.raise_for_status()
+        soup = BeautifulSoup(Document(r.text).summary(), "html.parser")
+        text = unescape(soup.get_text(separator="\n", strip=True))
+        # Drop ikon.mn's reserved-rights footer (and the dangling "ФОТО:" tag
+        # that often sits right above it).
+        idx = text.find(IKON_BOILERPLATE_MARKER)
+        if idx > 100:
+            text = text[:idx].rstrip()
+        if text.endswith("ФОТО:"):
+            text = text[:-len("ФОТО:")].rstrip()
+        if len(text) < 100:
+            return fallback_summary
+        return _smart_truncate(text, FULLTEXT_MAX_CHARS)
+    except Exception as e:
+        print(f"  ⚠️ full-body fetch failed for {url}: {type(e).__name__}: {str(e)[:120]}")
+        return fallback_summary
 
 
 def passthrough_mongolian(article, idx):
@@ -819,7 +875,10 @@ def passthrough_mongolian(article, idx):
     article_url = article.get("url") or article.get("link", "")
 
     domain = _source_domain(article_url, source)
-    body   = ensure_source_spacing(summary or title, domain)
+    # Phase 6.1.5: pull full article body from URL — RSS summary is a
+    # ~200-300 char preview that cuts mid-sentence.
+    full_body = fetch_full_article_body(article_url, summary or title)
+    body      = ensure_source_spacing(full_body, domain)
 
     # Source-derived hashtag (e.g. "ikon.mn" → "#ikon")
     brand = domain.split(".")[0] if "." in domain else domain
