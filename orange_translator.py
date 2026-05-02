@@ -956,13 +956,28 @@ Output JSON only:
 """
 
 
+def _strip_json_fences(raw: str) -> str:
+    """Strip ```json ... ``` fences if Claude wraps its JSON output."""
+    if raw.startswith("```"):
+        parts = raw.split("```")
+        if len(parts) >= 2:
+            raw = parts[1]
+            if raw.lower().startswith("json"):
+                raw = raw[4:]
+            raw = raw.strip()
+    return raw
+
+
 def gemini_quality_gate(title: str, body: str) -> tuple:
     """
-    Returns (verdict_bool, reason_str). On API or parse failure, returns
-    (False, "gate_error: ...") — conservative reject, never crashes pipeline.
+    Returns (verdict_or_None, reason_str).
+      True   → article passes the gate
+      False  → real "no" verdict from the model
+      None   → transient error (no client, empty response, parse error, API
+               error). Caller should retry with claude_quality_gate.
     """
     if not ACTIVE_GEMINI_MODEL or _GEMINI_CLIENT is None:
-        return False, "no_gemini_client"
+        return None, "no_gemini_client"
     prompt = QUALITY_GATE_PROMPT.format(title=title or "", body=(body or "")[:500])
     try:
         response = _GEMINI_CLIENT.models.generate_content(
@@ -976,13 +991,42 @@ def gemini_quality_gate(title: str, body: str) -> tuple:
         )
         raw = (response.text or "").strip()
         if not raw:
-            return False, "gate_empty_response"
+            return None, "gemini_gate_empty"
         result = json.loads(raw)
         verdict = (result.get("verdict") or "").strip().lower() == "yes"
         reason = (result.get("reason") or "").strip()[:80]
         return verdict, reason
+    except json.JSONDecodeError as e:
+        return None, f"gemini_gate_parse_error: {str(e)[:60]}"
     except Exception as e:
-        return False, f"gate_error: {type(e).__name__}: {str(e)[:60]}"
+        return None, f"gemini_gate_error: {type(e).__name__}: {str(e)[:60]}"
+
+
+def claude_quality_gate(title: str, body: str) -> tuple:
+    """
+    Claude fallback for gate. Same return shape as gemini_quality_gate.
+    Cost: ~$0.0005/call (Haiku 4.5 with ~500 input / ~30 output tokens).
+    """
+    if not os.environ.get("ANTHROPIC_API_KEY"):
+        return None, "no_claude_key"
+    prompt = QUALITY_GATE_PROMPT.format(title=title or "", body=(body or "")[:500])
+    try:
+        response = claude_client.messages.create(
+            model=CLAUDE_MODEL,
+            max_tokens=120,
+            messages=[{"role": "user", "content": prompt}],
+        )
+        raw = _strip_json_fences(response.content[0].text.strip())
+        if not raw:
+            return None, "claude_gate_empty"
+        result = json.loads(raw)
+        verdict = (result.get("verdict") or "").strip().lower() == "yes"
+        reason = (result.get("reason") or "").strip()[:80]
+        return verdict, reason
+    except json.JSONDecodeError as e:
+        return None, f"claude_gate_parse_error: {str(e)[:60]}"
+    except Exception as e:
+        return None, f"claude_gate_error: {type(e).__name__}: {str(e)[:60]}"
 
 
 # -----------------------------------------------------------------------------
@@ -1046,6 +1090,31 @@ def gemini_editorial_polish(title: str, body: str, source_domain: str):
     return parsed, latency_ms
 
 
+def claude_editorial_polish(title: str, body: str, source_domain: str):
+    """
+    Claude fallback for polish. Returns (parsed_dict, latency_ms) or raises.
+    Reuses MONGOLIAN_EDITOR_SYSTEM_PROMPT, same as gemini_editorial_polish
+    and the English→Mongolian Claude path.
+    Cost: ~$0.006/call (Haiku 4.5, ~3K input + ~1K output tokens).
+    """
+    user_prompt = POLISH_USER_PROMPT_TEMPLATE.format(
+        title=title or "",
+        body=body or "",
+        source_domain=source_domain or "",
+    )
+    t0 = time.time()
+    response = claude_client.messages.create(
+        model=CLAUDE_MODEL,
+        max_tokens=CLAUDE_MAX_TOKENS,
+        system=MONGOLIAN_EDITOR_SYSTEM_PROMPT,
+        messages=[{"role": "user", "content": user_prompt}],
+    )
+    latency_ms = int((time.time() - t0) * 1000)
+    raw = _strip_json_fences(response.content[0].text.strip())
+    parsed = json.loads(raw)
+    return parsed, latency_ms
+
+
 # -----------------------------------------------------------------------------
 # Mongolian editorial pipeline orchestrator (replaces passthrough_mongolian
 # at the call site in translate_article())
@@ -1086,19 +1155,41 @@ def process_mongolian_article(article, idx):
     # --- Step 2: full article body fetch
     full_body = fetch_full_article_body(article_url, summary or title)
 
-    # --- Step 3: Gemini quality gate
+    # --- Step 3: quality gate (Gemini → Claude fallback on transient errors)
     verdict, reason = gemini_quality_gate(title, full_body)
+    gate_used = "gemini"
+    if verdict is None:
+        print(f"  ⚠️ Gemini gate transient ({reason}); trying Claude")
+        verdict, reason = claude_quality_gate(title, full_body)
+        gate_used = "claude"
+    if verdict is None:
+        # Both gates errored — conservative reject, log both reasons.
+        print(f"  ⛔ gate dual-error ({reason}): {title[:80]}")
+        return _reject_log("mn_gate_rejected", f"gate_dual_error: {reason}")
     if not verdict:
-        print(f"  ⛔ gate rejected ({reason}): {title[:80]}")
-        return _reject_log("mn_gate_rejected", f"gate: {reason}")
+        print(f"  ⛔ gate rejected by {gate_used} ({reason}): {title[:80]}")
+        return _reject_log("mn_gate_rejected", f"gate({gate_used}): {reason}")
 
-    # --- Step 4: Gemini editorial polish
+    # --- Step 4: editorial polish (Gemini → Claude fallback)
+    polish_used        = None
+    parsed             = None
+    latency_ms         = None
+    gemini_polish_err  = None
+    claude_polish_err  = None
     try:
         parsed, latency_ms = gemini_editorial_polish(title, full_body, domain)
+        polish_used = "gemini"
     except Exception as e:
-        err = f"{type(e).__name__}: {str(e)[:120]}"
-        print(f"  ❌ polish failed ({err}): {title[:80]}")
-        return _reject_log("mn_polish_failed", err)
+        gemini_polish_err = f"{type(e).__name__}: {str(e)[:120]}"
+        print(f"  ⚠️ Gemini polish failed ({gemini_polish_err}); trying Claude")
+        try:
+            parsed, latency_ms = claude_editorial_polish(title, full_body, domain)
+            polish_used = "claude"
+        except Exception as e2:
+            claude_polish_err = f"{type(e2).__name__}: {str(e2)[:120]}"
+            err = f"gemini={gemini_polish_err} | claude={claude_polish_err}"
+            print(f"  ❌ both polish APIs failed: {title[:80]}")
+            return _reject_log("mn_polish_failed", err)
 
     # --- Extract polished fields
     headline        = clean_post_text(parsed.get("headline", "") or title)
@@ -1136,11 +1227,15 @@ def process_mongolian_article(article, idx):
         "type":            "news",
     }
 
+    api_tag = "gemini_mn_polish" if polish_used == "gemini" else "claude_mn_polish"
     log_entry = build_article_log_entry(
-        idx, title, "gemini_mn_polish",
-        gemini_attempted=True, gemini_success=True, gemini_error=None,
-        gemini_latency_ms=latency_ms,
-        claude_fallback_used=False, claude_latency_ms=None,
+        idx, title, api_tag,
+        gemini_attempted=True,
+        gemini_success=(polish_used == "gemini"),
+        gemini_error=gemini_polish_err,
+        gemini_latency_ms=latency_ms if polish_used == "gemini" else None,
+        claude_fallback_used=(polish_used == "claude"),
+        claude_latency_ms=latency_ms if polish_used == "claude" else None,
         prompt_text=user_prompt_preview(title, full_body, domain),
         response_text=json.dumps(parsed, ensure_ascii=False)[:2000],
         validation_warnings=validation_warnings,
@@ -1368,7 +1463,8 @@ def print_run_summary(run_data):
     print(f"Articles processed: {n}")
     print(f"  Gemini success:        {totals['gemini_success']}  ({pct(totals['gemini_success'])})")
     print(f"  Claude fallback:       {totals['claude_fallback']}  ({pct(totals['claude_fallback'])})")
-    print(f"  MN polish success:     {totals.get('mn_polish_success', 0)}  ({pct(totals.get('mn_polish_success', 0))})")
+    print(f"  MN polish (gemini):    {totals.get('mn_polish_gemini', 0)}")
+    print(f"  MN polish (claude):    {totals.get('mn_polish_claude', 0)}")
     print(f"  MN filter rejected:    {totals.get('mn_filter_drops', 0)}")
     print(f"  MN gate rejected:      {totals.get('mn_gate_drops', 0)}")
     print(f"  MN polish failed:      {totals.get('mn_polish_drops', 0)}")
@@ -1450,15 +1546,17 @@ def main():
     finished_utc = datetime.now(timezone.utc)
     duration_s   = (finished_utc - started_utc).total_seconds()
 
-    gemini_success    = sum(1 for a in article_logs if a["api_used"] == "gemini")
-    claude_fallback   = sum(1 for a in article_logs if a["api_used"] == "claude")
-    passthrough_mn    = sum(1 for a in article_logs if a["api_used"] == "passthrough_mn")
-    mn_polish_success = sum(1 for a in article_logs if a["api_used"] == "gemini_mn_polish")
-    mn_filter_drops   = sum(1 for a in article_logs if a["api_used"] == "mn_filter_rejected")
-    mn_gate_drops     = sum(1 for a in article_logs if a["api_used"] == "mn_gate_rejected")
-    mn_polish_drops   = sum(1 for a in article_logs if a["api_used"] == "mn_polish_failed")
-    both_failed       = sum(1 for a in article_logs if a["api_used"] == "failed")
-    cost_usd          = claude_fallback * COST_PER_CLAUDE_USD
+    gemini_success       = sum(1 for a in article_logs if a["api_used"] == "gemini")
+    claude_fallback      = sum(1 for a in article_logs if a["api_used"] == "claude")
+    passthrough_mn       = sum(1 for a in article_logs if a["api_used"] == "passthrough_mn")
+    mn_polish_gemini     = sum(1 for a in article_logs if a["api_used"] == "gemini_mn_polish")
+    mn_polish_claude     = sum(1 for a in article_logs if a["api_used"] == "claude_mn_polish")
+    mn_filter_drops      = sum(1 for a in article_logs if a["api_used"] == "mn_filter_rejected")
+    mn_gate_drops        = sum(1 for a in article_logs if a["api_used"] == "mn_gate_rejected")
+    mn_polish_drops      = sum(1 for a in article_logs if a["api_used"] == "mn_polish_failed")
+    both_failed          = sum(1 for a in article_logs if a["api_used"] == "failed")
+    # cost: any Claude path (English-fallback OR mongolian-polish)
+    cost_usd             = (claude_fallback + mn_polish_claude) * COST_PER_CLAUDE_USD
 
     run_data = {
         "run_id":        run_id,
@@ -1472,7 +1570,8 @@ def main():
             "gemini_success":    gemini_success,
             "claude_fallback":   claude_fallback,
             "passthrough_mn":    passthrough_mn,
-            "mn_polish_success": mn_polish_success,
+            "mn_polish_gemini":  mn_polish_gemini,
+            "mn_polish_claude":  mn_polish_claude,
             "mn_filter_drops":   mn_filter_drops,
             "mn_gate_drops":     mn_gate_drops,
             "mn_polish_drops":   mn_polish_drops,
