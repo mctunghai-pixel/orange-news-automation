@@ -50,7 +50,22 @@ RSS_FEEDS = [
     {"url": "https://decrypt.co/feed",                                "category": "crypto",  "weight": 1.1},
     # AI
     {"url": "https://venturebeat.com/feed/",                          "category": "AI",      "weight": 1.5},
+    # Mongolia (native-language sources — bypass translator via passthrough path)
+    {"url": "https://ikon.mn/rss",                                    "category": "mongolia", "weight": 1.5},
 ]
+
+# Feed-level category values that mark the source as native Mongolian.
+# Matches the passthrough branch in orange_translator.translate_article().
+MONGOLIA_FEED_CATEGORY = "mongolia"
+
+# Domains whose articles auto-classify to topic="mongolia" regardless of keyword
+# match. Phase 6.1 ships ikon.mn only; Phase 6.1.5 will extend to Montsame +
+# news.mn via scrapers.
+MONGOLIA_DOMAINS = ["ikon.mn"]
+
+# feedparser default UA is blocked by several .mn sites. Identify cleanly so
+# the source can rate-limit / contact us if needed.
+FEEDPARSER_UA = "Mozilla/5.0 (compatible; OrangeNews/1.0; +https://www.orangenews.mn)"
 
 BOOST_KEYWORDS = [
     "AI", "artificial intelligence", "Bitcoin", "crypto", "stock market",
@@ -78,13 +93,27 @@ TOPIC_KEYWORDS = {
     "macro":    ["Fed", "inflation", "GDP", "unemployment", "recession", "central bank", "interest rate"],
     "ai_tech":  ["AI", "artificial intelligence", "LLM", "OpenAI", "Anthropic", "GPT", "Claude", "Gemini"],
     "crypto":   ["Bitcoin", "BTC", "Ethereum", "ETH", "crypto", "stablecoin", "blockchain"],
-    "mongolia": ["Mongolia", "Ulaanbaatar", "MNT", "tugrik", "Oyu Tolgoi", "Rio Tinto Mongolia"],
+    "mongolia": [
+        "Mongolia", "Ulaanbaatar", "MNT", "tugrik", "Oyu Tolgoi", "Rio Tinto Mongolia",
+        "Монгол", "Улаанбаатар", "төгрөг", "уурхай", "Оюутолгой", "ХХК",
+        "банк", "хөрөнгө оруулалт",
+    ],
 }
 
 # Priority order used when picking quota slots and walking fallbacks.
 TOPIC_PRIORITY = ["stock", "macro", "ai_tech", "crypto", "mongolia"]
 
-# If a topic bucket is empty, borrow from neighbor buckets in this order.
+# Per-topic article count. Mongolia gets 2 to emphasise domestic coverage —
+# total priority slots = 6, leaving 3 for "other" at TOP_N = 9.
+TOPIC_QUOTA = {
+    "stock":    1,
+    "macro":    1,
+    "ai_tech":  1,
+    "crypto":   1,
+    "mongolia": 2,
+}
+
+# If a topic bucket can't fill its quota, borrow from neighbor buckets in this order.
 TOPIC_NEIGHBOR_FALLBACK = {
     "stock":    ["macro", "other"],
     "macro":    ["stock", "other"],
@@ -120,7 +149,7 @@ class NewsItem:
 
 def fetch_feed(feed_config: dict):
     try:
-        parsed = feedparser.parse(feed_config["url"])
+        parsed = feedparser.parse(feed_config["url"], agent=FEEDPARSER_UA)
         entries = []
         for entry in parsed.entries[:20]:
             entries.append({
@@ -190,7 +219,14 @@ def classify_topic(entry: dict) -> str:
     Assign an article to exactly one topic bucket.
     Priority order: stock → macro → ai_tech → crypto → mongolia → other.
     First match wins (by priority, not by keyword position).
+
+    Domain shortcut: any article whose URL host matches MONGOLIA_DOMAINS
+    auto-classifies as "mongolia" (e.g. ikon.mn). This sidesteps keyword
+    misses on Mongolian-language content.
     """
+    url = entry.get("url", "") or ""
+    if any(d in url for d in MONGOLIA_DOMAINS):
+        return "mongolia"
     text = (entry.get("title", "") or "") + " " + (entry.get("summary", "") or "")
     for topic in TOPIC_PRIORITY:
         if _TOPIC_PATTERNS[topic].search(text):
@@ -217,8 +253,8 @@ def _select_from_neighbor(buckets: dict, selected_urls: set, primary_topic: str)
 
 def _select_top_news_quota(scored_entries: list, top_n: int = TOP_N):
     """
-    Quota-based selection:
-      - 1 article each from stock, macro, ai_tech, crypto, mongolia (5 slots)
+    Quota-based selection (counts per TOPIC_QUOTA — Phase 6.1: mongolia=2):
+      - stock=1, macro=1, ai_tech=1, crypto=1, mongolia=2 (6 priority slots)
       - Remaining slots filled by top-scored 'other' articles
     Returns (ordered_list_of_entries, breakdown_dict) where breakdown_dict tracks
     classification counts and fallback events for logging.
@@ -236,22 +272,27 @@ def _select_top_news_quota(scored_entries: list, top_n: int = TOP_N):
     selected_urls = set()
     fallback_notes = []  # (slot, source_topic)
 
-    # Priority pass: 1 article per priority topic.
+    # Priority pass: TOPIC_QUOTA[topic] articles per priority topic.
     for topic in TOPIC_PRIORITY:
-        picked = None
-        # Try primary bucket first
+        quota = TOPIC_QUOTA.get(topic, 1)
+        filled = 0
+        # Drain primary bucket first, up to quota
         for entry in buckets[topic]:
-            if entry["url"] not in selected_urls:
-                picked = entry
+            if filled >= quota:
                 break
-        # If primary empty, walk neighbor fallbacks
-        if picked is None:
+            if entry["url"] not in selected_urls:
+                selected.append(entry)
+                selected_urls.add(entry["url"])
+                filled += 1
+        # Walk neighbor fallbacks for any unfilled slots
+        while filled < quota:
             picked = _select_from_neighbor(buckets, selected_urls, topic)
-            if picked is not None:
-                fallback_notes.append((topic, picked["topic"]))
-        if picked is not None:
+            if picked is None:
+                break
             selected.append(picked)
             selected_urls.add(picked["url"])
+            fallback_notes.append((topic, picked["topic"]))
+            filled += 1
 
     # Fill remaining slots from 'other' (top-scored first), then any unused.
     remaining = top_n - len(selected)
