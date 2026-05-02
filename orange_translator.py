@@ -108,6 +108,10 @@ CATEGORIES = {
         "badge": "🟢 ECONOMY",
         "hashtags": ["#Economy", "#GlobalMarkets"],
     },
+    "mongolia": {
+        "badge": "🇲🇳 МОНГОЛ",
+        "hashtags": ["#Mongolia", "#Монгол"],
+    },
     "market_watch": {
         "badge": "📊 ORANGE MARKET WATCH",
         "hashtags": ["#Finance", "#MarketWatch", "#DailyMarket"],
@@ -271,7 +275,7 @@ Required keys:
   "headline":        "<60-80 char Mongolian headline following Rule 3>",
   "image_caption":   "<3-5 word punchy phrase for image overlay — think magazine cover>",
   "body":            "<150-250 word Mongolian body in natural journalism tone, ending with blank line then 'Эх сурвалж: <source>'>",
-  "category":        "<one of: finance, tech, crypto, ai, business, economy>",
+  "category":        "<one of: finance, tech, crypto, ai, business, economy, mongolia>",
   "key_numbers":     ["<extracted numbers, percentages, or tickers>"],
   "dynamic_hashtag": "<single hashtag like #Apple or #Bitcoin>"
 }
@@ -618,7 +622,7 @@ Return JSON with these exact keys:
 - headline         (string, 60-80 chars, full news headline)
 - image_caption    (string, 3-5 words MAX, punchy phrase for image overlay — magazine-cover style)
 - body             (string, 150-250 words Mongolian, ends with a blank line then "Эх сурвалж: {source}")
-- category         (string, one of: finance, tech, crypto, ai, business, economy)
+- category         (string, one of: finance, tech, crypto, ai, business, economy, mongolia)
 - key_numbers      (array of strings extracted from article)
 - dynamic_hashtag  (single hashtag like #Apple or #Bitcoin)
 
@@ -786,6 +790,77 @@ def build_article_log_entry(
 
 
 # =============================================================================
+# NATIVE-MONGOLIAN PASSTHROUGH (Phase 6.1)
+# =============================================================================
+# Articles from native-Mongolian RSS feeds (feed-level category == "mongolia")
+# bypass Gemini/Claude entirely. The source byline IS the editorial voice; an
+# LLM rewrite would dilute it and burn tokens for zero quality gain.
+# =============================================================================
+
+from urllib.parse import urlparse
+
+
+def _source_domain(article_url: str, fallback: str) -> str:
+    try:
+        host = urlparse(article_url).netloc.replace("www.", "")
+        return host or fallback
+    except Exception:
+        return fallback
+
+
+def passthrough_mongolian(article, idx):
+    """
+    Wrap a native-Mongolian article in the same output schema as a translated
+    article — no LLM call. Headline / body come straight from the RSS entry.
+    """
+    title       = clean_post_text(article.get("title", "") or "")
+    summary     = clean_post_text(article.get("summary", "") or "")
+    source      = article.get("source", "Unknown")
+    article_url = article.get("url") or article.get("link", "")
+
+    domain = _source_domain(article_url, source)
+    body   = ensure_source_spacing(summary or title, domain)
+
+    # Source-derived hashtag (e.g. "ikon.mn" → "#ikon")
+    brand = domain.split(".")[0] if "." in domain else domain
+    dynamic_hashtag = f"#{brand}" if brand else "#Mongolia"
+
+    category      = "mongolia"
+    image_caption = (title[:40].strip() if title else "МОНГОЛ")
+    full_post     = build_full_post(category, title, body, dynamic_hashtag)
+
+    output = {
+        "category":        category,
+        "badge":           CATEGORIES[category]["badge"],
+        "headline":        title,
+        "image_caption":   image_caption,
+        "post_text":       full_post,
+        "body_only":       body,
+        "full_post":       full_post,
+        "dynamic_hashtag": dynamic_hashtag,
+        "key_numbers":     [],
+        "hashtags":        build_hashtags(category, dynamic_hashtag).split(),
+        "original_url":    article_url,
+        "original_title":  title,
+        "url":             article_url,
+        "source":          source,
+        "score":           article.get("score", 0),
+        "is_market_watch": False,
+        "type":            "news",
+    }
+
+    log_entry = build_article_log_entry(
+        idx, title, "passthrough_mn",
+        gemini_attempted=False, gemini_success=False, gemini_error=None,
+        gemini_latency_ms=None,
+        claude_fallback_used=False, claude_latency_ms=None,
+        prompt_text="", response_text="",
+        validation_warnings=[],
+    )
+    return output, log_entry
+
+
+# =============================================================================
 # ORCHESTRATOR — Gemini → (fail) → Claude → validate → assemble
 # =============================================================================
 
@@ -793,6 +868,11 @@ def translate_article(article, idx):
     """
     Returns: (output_dict_or_None, log_entry)
     """
+    # Native-Mongolian sources skip the LLM entirely — feed-level category
+    # set by orange_rss_collector marks the source language.
+    if article.get("category") == "mongolia":
+        return passthrough_mongolian(article, idx)
+
     article_url = article.get("url") or article.get("link", "")
     title_en    = article.get("title", "")
 
@@ -934,6 +1014,7 @@ def print_run_summary(run_data):
     print(f"Articles processed: {n}")
     print(f"  Gemini success:    {totals['gemini_success']}  ({pct(totals['gemini_success'])})")
     print(f"  Claude fallback:   {totals['claude_fallback']}  ({pct(totals['claude_fallback'])})")
+    print(f"  Passthrough (MN):  {totals.get('passthrough_mn', 0)}  ({pct(totals.get('passthrough_mn', 0))})")
     print(f"  Both failed:       {totals['both_failed']}  ({pct(totals['both_failed'])})\n")
 
     print("Latency:")
@@ -1013,6 +1094,7 @@ def main():
 
     gemini_success  = sum(1 for a in article_logs if a["api_used"] == "gemini")
     claude_fallback = sum(1 for a in article_logs if a["api_used"] == "claude")
+    passthrough_mn  = sum(1 for a in article_logs if a["api_used"] == "passthrough_mn")
     both_failed     = sum(1 for a in article_logs if a["api_used"] == "failed")
     cost_usd        = claude_fallback * COST_PER_CLAUDE_USD
 
@@ -1027,6 +1109,7 @@ def main():
             "articles":        len(article_logs),
             "gemini_success":  gemini_success,
             "claude_fallback": claude_fallback,
+            "passthrough_mn":  passthrough_mn,
             "both_failed":     both_failed,
             "cost_usd":        cost_usd,
         },
