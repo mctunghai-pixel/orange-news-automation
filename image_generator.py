@@ -27,6 +27,7 @@ from html.parser import HTMLParser
 OUTPUT_DIR = "assets/generated"
 LOGO_PATH = "assets/logo.png"
 IMG_W, IMG_H = 1200, 630
+PADDING_X = 90  # iOS FB feed safe zone (was 22, expanded for ~1.56:1 in-feed crop)
 
 COLOR_WHITE = (255, 255, 255)
 COLOR_GRAY = (160, 160, 160)
@@ -318,8 +319,8 @@ def generate_image(
     bbox = draw.textbbox((0, 0), badge_text, font=cat_font)
     bw = bbox[2] - bbox[0] + badge_pad * 2
     BADGE_Y = 55  # was 22 — moved down to avoid mobile crop
-    draw.rectangle([(22, BADGE_Y), (22 + bw, BADGE_Y + 30)], fill=accent)
-    draw.text((22 + badge_pad, BADGE_Y + 5), badge_text, font=cat_font, fill=COLOR_WHITE)
+    draw.rectangle([(PADDING_X, BADGE_Y), (PADDING_X + bw, BADGE_Y + 30)], fill=accent)
+    draw.text((PADDING_X + badge_pad, BADGE_Y + 5), badge_text, font=cat_font, fill=COLOR_WHITE)
 
     # 5. OVERLAY TEXT — short caption (3-5 words), bold, high-contrast stroke.
     # v8.2: tuned font 78→66 for mobile FB story view; use stroke instead of dual-draw drop shadow.
@@ -332,7 +333,7 @@ def generate_image(
     for i, line in enumerate(reversed(wrapped)):
         y = IMG_H - BOTTOM_BAR - 12 - (i * LINE_H) - LINE_H + 10
         draw.text(
-            (30, y),
+            (PADDING_X + 8, y),
             line,
             font=h_font,
             fill=COLOR_WHITE,
@@ -342,18 +343,18 @@ def generate_image(
 
     # 6. Separator
     sep_y = IMG_H - BOTTOM_BAR
-    draw.line([(22, sep_y), (IMG_W - 22, sep_y)], fill=(*accent, 120), width=1)
+    draw.line([(PADDING_X, sep_y), (IMG_W - PADDING_X, sep_y)], fill=(*accent, 120), width=1)
 
     # 7. Logo + watermark
     LOGO_H = 30
     logo_y = IMG_H - LOGO_H - 10
-    wm_x = 22
+    wm_x = PADDING_X
     try:
         logo = Image.open(LOGO_PATH).convert("RGBA")
         lw = int(logo.width * LOGO_H / logo.height)
         logo = logo.resize((lw, LOGO_H), Image.LANCZOS)
-        base.paste(logo, (22, logo_y), logo)
-        wm_x = 22 + lw + 10
+        base.paste(logo, (PADDING_X, logo_y), logo)
+        wm_x = PADDING_X + lw + 10
     except:
         pass
 
