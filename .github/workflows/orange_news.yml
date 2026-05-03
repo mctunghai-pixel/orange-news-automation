@@ -16,6 +16,12 @@ on:
     - cron: '0 22 * * *'
 
   workflow_dispatch:
+    inputs:
+      live:
+        description: 'Publish to Facebook (false = dry-run, no FB posts)'
+        required: false
+        default: 'true'
+        type: boolean
 
 permissions:
   contents: write
@@ -100,7 +106,7 @@ jobs:
           FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
         run: |
           echo "📘 FB poster at $(date '+%H:%M:%S %Z')"
-          python3 fb_poster.py --live
+          python3 fb_poster.py ${{ (github.event_name == 'schedule' || inputs.live == true) && '--live' || '' }}
       # ----------------------------------------------------------------
       # Phase 4: Commit translated_posts.json (website-руу feed хийх)
       # ----------------------------------------------------------------
