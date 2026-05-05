@@ -54,7 +54,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install anthropic google-genai python-dotenv feedparser httpx certifi python-dateutil yfinance Pillow requests
+          pip install anthropic google-genai python-dotenv feedparser httpx certifi python-dateutil yfinance Pillow requests readability-lxml beautifulsoup4
 
       # -----------------------------------------------------------------
       # Phase 1: RSS цуглуулах (translator-ийн INPUT_FILE = top_news.json)
