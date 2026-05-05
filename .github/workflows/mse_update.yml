@@ -5,16 +5,22 @@
 # Frontend (orangenews-website) fetches raw.githubusercontent.com → renders
 # ticker ribbon, top movers, mining trades.
 #
-# Cron times (UTC): 02:00 (=10:00 MNT, market open), 08:00 (=16:00 MNT, post-close)
+# Cron times (UTC): morning batch 02:00/03:00/04:00 (=MNT 10:00/11:00/12:00),
+# evening batch 08:00/09:00 (=MNT 16:00/17:00). The extra slots are retries
+# against GHA scheduler misses (yesterday: 3h38m drift; today: 02:00 missed
+# entirely until manual workflow_dispatch caught it). Each fire is ~30s and
+# intra-day price movement makes additional commits useful, not noisy.
 # Schedule: weekdays only — MSE doesn't trade on weekends.
-# Free tier budget: ~10 runs/week × ~5s = ~1 min/month (negligible).
+# Free tier budget: ~25 runs/week × ~30s ≈ 12 min/month (negligible).
+# concurrency:cancel-in-progress prevents overlap if a slow run is still
+# going when the next slot fires.
 # =============================================================================
 
 name: MSE data refresh
 
 on:
   schedule:
-    - cron: '0 2,8 * * 1-5'
+    - cron: '0 2,3,4,8,9 * * 1-5'
   workflow_dispatch:
 
 permissions:
