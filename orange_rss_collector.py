@@ -344,6 +344,18 @@ def collect_top_news(top_n: int = TOP_N):
         all_entries.extend(entries)
         print(f"  ✓ {feed_config['category'].upper():8s} | {len(entries):2d} | {feed_config['url'].split('/')[2]}")
 
+    # Phase 6.1.5: Montsame HTML scraper (Mongolian-language source).
+    # Day 6 recon proved the Mongolian web doesn't expose RSS broadly;
+    # ikon.mn (RSS, above) + Montsame (here) are the two native-mn sources.
+    # Soft-fail: any scraper exception is logged and the pipeline continues.
+    try:
+        from montsame_scraper import fetch_articles as _fetch_montsame
+        montsame_entries = _fetch_montsame(limit=3)
+        all_entries.extend(montsame_entries)
+        print(f"  ✓ MONGOLIA | {len(montsame_entries):2d} | montsame.mn (scraper)")
+    except Exception as e:
+        print(f"[WARN] Montsame scraper failed: {type(e).__name__}: {e}")
+
     # Dedupe + score + classify
     seen_urls = set()
     scored = []
