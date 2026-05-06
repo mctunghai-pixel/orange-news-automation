@@ -68,3 +68,19 @@ jobs:
             git push
             echo "Pushed mse_data.json"
           fi
+
+      # -----------------------------------------------------------------
+      # Phase 8.1: Slack notification on workflow failure
+      # -----------------------------------------------------------------
+      - name: Notify Slack on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,workflow,job
+          text: |
+            🚨 Workflow failed: ${{ github.workflow }}
+            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Trigger: ${{ github.event_name }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
