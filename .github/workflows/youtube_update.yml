@@ -1,0 +1,83 @@
+# =============================================================================
+# Orange News — YouTube Video Feed Refresh (Phase 7.3 Checkpoint A)
+# =============================================================================
+# Every 2 hours, refresh youtube_data.json from 6 curated YouTube channels
+# (Bloomberg Television, WSJ, Reuters, Financial Times, CNBC, World Bank Group).
+# Frontend (orangenews-website) consumes via raw.githubusercontent.com →
+# renders the homepage "Шууд үзэх" section + future /video archive route.
+#
+# Cron times (UTC): every 2 hours, 24/7. ~12 fires/day × ~30s each ≈ 6 min/day
+# of CI time (negligible for free tier). Daily YouTube API quota ≈ 1,080 units
+# (~10.8% of free 10K) per the Phase 7.3 reservation block.
+# =============================================================================
+
+name: YouTube data refresh
+
+on:
+  schedule:
+    - cron: '0 */2 * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: youtube-data-refresh
+  cancel-in-progress: true
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    env:
+      TZ: UTC
+      PYTHONIOENCODING: utf-8
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests feedparser
+
+      - name: Fetch YouTube data
+        env:
+          YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+        run: python3 youtube_fetcher.py
+
+      - name: Commit youtube_data.json if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add youtube_data.json
+          if git diff --staged --quiet; then
+            echo "No data changes — skipping commit"
+          else
+            git commit -m "data: update youtube_data.json [skip ci]"
+            git push
+            echo "Pushed youtube_data.json"
+          fi
+
+      # -----------------------------------------------------------------
+      # Phase 8.1: Slack notification on workflow failure (matches Track A)
+      # -----------------------------------------------------------------
+      - name: Notify Slack on failure
+        if: failure()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,workflow,job
+          text: |
+            🚨 Workflow failed: ${{ github.workflow }}
+            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            Trigger: ${{ github.event_name }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
