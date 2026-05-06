@@ -63,10 +63,16 @@ Multiple "Day N" sessions ran on the same calendar day under sprint cadence; the
 | 9 | `montsame_scraper.py` + `orange_rss_collector.py` integration hook | 6.1.5 |
 | 10 | (frontend-only this day) | 9.1 sales deck |
 | 11 | (frontend lint cleanup + this README) | T1-T5 |
+| 12 | (frontend-only — Phase 9.2 customer outreach kit in `docs/sales/`) | 9.2 |
+| 13 | (founder review session — no engineer commits) | (founder day) |
+| 14 | (frontend-only — Phase 9.3 demo preparation, sprint COMPLETE) | 9.3 |
 
-**Carryover into Day 12+:**
+**🎯 Sprint COMPLETE (Day 14, 2026-05-06).** Production state: ready for first commercial customer onboarding. See the frontend repo's `CLAUDE.md` for the full sprint state + founder review queue. The comprehensive Day 1-14 retrospective lives at `orangenews-website/docs/sales/sprint_retrospective.md`.
+
+**Outstanding founder activations (decoupled from sprint completion):**
 - `SLACK_WEBHOOK_URL` repo secret — Day 11 canary diagnosis confirmed GitHub API healthy. Founder needs to re-run `gh secret set SLACK_WEBHOOK_URL --body "<webhook URL>" -R mctunghai-pixel/orange-news-automation` (verified working via TEST_CANARY round-trip).
 - `RESEND_API_KEY` + `RESEND_AUDIENCE_ID` Vercel env vars — Phase 7.2.1 Subscribe still 503 until set; backend repo unaffected.
+- FB token migration to long-lived System User token (Day 13 spec; backend `FB_ACCESS_TOKEN` secret swap when ready).
 
 ## Operational footprint
 
