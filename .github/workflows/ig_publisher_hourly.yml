@@ -1,0 +1,69 @@
+# =============================================================================
+# IG Publisher Hourly — Phase 3A scaffolding
+# =============================================================================
+# Hourly cron-driven Instagram publisher. Reads translated_posts.json on main,
+# determines current MNT hour, picks corresponding post index, publishes to
+# @orangenews.official.
+#
+# PHASE 3A STATUS: scaffolding only. Cron schedule commented out below. Manual
+# trigger via workflow_dispatch is functional but defaults to dry-run (flag OFF).
+# Phase 3C will uncomment the schedule and flip the default flag.
+# =============================================================================
+
+name: IG Publisher Hourly
+
+on:
+  workflow_dispatch:
+    inputs:
+      enable_publishing:
+        description: 'Set ENABLE_IG_PUBLISHING=1 (false=dry-run, no IG posts)'
+        required: false
+        default: false
+        type: boolean
+
+  # PHASE 3C: uncomment the schedule block below to enable production cron.
+  # schedule:
+  #   # MNT 08:00 (UTC 00:00) — Market Watch (post 0)
+  #   - cron: '0 0 * * *'
+  #   # MNT 09:00–17:00 (UTC 01:00–09:00) — hourly news (posts 1–9)
+  #   - cron: '0 1-9 * * *'
+
+permissions:
+  contents: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      TZ: Asia/Ulaanbaatar
+      PYTHONIOENCODING: utf-8
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests
+
+      - name: Run IG publisher
+        env:
+          FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
+          IG_USER_ID: ${{ secrets.IG_USER_ID }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ENABLE_IG_PUBLISHING: ${{ inputs.enable_publishing && '1' || '0' }}
+        run: |
+          echo "🍊 IG runner at $(date '+%H:%M:%S %Z')"
+          python3 ig_runner.py
