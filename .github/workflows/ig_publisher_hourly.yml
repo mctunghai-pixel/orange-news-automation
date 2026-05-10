@@ -86,9 +86,12 @@ jobs:
       # if: always() → captures state even if the runner step failed (partial
       # state is more useful than no state for debugging). Only commits when
       # the file actually changed. [skip ci] prevents recursive workflow runs.
+      # set -euo pipefail → a failed rebase halts the step before push,
+      # preventing partial pushes when main moved during the run.
       - name: Commit state file back to main
         if: always()
         run: |
+          set -euo pipefail
           if [ ! -f logs/ig_publish_state.json ]; then
             echo "No state file produced; nothing to commit."
             exit 0
@@ -104,3 +107,66 @@ jobs:
           # Rebase on origin/main in case main moved during this run.
           git pull --rebase origin main
           git push origin HEAD:main
+
+      # Per-run heartbeat to Slack. Fires regardless of runner outcome
+      # (if: always()) so operators can confirm "did the cron tick?" even on
+      # kill-switch / DRY_RUN / silent-skip exit paths. Reads the per-run
+      # summary written by ig_runner.py's finally block (logs/ig_publish_run_status.json).
+      # Distinct from ig_runner.py's _slack_alert_if_threshold (≥3 failures/day,
+      # action signal) — this step is the heartbeat (visibility signal).
+      - name: Notify Slack (per-run)
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_WORKFLOW: ${{ github.workflow }}
+          GH_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GH_JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          STATUS_FILE="logs/ig_publish_run_status.json"
+          if [ -f "$STATUS_FILE" ]; then
+            EXIT_PATH=$(jq -r '.exit_path // "unknown"' "$STATUS_FILE")
+            POST_IDX=$(jq -r '.post_idx // "—"' "$STATUS_FILE")
+            EXTERNAL_ID=$(jq -r '.external_id // ""' "$STATUS_FILE")
+            ERROR=$(jq -r '.error // ""' "$STATUS_FILE")
+            DATE_STR=$(jq -r '.date_str // ""' "$STATUS_FILE")
+          else
+            EXIT_PATH="no_status_file"
+            POST_IDX="—"
+            EXTERNAL_ID=""
+            ERROR=""
+            DATE_STR=""
+          fi
+          case "$EXIT_PATH" in
+            publish_success)         EMOJI="✅"; DETAIL="published idx=$POST_IDX, IG id=$EXTERNAL_ID" ;;
+            dry_run)                 EMOJI="🧪"; DETAIL="DRY_RUN: would post idx=$POST_IDX (date=$DATE_STR)" ;;
+            kill_switch)             EMOJI="🛑"; DETAIL="kill switch engaged (no work performed)" ;;
+            enable_off)              EMOJI="⏸"; DETAIL="ENABLE_IG_PUBLISHING != 1 (dispatch flag off)" ;;
+            out_of_window)           EMOJI="⏰"; DETAIL="MNT hour outside posting window" ;;
+            already_published_local) EMOJI="↩"; DETAIL="already published locally idx=$POST_IDX (state cache hit)" ;;
+            cross_check_duplicate)   EMOJI="🔁"; DETAIL="upstream duplicate idx=$POST_IDX, IG id=$EXTERNAL_ID" ;;
+            idx_out_of_range)        EMOJI="📭"; DETAIL="idx out of range (translated_posts.json shorter than expected)" ;;
+            input_missing)           EMOJI="❓"; DETAIL="translated_posts.json missing (translator did not run)" ;;
+            image_url_unreachable)   EMOJI="🌐"; DETAIL="image URL unreachable idx=$POST_IDX: $ERROR" ;;
+            publish_failure)         EMOJI="❌"; DETAIL="publish failed idx=$POST_IDX: $ERROR" ;;
+            exception)               EMOJI="💥"; DETAIL="unhandled exception: $ERROR" ;;
+            no_status_file)          EMOJI="⚠"; DETAIL="no status file (runner did not start or crashed before init)" ;;
+            *)                       EMOJI="ℹ"; DETAIL="exit_path=$EXIT_PATH" ;;
+          esac
+          # jq builds the multi-line text via string concatenation + embedded
+          # \n. Avoids bash multi-line string syntax (which would break the
+          # YAML block scalar indentation). UTF-8 / Cyrillic encode safely.
+          PAYLOAD=$(jq -n \
+            --arg emoji "$EMOJI" \
+            --arg wf "$GH_WORKFLOW" \
+            --arg detail "$DETAIL" \
+            --arg url "$GH_RUN_URL" \
+            --arg js "$GH_JOB_STATUS" \
+            '{text: ($emoji + " " + $wf + ": " + $detail + "\nRun: " + $url + "\nJob status: " + $js)}')
+          curl -sS -X POST -H 'Content-Type: application/json' \
+            --data "$PAYLOAD" "$SLACK_WEBHOOK_URL" > /dev/null
+          echo "Slack heartbeat sent: $EXIT_PATH"

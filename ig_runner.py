@@ -37,6 +37,9 @@ MEDIA_BRANCH = "media-public"
 INPUT_FILE = "translated_posts.json"
 LOGS_DIR = "logs"
 STATE_FILE = os.path.join(LOGS_DIR, "ig_publish_state.json")
+# Per-run heartbeat consumed by the workflow's Slack notification step.
+# Overwritten each run; intentionally NOT committed (gitignored).
+RUN_STATUS_FILE = os.path.join(LOGS_DIR, "ig_publish_run_status.json")
 
 MNT_OFFSET = timedelta(hours=8)
 FIRST_POST_HOUR_MNT = 8
@@ -182,6 +185,21 @@ def _save_state(state: dict) -> None:
         json.dump(state, f, indent=2, ensure_ascii=False)
 
 
+def _write_run_status(status: dict) -> None:
+    """Write the per-run summary read by the workflow's Slack step.
+
+    Always called from main()'s finally block so the file reflects the
+    actual exit path (or 'unknown' / 'exception' if no branch updated it).
+    Best-effort: a write failure logs a warning but does not raise.
+    """
+    try:
+        os.makedirs(LOGS_DIR, exist_ok=True)
+        with open(RUN_STATUS_FILE, "w", encoding="utf-8") as f:
+            json.dump(status, f, indent=2, ensure_ascii=False)
+    except Exception as e:
+        _log(f"⚠ failed to write {RUN_STATUS_FILE}: {e}")
+
+
 def _append_log_entry(date_str: str, entry: dict, started_at: str) -> str:
     log_path = os.path.join(LOGS_DIR, f"ig_publish_log_{date_str}.json")
     finished_at = datetime.now(timezone.utc).isoformat()
@@ -243,128 +261,167 @@ def _slack_alert_if_threshold(date_str: str, state: dict, log_path: str) -> None
 
 
 def main() -> int:
-    # Kill switch first — fastest mitigation, runs before any other work.
-    engaged, reason = _kill_switch_engaged()
-    if engaged:
-        _log(f"🛑 kill switch: {reason} — exiting without work")
-        return 0
+    # status accumulates per-run summary; finally block writes it to
+    # RUN_STATUS_FILE so the workflow's Slack step can format a notification.
+    # Default exit_path "unknown" → finally still writes a useful record if a
+    # branch forgot to set it (would surface as "exit_path=unknown" in Slack).
+    status: dict = {
+        "exit_path": "unknown",
+        "started_at_utc": datetime.now(timezone.utc).isoformat(),
+    }
+    try:
+        # Kill switch first — fastest mitigation, runs before any other work.
+        engaged, reason = _kill_switch_engaged()
+        if engaged:
+            _log(f"🛑 kill switch: {reason} — exiting without work")
+            status["exit_path"] = "kill_switch"
+            status["reason"] = reason
+            return 0
 
-    if os.environ.get("ENABLE_IG_PUBLISHING") != "1":
-        _log("ENABLE_IG_PUBLISHING != 1 — exiting without publish")
-        return 0
+        if os.environ.get("ENABLE_IG_PUBLISHING") != "1":
+            _log("ENABLE_IG_PUBLISHING != 1 — exiting without publish")
+            status["exit_path"] = "enable_off"
+            return 0
 
-    now_mnt = _now_mnt()
-    date_str = now_mnt.strftime("%Y%m%d")
-    idx = _resolve_post_index(now_mnt)
-    if idx is None:
-        _log(f"current MNT hour {now_mnt.hour} outside window — exiting")
-        return 0
-    state_key = f"{date_str}:{idx}"
-    _log(f"MNT now: {now_mnt.isoformat()} -> post idx {idx} (key={state_key})")
+        now_mnt = _now_mnt()
+        date_str = now_mnt.strftime("%Y%m%d")
+        status["date_str"] = date_str
+        idx = _resolve_post_index(now_mnt)
+        if idx is None:
+            _log(f"current MNT hour {now_mnt.hour} outside window — exiting")
+            status["exit_path"] = "out_of_window"
+            status["mnt_hour"] = now_mnt.hour
+            return 0
+        state_key = f"{date_str}:{idx}"
+        status["post_idx"] = idx
+        _log(f"MNT now: {now_mnt.isoformat()} -> post idx {idx} (key={state_key})")
 
-    state = _load_state()
-    if state["posts"].get(state_key, {}).get("ok"):
-        _log(f"already published {state_key} — skipping")
-        return 0
+        state = _load_state()
+        if state["posts"].get(state_key, {}).get("ok"):
+            _log(f"already published {state_key} — skipping")
+            status["exit_path"] = "already_published_local"
+            status["external_id"] = state["posts"][state_key].get("external_id")
+            return 0
 
-    if not os.path.exists(INPUT_FILE):
-        _log(f"❌ {INPUT_FILE} not found — translator hasn't run today")
-        return 1
-    with open(INPUT_FILE, "r", encoding="utf-8") as f:
-        posts = json.load(f)
-    if idx >= len(posts):
-        _log(f"idx {idx} out of range (only {len(posts)} posts) — exiting")
-        return 0
-    post = posts[idx]
+        if not os.path.exists(INPUT_FILE):
+            _log(f"❌ {INPUT_FILE} not found — translator hasn't run today")
+            status["exit_path"] = "input_missing"
+            status["error"] = f"{INPUT_FILE} not found"
+            return 1
+        with open(INPUT_FILE, "r", encoding="utf-8") as f:
+            posts = json.load(f)
+        if idx >= len(posts):
+            _log(f"idx {idx} out of range (only {len(posts)} posts) — exiting")
+            status["exit_path"] = "idx_out_of_range"
+            status["posts_total"] = len(posts)
+            return 0
+        post = posts[idx]
 
-    image_url = _build_image_url(idx, date_str)
-    _log(f"image URL: {image_url}")
-    url_ok, url_err = _verify_image_url(image_url)
-    if not url_ok:
-        _log(f"❌ image URL not reachable: {url_err}")
+        image_url = _build_image_url(idx, date_str)
+        _log(f"image URL: {image_url}")
+        url_ok, url_err = _verify_image_url(image_url)
+        if not url_ok:
+            _log(f"❌ image URL not reachable: {url_err}")
+            started_at = datetime.now(timezone.utc).isoformat()
+            entry = {
+                "post_index": idx,
+                "ok": False,
+                "external_id": None,
+                "attempts": 0,
+                "error": f"image URL not reachable: {url_err}",
+                "timestamp": started_at,
+            }
+            log_path = _append_log_entry(date_str, entry, started_at)
+            state["posts"][state_key] = {
+                "ok": False,
+                "error": entry["error"],
+                "timestamp": started_at,
+            }
+            _save_state(state)
+            _slack_alert_if_threshold(date_str, state, log_path)
+            status["exit_path"] = "image_url_unreachable"
+            status["error"] = url_err
+            return 1
+
+        caption = adapt_caption_for_ig(post)
+
+        # Defense-in-depth: cross-check IG /me/media for an upstream duplicate
+        # before publishing. State file may be stale (commit-back failed, manual
+        # repost). If found, record the upstream ID and exit success — re-running
+        # the runner will then short-circuit on the local state check above.
+        already, existing_id = _check_ig_already_posted(caption)
+        if already:
+            _log(f"✓ IG cross-check: post already exists upstream (id={existing_id}) — recording and exiting")
+            cross_check_ts = datetime.now(timezone.utc).isoformat()
+            entry = {
+                "post_index": idx,
+                "ok": True,
+                "external_id": existing_id,
+                "attempts": 0,
+                "via_cross_check": True,
+                "timestamp": cross_check_ts,
+            }
+            _append_log_entry(date_str, entry, cross_check_ts)
+            state["posts"][state_key] = {
+                "ok": True,
+                "external_id": existing_id,
+                "via_cross_check": True,
+                "timestamp": cross_check_ts,
+            }
+            _save_state(state)
+            status["exit_path"] = "cross_check_duplicate"
+            status["external_id"] = existing_id
+            return 0
+
+        # DRY_RUN gate (default true). Logs the would-be payload and exits without
+        # calling /media_publish. Does NOT update state — next run re-attempts.
+        # Set DRY_RUN=false in the workflow env to actually post (Phase 3B.2).
+        if _is_dry_run():
+            _log_dry_run_payload(image_url, caption, idx, date_str)
+            status["exit_path"] = "dry_run"
+            return 0
+
         started_at = datetime.now(timezone.utc).isoformat()
+        publisher = InstagramPublisher()
+        result = publisher.publish(image_url, caption)
+
         entry = {
             "post_index": idx,
-            "ok": False,
-            "external_id": None,
-            "attempts": 0,
-            "error": f"image URL not reachable: {url_err}",
+            "ok": result.ok,
+            "external_id": result.external_id,
+            "attempts": result.attempts,
+            "error": result.error,
             "timestamp": started_at,
         }
         log_path = _append_log_entry(date_str, entry, started_at)
+
         state["posts"][state_key] = {
-            "ok": False,
-            "error": entry["error"],
+            "ok": result.ok,
+            "external_id": result.external_id,
+            "error": result.error,
             "timestamp": started_at,
         }
         _save_state(state)
+
         _slack_alert_if_threshold(date_str, state, log_path)
-        return 1
 
-    caption = adapt_caption_for_ig(post)
-
-    # Defense-in-depth: cross-check IG /me/media for an upstream duplicate
-    # before publishing. State file may be stale (commit-back failed, manual
-    # repost). If found, record the upstream ID and exit success — re-running
-    # the runner will then short-circuit on the local state check above.
-    already, existing_id = _check_ig_already_posted(caption)
-    if already:
-        _log(f"✓ IG cross-check: post already exists upstream (id={existing_id}) — recording and exiting")
-        cross_check_ts = datetime.now(timezone.utc).isoformat()
-        entry = {
-            "post_index": idx,
-            "ok": True,
-            "external_id": existing_id,
-            "attempts": 0,
-            "via_cross_check": True,
-            "timestamp": cross_check_ts,
-        }
-        _append_log_entry(date_str, entry, cross_check_ts)
-        state["posts"][state_key] = {
-            "ok": True,
-            "external_id": existing_id,
-            "via_cross_check": True,
-            "timestamp": cross_check_ts,
-        }
-        _save_state(state)
+        status["attempts"] = result.attempts
+        if not result.ok:
+            _log(f"❌ publish failed: {result.error}")
+            status["exit_path"] = "publish_failure"
+            status["error"] = result.error
+            return 1
+        _log(f"✅ published: {result.external_id}")
+        status["exit_path"] = "publish_success"
+        status["external_id"] = result.external_id
         return 0
-
-    # DRY_RUN gate (default true). Logs the would-be payload and exits without
-    # calling /media_publish. Does NOT update state — next run re-attempts.
-    # Set DRY_RUN=false in the workflow env to actually post (Phase 3B.2).
-    if _is_dry_run():
-        _log_dry_run_payload(image_url, caption, idx, date_str)
-        return 0
-
-    started_at = datetime.now(timezone.utc).isoformat()
-    publisher = InstagramPublisher()
-    result = publisher.publish(image_url, caption)
-
-    entry = {
-        "post_index": idx,
-        "ok": result.ok,
-        "external_id": result.external_id,
-        "attempts": result.attempts,
-        "error": result.error,
-        "timestamp": started_at,
-    }
-    log_path = _append_log_entry(date_str, entry, started_at)
-
-    state["posts"][state_key] = {
-        "ok": result.ok,
-        "external_id": result.external_id,
-        "error": result.error,
-        "timestamp": started_at,
-    }
-    _save_state(state)
-
-    _slack_alert_if_threshold(date_str, state, log_path)
-
-    if not result.ok:
-        _log(f"❌ publish failed: {result.error}")
-        return 1
-    _log(f"✅ published: {result.external_id}")
-    return 0
+    except Exception as e:
+        _log(f"💥 unhandled exception: {e}")
+        status["exit_path"] = "exception"
+        status["error"] = f"{type(e).__name__}: {e}"
+        raise
+    finally:
+        _write_run_status(status)
 
 
 if __name__ == "__main__":

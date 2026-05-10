@@ -11,7 +11,11 @@ assets/generated/
 __pycache__/
 .env
 files.zip
-logs/
+logs/*
+# Allowlist: ig_runner.py state file must be committed back across hourly runs
+# for idempotency. Per-run heartbeat (logs/ig_publish_run_status.json) and
+# per-day publish logs stay ignored.
+!logs/ig_publish_state.json
 
 # macOS system files
 .DS_Store
