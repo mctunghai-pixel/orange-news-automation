@@ -28,8 +28,18 @@ on:
   #   # MNT 09:00–17:00 (UTC 01:00–09:00) — hourly news (posts 1–9)
   #   - cron: '0 1-9 * * *'
 
+# Serialize runs of this workflow. A delayed cron tick must not race with the
+# next on-time tick when both push logs/ig_publish_state.json back to main.
+# cancel-in-progress: false → never kill an in-flight run; queue the next one.
+concurrency:
+  group: ig-publisher
+  cancel-in-progress: false
+
+# contents: write is required so the state-file commit-back step (below) can
+# push logs/ig_publish_state.json. Scoped to THIS workflow only — no other
+# workflow gains write access.
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   publish:
@@ -67,3 +77,26 @@ jobs:
         run: |
           echo "🍊 IG runner at $(date '+%H:%M:%S %Z')"
           python3 ig_runner.py
+
+      # Persist logs/ig_publish_state.json across ephemeral runners.
+      # if: always() → captures state even if the runner step failed (partial
+      # state is more useful than no state for debugging). Only commits when
+      # the file actually changed. [skip ci] prevents recursive workflow runs.
+      - name: Commit state file back to main
+        if: always()
+        run: |
+          if [ ! -f logs/ig_publish_state.json ]; then
+            echo "No state file produced; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logs/ig_publish_state.json
+          if git diff --quiet --cached; then
+            echo "State file unchanged; nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore(ig): update ig_publish_state.json [skip ci]"
+          # Rebase on origin/main in case main moved during this run.
+          git pull --rebase origin main
+          git push origin HEAD:main
