@@ -10,7 +10,8 @@ Hour-to-index mapping (MNT, posts go live at the hour they're scheduled):
   ...
   17:00 (UTC 09:00) -> post 9
 
-Gating (defense in depth):
+Gating (defense in depth, in this order):
+  - IG_PUBLISH_ENABLED env (must equal "true") — repo-variable kill switch
   - ENABLE_IG_PUBLISHING env (must equal "1") — workflow_dispatch gate
   - IG /me/media cross-check — aborts if matching caption exists upstream
   - DRY_RUN env (default "true") — logs payload and exits without /media_publish
@@ -83,6 +84,23 @@ def _verify_image_url(url: str) -> tuple[bool, str | None]:
     if resp.status_code != 200:
         return False, f"HEAD status {resp.status_code}"
     return True, None
+
+
+def _kill_switch_engaged() -> tuple[bool, str]:
+    """IG_PUBLISH_ENABLED repo-variable kill switch. Default-disabled.
+
+    Must equal "true" (case-insensitive) to allow publishing. Any other value
+    — "false", absent, empty — engages the kill switch. Default-disabled
+    polarity means an accidentally-deleted variable also blocks the runner.
+
+    Returns (engaged, reason). When engaged, runner exits 0 immediately.
+    """
+    val = os.environ.get("IG_PUBLISH_ENABLED", "").strip().lower()
+    if val == "true":
+        return False, ""
+    if not val:
+        return True, "IG_PUBLISH_ENABLED not set"
+    return True, f'IG_PUBLISH_ENABLED="{val}"'
 
 
 def _is_dry_run() -> bool:
@@ -225,6 +243,12 @@ def _slack_alert_if_threshold(date_str: str, state: dict, log_path: str) -> None
 
 
 def main() -> int:
+    # Kill switch first — fastest mitigation, runs before any other work.
+    engaged, reason = _kill_switch_engaged()
+    if engaged:
+        _log(f"🛑 kill switch: {reason} — exiting without work")
+        return 0
+
     if os.environ.get("ENABLE_IG_PUBLISHING") != "1":
         _log("ENABLE_IG_PUBLISHING != 1 — exiting without publish")
         return 0

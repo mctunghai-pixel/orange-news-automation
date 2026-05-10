@@ -74,6 +74,10 @@ jobs:
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
           ENABLE_IG_PUBLISHING: ${{ inputs.enable_publishing && '1' || '0' }}
+          # Kill switch: repo variable IG_PUBLISH_ENABLED must equal "true"
+          # for the runner to do any work. Empty/absent/anything-else blocks.
+          # Set via Settings → Secrets and variables → Actions → Variables.
+          IG_PUBLISH_ENABLED: ${{ vars.IG_PUBLISH_ENABLED }}
         run: |
           echo "🍊 IG runner at $(date '+%H:%M:%S %Z')"
           python3 ig_runner.py
