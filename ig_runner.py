@@ -10,7 +10,11 @@ Hour-to-index mapping (MNT, posts go live at the hour they're scheduled):
   ...
   17:00 (UTC 09:00) -> post 9
 
-Gated by ENABLE_IG_PUBLISHING env var (must equal "1" to actually publish).
+Gating (defense in depth):
+  - ENABLE_IG_PUBLISHING env (must equal "1") — workflow_dispatch gate
+  - IG /me/media cross-check — aborts if matching caption exists upstream
+  - DRY_RUN env (default "true") — logs payload and exits without /media_publish
+
 Slack alerts at >=3 failures per day (deduped via state file).
 """
 from __future__ import annotations
@@ -41,6 +45,11 @@ SLACK_FAILURE_THRESHOLD = 3
 SCHEMA_VERSION = 1
 HEAD_TIMEOUT_SECONDS = 10
 SLACK_TIMEOUT_SECONDS = 10
+
+IG_API_VERSION = "v22.0"
+IG_API_TIMEOUT_SECONDS = 10
+CROSS_CHECK_PREFIX_LEN = 80
+CROSS_CHECK_LIMIT = 25
 
 
 def _log(msg: str) -> None:
@@ -74,6 +83,64 @@ def _verify_image_url(url: str) -> tuple[bool, str | None]:
     if resp.status_code != 200:
         return False, f"HEAD status {resp.status_code}"
     return True, None
+
+
+def _is_dry_run() -> bool:
+    """DRY_RUN gate. Default 'true' (safe). Set DRY_RUN=false to actually publish."""
+    return os.environ.get("DRY_RUN", "true").lower() != "false"
+
+
+def _check_ig_already_posted(caption: str) -> tuple[bool, str | None]:
+    """Cross-check IG Graph API for an upstream post matching this caption.
+
+    Defense-in-depth against duplicates: the local state file may say "not
+    yet" while IG already has the post (state-file commit-back failed,
+    manual repost, concurrent run, etc.). Match on caption prefix.
+
+    Returns (already_posted, ig_media_id_or_None). On API failure returns
+    (False, None) and logs a warning — the cross-check is best-effort and
+    must not brick the runner if /me/media is unreachable.
+    """
+    ig_user_id = os.environ.get("IG_USER_ID")
+    access_token = os.environ.get("FB_ACCESS_TOKEN")
+    if not ig_user_id or not access_token:
+        _log("⚠ IG_USER_ID / FB_ACCESS_TOKEN not set — skipping cross-check")
+        return False, None
+    url = f"https://graph.facebook.com/{IG_API_VERSION}/{ig_user_id}/media"
+    params = {
+        "fields": "id,caption,timestamp",
+        "access_token": access_token,
+        "limit": CROSS_CHECK_LIMIT,
+    }
+    try:
+        resp = requests.get(url, params=params, timeout=IG_API_TIMEOUT_SECONDS)
+    except requests.RequestException as e:
+        _log(f"⚠ IG /media cross-check network error: {e} — proceeding")
+        return False, None
+    if resp.status_code != 200:
+        _log(f"⚠ IG /media cross-check status {resp.status_code} — proceeding")
+        return False, None
+    prefix = caption[:CROSS_CHECK_PREFIX_LEN].strip()
+    if not prefix:
+        return False, None
+    for item in resp.json().get("data", []):
+        item_caption = (item.get("caption") or "").strip()
+        if item_caption.startswith(prefix):
+            return True, item.get("id")
+    return False, None
+
+
+def _log_dry_run_payload(image_url: str, caption: str, idx: int, date_str: str) -> None:
+    ig_user_id = os.environ.get("IG_USER_ID", "<unset>")
+    _log("=== DRY_RUN: would publish ===")
+    _log(f"  destination IG_USER_ID: {ig_user_id}")
+    _log(f"  post idx:               {idx}")
+    _log(f"  date:                   {date_str}")
+    _log(f"  image_url:              {image_url}")
+    _log(f"  caption ({len(caption)} chars):")
+    for line in caption.splitlines():
+        _log(f"    | {line}")
+    _log("=== DRY_RUN: skipped /media_publish (set DRY_RUN=false to publish) ===")
 
 
 def _load_state() -> dict:
@@ -211,6 +278,40 @@ def main() -> int:
         return 1
 
     caption = adapt_caption_for_ig(post)
+
+    # Defense-in-depth: cross-check IG /me/media for an upstream duplicate
+    # before publishing. State file may be stale (commit-back failed, manual
+    # repost). If found, record the upstream ID and exit success — re-running
+    # the runner will then short-circuit on the local state check above.
+    already, existing_id = _check_ig_already_posted(caption)
+    if already:
+        _log(f"✓ IG cross-check: post already exists upstream (id={existing_id}) — recording and exiting")
+        cross_check_ts = datetime.now(timezone.utc).isoformat()
+        entry = {
+            "post_index": idx,
+            "ok": True,
+            "external_id": existing_id,
+            "attempts": 0,
+            "via_cross_check": True,
+            "timestamp": cross_check_ts,
+        }
+        _append_log_entry(date_str, entry, cross_check_ts)
+        state["posts"][state_key] = {
+            "ok": True,
+            "external_id": existing_id,
+            "via_cross_check": True,
+            "timestamp": cross_check_ts,
+        }
+        _save_state(state)
+        return 0
+
+    # DRY_RUN gate (default true). Logs the would-be payload and exits without
+    # calling /media_publish. Does NOT update state — next run re-attempts.
+    # Set DRY_RUN=false in the workflow env to actually post (Phase 3B.2).
+    if _is_dry_run():
+        _log_dry_run_payload(image_url, caption, idx, date_str)
+        return 0
+
     started_at = datetime.now(timezone.utc).isoformat()
     publisher = InstagramPublisher()
     result = publisher.publish(image_url, caption)
