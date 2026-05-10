@@ -2,14 +2,21 @@
 
 Returns a map of {local_path: raw.githubusercontent.com URL} that the
 Instagram publisher feeds into the Graph API as image_url.
+
+CLI entry (added Phase 3B.1):
+    python publishers/media_pusher.py
+        Pushes today's assets/generated/post_*_<MNT_DATE>.png images.
+        Override date with MEDIA_PUSH_DATE=YYYYMMDD env (catch-up runs).
 """
 from __future__ import annotations
 
+import glob
 import os
 import shutil
 import subprocess
 import sys
 import tempfile
+from datetime import datetime, timezone, timedelta
 
 GITHUB_OWNER = "mctunghai-pixel"
 GITHUB_REPO = "orange-news-automation"
@@ -116,3 +123,40 @@ def push_images_to_media_branch(
         except Exception as cleanup_err:
             _log(f"worktree cleanup warning: {cleanup_err}")
             shutil.rmtree(worktree_dir, ignore_errors=True)
+
+
+def _today_mnt_date_str() -> str:
+    """YYYYMMDD in Asia/Ulaanbaatar (UTC+8). Robust to host-TZ drift."""
+    return (datetime.now(timezone.utc) + timedelta(hours=8)).strftime("%Y%m%d")
+
+
+def _cli_push_today() -> int:
+    """CLI: discover assets/generated/post_*_<date>.png and push to media-public.
+
+    Date defaults to today (MNT). Override with MEDIA_PUSH_DATE=YYYYMMDD env
+    for catch-up runs or verification dispatches against historical dates.
+
+    Exit codes:
+      0 — push succeeded (or no-op when content unchanged)
+      1 — no matching images found for the resolved date
+      (raises) — git operations failed; worktree library prints stderr
+    """
+    date_str = os.environ.get("MEDIA_PUSH_DATE", "").strip() or _today_mnt_date_str()
+    pattern = os.path.join("assets", "generated", f"post_*_{date_str}.png")
+    paths = sorted(glob.glob(pattern))
+    if not paths:
+        _log(f"❌ no images match {pattern}")
+        return 1
+    _log(
+        f"found {len(paths)} image(s) for {date_str}: "
+        f"{[os.path.basename(p) for p in paths]}"
+    )
+    url_map = push_images_to_media_branch(paths, date_str)
+    _log(f"=== url_map ({len(url_map)}) ===")
+    for src, url in sorted(url_map.items()):
+        _log(f"  {os.path.basename(src)} -> {url}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(_cli_push_today())

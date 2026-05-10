@@ -1,0 +1,107 @@
+# =============================================================================
+# Media Publisher — Phase 3B.1
+# =============================================================================
+# Pushes today's generated post images to the media-public orphan branch so
+# ig_runner.py can fetch them via raw.githubusercontent.com URLs.
+#
+# Architecture (path A, re-generate):
+#   1. Checkout main → has translated_posts.json + market_data.json
+#   2. Run image_generator.py → writes assets/generated/post_*_<date>.png
+#   3. Run publishers/media_pusher.py → pushes those PNGs to media-public
+#      via git-worktree (Phase 2 pattern, commit 3f25160).
+#
+# Slight risk of image drift vs the FB pipeline's images at 06:00 MNT (e.g.,
+# OG-thumbnail URLs returning different bytes by the time this runs).
+# Acceptable for IG — separate platform, no user-visible side-by-side.
+#
+# Phase 3B.1: workflow_dispatch only. No schedule, no workflow_run trigger.
+# Phase 3C: add workflow_run trigger linking this to orange_news.yml on success.
+#
+# Bootstrap requirement: the media-public orphan branch must already exist on
+# origin (created in Phase 2, commit 3f25160). If `git fetch origin
+# media-public:media-public` below fails, run this once locally:
+#   git push -u origin media-public
+# =============================================================================
+
+name: Media Publisher
+
+on:
+  workflow_dispatch:
+    inputs:
+      date_override:
+        description: 'YYYYMMDD override (default: today MNT). Catch-up only.'
+        required: false
+        default: ''
+        type: string
+
+# Serialize: only one push to media-public at a time.
+concurrency:
+  group: media-publisher
+  cancel-in-progress: false
+
+# contents: write required for media_pusher.py to push the orphan branch.
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    env:
+      TZ: Asia/Ulaanbaatar
+      PYTHONIOENCODING: utf-8
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Fetch media-public branch ref
+        # media_pusher.py uses `git worktree add WORKTREE media-public` which
+        # requires a local ref. checkout@v4 with fetch-depth=1 only fetches
+        # main, so we explicitly fetch the orphan branch as a local ref here.
+        run: git fetch origin media-public:media-public
+
+      - name: Configure git identity
+        # Worktrees inherit global git config. media_pusher.py calls
+        # `git commit` without configuring identity itself — so set globally
+        # before the worktree is created.
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Mongolian fonts
+        # image_generator.py renders Mongolian text — needs Noto fonts.
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y fonts-noto fonts-noto-cjk
+
+      - name: Install Python dependencies
+        # Subset of orange_news.yml deps — only what image_generator.py +
+        # media_pusher.py need. No LLM SDKs (no translation in this workflow).
+        run: |
+          pip install --upgrade pip
+          pip install Pillow requests beautifulsoup4
+
+      - name: Regenerate today's images
+        # Re-runs image_generator.py against main's translated_posts.json +
+        # market_data.json. Output: assets/generated/post_*_<date>.png.
+        run: |
+          echo "🎨 Image generator at $(date '+%H:%M:%S %Z')"
+          python3 image_generator.py
+
+      - name: Push images to media-public
+        env:
+          MEDIA_PUSH_DATE: ${{ inputs.date_override }}
+        run: |
+          echo "📤 Media pusher at $(date '+%H:%M:%S %Z')"
+          python3 publishers/media_pusher.py
