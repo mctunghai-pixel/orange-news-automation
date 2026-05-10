@@ -16,9 +16,14 @@ on:
   workflow_dispatch:
     inputs:
       enable_publishing:
-        description: 'Set ENABLE_IG_PUBLISHING=1 (false=dry-run, no IG posts)'
+        description: 'Set ENABLE_IG_PUBLISHING=1 (false=runner exits without work)'
         required: false
         default: false
+        type: boolean
+      dry_run:
+        description: 'true = log payload only, false = LIVE IG publish (Phase 3B.2 default true — must opt in to live)'
+        required: false
+        default: true
         type: boolean
 
   # PHASE 3C: uncomment the schedule block below to enable production cron.
@@ -78,6 +83,12 @@ jobs:
           # for the runner to do any work. Empty/absent/anything-else blocks.
           # Set via Settings → Secrets and variables → Actions → Variables.
           IG_PUBLISH_ENABLED: ${{ vars.IG_PUBLISH_ENABLED }}
+          # DRY_RUN gate (Phase 3B.2): 'true' → log payload, skip /media_publish;
+          # 'false' → live publish. Runner check is `!= "false"`, so the strings
+          # MUST be 'true'/'false' (NOT '1'/'0'). Default true matches the
+          # runner's safe-by-default behavior — operator must opt into live by
+          # explicitly selecting dry_run=false at workflow_dispatch.
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
         run: |
           echo "🍊 IG runner at $(date '+%H:%M:%S %Z')"
           python3 ig_runner.py
