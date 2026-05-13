@@ -286,6 +286,20 @@ def main() -> None:
         "videos": surviving,
     }
 
+    # Preserve-on-failure guard: if all channels failed (e.g. YouTube RSS
+    # returning 404 HTML for the runner IP), keep the prior payload instead
+    # of overwriting with an empty videos array. Triggered 2026-05-13 morning
+    # MNT when one upstream-outage tick wiped the live /video section.
+    if channels_processed == 0:
+        print(
+            f"\n⚠️  Бүх {len(CHANNELS)} сувгийн RSS амжилтгүй — өмнөх "
+            f"{OUTPUT_FILE}-г хадгалж байна (хоосон бичих биш). "
+            f"Алдаа: {len(errors)}"
+        )
+        for err in errors:
+            print(f"   - {err}")
+        return
+
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:
         json.dump(result, f, ensure_ascii=False, indent=2)
 
