@@ -20,6 +20,7 @@ Slack alerts at >=3 failures per day (deduped via state file).
 """
 from __future__ import annotations
 
+import argparse
 import json
 import os
 import sys
@@ -69,6 +70,25 @@ def _resolve_post_index(now_mnt: datetime) -> int | None:
     if hour < FIRST_POST_HOUR_MNT or hour > LAST_POST_HOUR_MNT:
         return None
     return hour - FIRST_POST_HOUR_MNT
+
+
+def _resolve_override_idx(cli_idx: int | None) -> int | None:
+    """Operator override for post selection (Phase 3B.2 acceleration).
+
+    Precedence: CLI flag --idx wins over the FORCE_IDX env var. Empty or
+    unset env var means no override and hour-based logic is used. A non-empty
+    env var that fails int() raises ValueError so a config typo surfaces as
+    an explicit failure rather than silently falling through to hour logic.
+    """
+    if cli_idx is not None:
+        return cli_idx
+    raw = os.environ.get("FORCE_IDX", "").strip()
+    if not raw:
+        return None
+    try:
+        return int(raw)
+    except ValueError as e:
+        raise ValueError(f"FORCE_IDX env var is not an integer: {raw!r}") from e
 
 
 def _build_image_url(idx: int, date_str: str) -> str:
@@ -261,6 +281,19 @@ def _slack_alert_if_threshold(date_str: str, state: dict, log_path: str) -> None
 
 
 def main() -> int:
+    parser = argparse.ArgumentParser(description="IG publisher runner")
+    parser.add_argument(
+        "--idx",
+        type=int,
+        default=None,
+        help=(
+            "Override post index, bypassing hour-based selection. "
+            "Empty/unset falls back to FORCE_IDX env var, then hour logic."
+        ),
+    )
+    args = parser.parse_args()
+    cli_idx = args.idx
+
     # status accumulates per-run summary; finally block writes it to
     # RUN_STATUS_FILE so the workflow's Slack step can format a notification.
     # Default exit_path "unknown" → finally still writes a useful record if a
@@ -286,12 +319,24 @@ def main() -> int:
         now_mnt = _now_mnt()
         date_str = now_mnt.strftime("%Y%m%d")
         status["date_str"] = date_str
-        idx = _resolve_post_index(now_mnt)
-        if idx is None:
-            _log(f"current MNT hour {now_mnt.hour} outside window — exiting")
-            status["exit_path"] = "out_of_window"
-            status["mnt_hour"] = now_mnt.hour
-            return 0
+        try:
+            override_idx = _resolve_override_idx(cli_idx)
+        except ValueError as exc:
+            _log(f"❌ {exc}")
+            status["exit_path"] = "force_idx_invalid"
+            status["error"] = str(exc)
+            return 1
+        if override_idx is not None:
+            idx = override_idx
+            status["force_idx"] = idx
+            _log(f"📌 force_idx override: idx={idx} (hour-based logic skipped)")
+        else:
+            idx = _resolve_post_index(now_mnt)
+            if idx is None:
+                _log(f"current MNT hour {now_mnt.hour} outside window — exiting")
+                status["exit_path"] = "out_of_window"
+                status["mnt_hour"] = now_mnt.hour
+                return 0
         state_key = f"{date_str}:{idx}"
         status["post_idx"] = idx
         _log(f"MNT now: {now_mnt.isoformat()} -> post idx {idx} (key={state_key})")
