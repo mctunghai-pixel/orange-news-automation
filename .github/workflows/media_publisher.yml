@@ -14,8 +14,8 @@
 # OG-thumbnail URLs returning different bytes by the time this runs).
 # Acceptable for IG — separate platform, no user-visible side-by-side.
 #
-# Phase 3B.1: workflow_dispatch only. No schedule, no workflow_run trigger.
-# Phase 3C: add workflow_run trigger linking this to orange_news.yml on success.
+# Phase 3C activated 2026-05-13 — daily cron at MNT 07:00 + workflow_dispatch.
+# Phase 3D (future): replace cron with workflow_run trigger on orange_news.yml.
 #
 # Bootstrap requirement: the media-public orphan branch must already exist on
 # origin (created in Phase 2, commit 3f25160). If `git fetch origin
@@ -26,6 +26,14 @@
 name: Media Publisher
 
 on:
+  schedule:
+    # MNT 07:00 (UTC 23:00) — daily regen + push to media-public.
+    # 1-hour buffer before the first IG slot at MNT 08:00 (UTC 00:00).
+    # Scheduled triggers do not pass `inputs.date_override`, so MEDIA_PUSH_DATE
+    # arrives empty; media_pusher.py falls back to today MNT (publishers/
+    # media_pusher.py:144).
+    - cron: '0 23 * * *'
+
   workflow_dispatch:
     inputs:
       date_override:
