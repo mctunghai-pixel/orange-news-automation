@@ -25,6 +25,11 @@ on:
         required: false
         default: true
         type: boolean
+      force_idx:
+        description: 'Override post index (0-9). Blank = use hour-based logic. Set to a specific index to dispatch that post regardless of current MNT hour.'
+        required: false
+        default: ''
+        type: string
 
   # PHASE 3C: uncomment the schedule block below to enable production cron.
   # schedule:
@@ -89,6 +94,10 @@ jobs:
           # runner's safe-by-default behavior — operator must opt into live by
           # explicitly selecting dry_run=false at workflow_dispatch.
           DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          # Optional override (Phase 3B.2 acceleration): when non-empty,
+          # ig_runner.py picks this post index instead of the hour-based
+          # mapping. Hour-based logic remains the default for cron paths.
+          FORCE_IDX: ${{ inputs.force_idx }}
         run: |
           echo "🍊 IG runner at $(date '+%H:%M:%S %Z')"
           python3 ig_runner.py
