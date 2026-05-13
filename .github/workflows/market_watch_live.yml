@@ -109,15 +109,34 @@ jobs:
       - name: Phase 4 — Commit translated_posts.json + archive
         if: always()
         run: |
+          set -euo pipefail
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add translated_posts.json archive/
           if git diff --staged --quiet; then
             echo "ℹ️  No changes to translated_posts.json or archive"
-          else
-            git commit -m "data: update translated_posts.json + archive [skip ci]"
-            git push
-            echo "✅ translated_posts.json + archive committed and pushed"
+            exit 0
+          fi
+          git commit -m "data: update translated_posts.json + archive [skip ci]"
+          # Push-race guard: Market Data Live Update fires at 23:59:30 UTC,
+          # 20s before this workflow. Its commits can advance origin/main
+          # during our run window, causing single-shot `git push` to fail
+          # non-fast-forward. Retry with pull --rebase up to 3 times.
+          pushed=0
+          for attempt in 1 2 3; do
+            git pull --rebase --autostash origin main || \
+              echo "⚠️  pull --rebase failed on attempt $attempt (will retry push anyway)"
+            if git push origin HEAD:main; then
+              echo "✅ translated_posts.json + archive committed and pushed (attempt $attempt)"
+              pushed=1
+              break
+            fi
+            echo "⚠️  push rejected on attempt $attempt — sleeping 5s before retry"
+            sleep 5
+          done
+          if [ "$pushed" != "1" ]; then
+            echo "❌ push failed after 3 attempts — giving up"
+            exit 1
           fi
 
 
@@ -140,13 +159,24 @@ jobs:
       # -----------------------------------------------------------------
       - name: Notify Slack on failure
         if: failure()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,workflow,job
-          text: |
-            🚨 Workflow failed: ${{ github.workflow }}
-            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            Trigger: ${{ github.event_name }}
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_WORKFLOW: ${{ github.workflow }}
+          GH_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GH_EVENT: ${{ github.event_name }}
+          GH_JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          PAYLOAD=$(jq -n \
+            --arg wf "$GH_WORKFLOW" \
+            --arg url "$GH_RUN_URL" \
+            --arg ev "$GH_EVENT" \
+            --arg js "$GH_JOB_STATUS" \
+            '{text: ("🚨 Workflow failed: " + $wf + "\nRun: " + $url + "\nTrigger: " + $ev + "\nJob status: " + $js)}')
+          curl -sS -X POST -H 'Content-Type: application/json' \
+            --data "$PAYLOAD" "$SLACK_WEBHOOK_URL" > /dev/null
+          echo "Slack failure notification sent"
