@@ -31,12 +31,12 @@ on:
         default: ''
         type: string
 
-  # PHASE 3C: uncomment the schedule block below to enable production cron.
-  # schedule:
-  #   # MNT 08:00 (UTC 00:00) — Market Watch (post 0)
-  #   - cron: '0 0 * * *'
-  #   # MNT 09:00–17:00 (UTC 01:00–09:00) — hourly news (posts 1–9)
-  #   - cron: '0 1-9 * * *'
+  # PHASE 3C activated 2026-05-13 — hourly cron live.
+  schedule:
+    # MNT 08:00 (UTC 00:00) — Market Watch (post 0)
+    - cron: '0 0 * * *'
+    # MNT 09:00–17:00 (UTC 01:00–09:00) — hourly news (posts 1–9)
+    - cron: '0 1-9 * * *'
 
 # Serialize runs of this workflow. A delayed cron tick must not race with the
 # next on-time tick when both push logs/ig_publish_state.json back to main.
