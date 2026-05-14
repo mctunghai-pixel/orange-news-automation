@@ -83,7 +83,7 @@ jobs:
           FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
           IG_USER_ID: ${{ secrets.IG_USER_ID }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          ENABLE_IG_PUBLISHING: ${{ inputs.enable_publishing && '1' || '0' }}
+          ENABLE_IG_PUBLISHING: ${{ (github.event_name == 'schedule' || inputs.enable_publishing) && '1' || '0' }}
           # Kill switch: repo variable IG_PUBLISH_ENABLED must equal "true"
           # for the runner to do any work. Empty/absent/anything-else blocks.
           # Set via Settings → Secrets and variables → Actions → Variables.
