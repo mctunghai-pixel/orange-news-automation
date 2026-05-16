@@ -45,6 +45,9 @@ RUN_STATUS_FILE = os.path.join(LOGS_DIR, "ig_publish_run_status.json")
 MNT_OFFSET = timedelta(hours=8)
 FIRST_POST_HOUR_MNT = 8
 LAST_POST_HOUR_MNT = 17
+# Phase 3D.1: OOW guard tolerates MNT 18-19 so :15/:30 retry cron fires that
+# drift past slot 9's hour still publish. Hours 18-19 clamp to idx 9.
+WINDOW_END_HOUR_MNT = 19
 
 SLACK_FAILURE_THRESHOLD = 3
 SCHEMA_VERSION = 1
@@ -67,9 +70,9 @@ def _now_mnt() -> datetime:
 
 def _resolve_post_index(now_mnt: datetime) -> int | None:
     hour = now_mnt.hour
-    if hour < FIRST_POST_HOUR_MNT or hour > LAST_POST_HOUR_MNT:
+    if hour < FIRST_POST_HOUR_MNT or hour > WINDOW_END_HOUR_MNT:
         return None
-    return hour - FIRST_POST_HOUR_MNT
+    return min(hour - FIRST_POST_HOUR_MNT, LAST_POST_HOUR_MNT - FIRST_POST_HOUR_MNT)
 
 
 def _resolve_override_idx(cli_idx: int | None) -> int | None:

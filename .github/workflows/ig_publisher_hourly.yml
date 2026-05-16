@@ -32,11 +32,17 @@ on:
         type: string
 
   # PHASE 3C activated 2026-05-13 — hourly cron live.
+  # PHASE 3D.1 (2026-05-16): triple-stacked staggered schedule to combat GHA
+  # scheduled-event skip rate (~60% slot loss observed days 14-16). Each slot
+  # has 3 fire attempts (:00, :15, :30); ig_runner.py is idempotent via
+  # already_published_local, so retries no-op when the :00 attempt succeeded.
+  # OOW guard widened to MNT 19 (ig_runner.py WINDOW_END_HOUR_MNT) so :15/:30
+  # retries that drift past 17:59 still publish (clamped to idx 9).
   schedule:
-    # MNT 08:00 (UTC 00:00) — Market Watch (post 0)
-    - cron: '0 0 * * *'
-    # MNT 09:00–17:00 (UTC 01:00–09:00) — hourly news (posts 1–9)
-    - cron: '0 1-9 * * *'
+    # MNT 08:00–17:00 (UTC 00:00–09:00) — slots 0-9, primary + 2 retries each.
+    - cron: '0 0-9 * * *'    # primary  (:00)
+    - cron: '15 0-9 * * *'   # retry 1  (:15)
+    - cron: '30 0-9 * * *'   # retry 2  (:30)
 
 # Serialize runs of this workflow. A delayed cron tick must not race with the
 # next on-time tick when both push logs/ig_publish_state.json back to main.
