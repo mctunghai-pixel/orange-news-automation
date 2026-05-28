@@ -1,14 +1,32 @@
 {
-  "fetched_at_utc": "2026-05-27T23:14:39Z",
-  "fetched_at_mnt": "2026-05-28T07:14:42+0800",
-  "channels_processed": 6,
-  "videos_total": 33,
-  "videos_filtered_short": 57,
+  "fetched_at_utc": "2026-05-28T02:51:03Z",
+  "fetched_at_mnt": "2026-05-28T10:51:04+0800",
+  "channels_processed": 2,
+  "videos_total": 18,
+  "videos_filtered_short": 12,
   "videos_filtered_denied": 0,
   "videos_filtered_no_duration": 0,
-  "errors": [],
-  "elapsed_seconds": 3.07,
+  "errors": [
+    "WSJ: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "Reuters: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "Financial Times: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "World Bank Group: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))"
+  ],
+  "elapsed_seconds": 0.86,
   "videos": [
+    {
+      "id": "Qou3FsvY2Xo",
+      "title": "Trump: 'Not Satisfied Yet' on Iran Deal | Balance of Power: Late Edition 5/27/2026",
+      "description": "\"Balance of Power: Late Edition\" focuses on the intersection of politics and global business. On today's show, Dana Stroul, The Washington Institute for Near East Policy Research Director, discusses President Trump denying an Iranian report on a drafted deal to re-open the Strait of Hormuz, Jessica Taylor, Cook Political Report US Senate and Governors Editor, talks about the Texas Republican primary race where Attorney General Ken Paxton defeated incumbent Senator John Cornyn, and Representative Joe Morelle (D-NY), Ranking Member of the House Administration Committee and Vice Ranking Member of the House Appropriations Committee, says New York Democrats are considering two constitutional redistricting options in response to GOP-led map changes in states like Texas.\n\nChapters:\n00:00:00 - Balance of Power Begins\n00:01:20 - Tyler Kendall on President Trump's Cabinet Meeting\n00:05:36 - Dana Stroul, The Washington Institute for Near East Policy Research Director\n00:13:15 - Power Moves with Romaine Bostick\n00:18:08 - Jessica Taylor, Cook Political Report US Senate and Governors Editor\n00:25:17 - Rep. Joe Morelle (D-NY)\n00:33:58 - Caroline Hyde Speaks with NASA Administrator Jared Isaacman\n00:38:03 - Julie Fine, Meghan Hays and Lisa Camooso Miller Discuss Texas Senate Race\n--------\nMore on Bloomberg Television and Markets\n \nLike this video? Subscribe and turn on notifications so you don't miss any videos from Bloomberg Markets & Finance: https://tinyurl.com/ysu5b8a9\nVisit http://www.bloomberg.com for business news & analysis, up-to-the-minute market data, features, profiles and more.\n \nConnect with Bloomberg Television on:\nX: https://twitter.com/BloombergTV\nFacebook: https://www.facebook.com/BloombergTelevision\nInstagram: https://www.instagram.com/bloombergtv/\n \nConnect with Bloomberg Business on:\nX: https://twitter.com/business\nFacebook: https://www.facebook.com/bloombergbusiness\nInstagram: https://www.instagram.com/bloombergbusiness/\nTikTok: https://www.tiktok.com/@bloombergbusiness?lang=en\nReddit: https://www.reddit.com/r/bloomberg/\nLinkedIn: https://www.linkedin.com/company/bloomberg-news/\n \nMore from Bloomberg:\nBloomberg Radio: https://twitter.com/BloombergRadio\n\nBloomberg Surveillance: https://twitter.com/bsurveillance\nBloomberg Politics: https://twitter.com/bpolitics\nBloomberg Originals: https://twitter.com/bbgoriginals\n \nWatch more on YouTube:\nBloomberg Technology: https://www.youtube.com/@BloombergTechnology\nBloomberg Originals: https://www.youtube.com/@business\nBloomberg Quicktake: https://www.youtube.com/@BloombergQuicktake\nBloomberg Espanol: https://www.youtube.com/@bloomberg_espanol\nBloomberg Podcasts: https://www.youtube.com/@BloombergPodcasts",
+      "channel_id": "UCIALMKvObZNtJ6AmdCLP7Lg",
+      "channel_title": "Bloomberg Television",
+      "published_at": "2026-05-28T00:18:07+00:00",
+      "thumbnail_url": "https://i2.ytimg.com/vi/Qou3FsvY2Xo/hqdefault.jpg",
+      "watch_url": "https://www.youtube.com/watch?v=Qou3FsvY2Xo",
+      "duration_seconds": 2880,
+      "duration_iso": "PT48M",
+      "mongolia_relevant": false
+    },
     {
       "id": "9DJjVFxFdwk",
       "title": "Stocks Halt Rally on Conflicting US-Iran Signals | The Close 5/27/2026",
@@ -33,19 +51,6 @@
       "watch_url": "https://www.youtube.com/watch?v=y4UCXwP4VJU",
       "duration_seconds": 362,
       "duration_iso": "PT6M2S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "sOVqwXSVnWA",
-      "title": "LIVE: Russian cosmonauts conduct ISS spacewalk",
-      "description": "Two Russian cosmonauts conduct a spacewalk outside the International Space Station. Expedition commander Sergey Kud-Sverchkov and flight engineer Sergei Mikaev will install a solar radiation experiment and remove other science hardware from the Roscosmos section of the ISS.\n\n#ISS #roscosmos #space #spacewalk #internationalspacestation #SergeiMikaev #sergeikudsverchkov #live #Reuters #News\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-05-27T20:47:37+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/sOVqwXSVnWA/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=sOVqwXSVnWA",
-      "duration_seconds": 22285,
-      "duration_iso": "PT6H11M25S",
       "mongolia_relevant": false
     },
     {
@@ -101,19 +106,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "XUTL0OB6xZQ",
-      "title": "LIVE: Protest outside ICE detention center in New Jersey",
-      "description": "Tensions continue to mount outside New Jersey’s Delaney Hall detention center where lawmakers, families, and advocates protest conditions at the facility.\n\n#us #newjersey #newark #ICE #delaneyhall #migration #live #Reuters #News\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-05-27T20:11:35+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/XUTL0OB6xZQ/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=XUTL0OB6xZQ",
-      "duration_seconds": 11762,
-      "duration_iso": "PT3H16M2S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "qfqCqe-XCh4",
       "title": "Jamie Dimon 'On The Lookout' For Next Big Deal, Real-Estate Deals | Bloomberg Deals 5/27/2026",
       "description": "A weekly, midday program that delivers high-impact, editorially driven coverage of the most important corporate transactions shaping the global market. Today's guests: Ancora Alternatives President Jim Chadwick, Newmark President of Leasing for North America Liz Hart, Brown Harris Stevens CEO Bess Freedman, PIMCO Real Estate CEO Europe Annette Kroeger, and AMP Founder Anjney Midha.\n\nChapters:\n00:00:00 - Bloomberg Deals open\n00:00:56 - Dimon Is 'On The Lookout' For JPMorgan's Next Big Deal\n00:02:35 - Lululemon Settles Dispute With Founder\n00:03:59 - Lilly Goes on $20 Billion Buying Spree\n00:06:04 - Uber Proposes Delivery Hero Takeover At €10B Valuation\n00:08:08 - Jim Chadwick, Ancora Alternatives President\n00:15:48 - PGIM Backs $4B of US Land-Bank Deals\n00:18:48 - Real Estate Investment Committee: AI, Rates, Supply & Demand\n00:28:40 - Investment Landscape for Hyperscalers \n--------\nMore on Bloomberg Television and Markets\n \nLike this video? Subscribe and turn on notifications so you don't miss any videos from Bloomberg Markets & Finance: https://tinyurl.com/ysu5b8a9\nVisit http://www.bloomberg.com for business news & analysis, up-to-the-minute market data, features, profiles and more.\n \nConnect with Bloomberg Television on:\nX: https://twitter.com/BloombergTV\nFacebook: https://www.facebook.com/BloombergTelevision\nInstagram: https://www.instagram.com/bloombergtv/\n \nConnect with Bloomberg Business on:\nX: https://twitter.com/business\nFacebook: https://www.facebook.com/bloombergbusiness\nInstagram: https://www.instagram.com/bloombergbusiness/\nTikTok: https://www.tiktok.com/@bloombergbusiness?lang=en\nReddit: https://www.reddit.com/r/bloomberg/\nLinkedIn: https://www.linkedin.com/company/bloomberg-news/\n \nMore from Bloomberg:\nBloomberg Radio: https://twitter.com/BloombergRadio\n\nBloomberg Surveillance: https://twitter.com/bsurveillance\nBloomberg Politics: https://twitter.com/bpolitics\nBloomberg Originals: https://twitter.com/bbgoriginals\n \nWatch more on YouTube:\nBloomberg Technology: https://www.youtube.com/@BloombergTechnology\nBloomberg Originals: https://www.youtube.com/@business\nBloomberg Quicktake: https://www.youtube.com/@BloombergQuicktake\nBloomberg Espanol: https://www.youtube.com/@bloomberg_espanol\nBloomberg Podcasts: https://www.youtube.com/@BloombergPodcasts",
@@ -127,19 +119,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "0OhU2Jn_Rmk",
-      "title": "LIVE: Court view as Matthew Perry's former assistant is sentenced",
-      "description": "A view of the Los Angeles courthouse as Matthew Perry's former assistant is sentenced over his involvement in the actor's death. Attorneys may speak to reporters after the sentencing.\n \n#court #matthewperry #legal #entertainment #losangeles \n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-05-27T19:43:01+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/0OhU2Jn_Rmk/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=0OhU2Jn_Rmk",
-      "duration_seconds": 2029,
-      "duration_iso": "PT33M49S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "-VcCAXxG7o8",
       "title": "Trump Disputes Iran’s Hormuz Control | Balance of Power: Early Edition 5/27/2026",
       "description": "On the early edition of Balance of Power, Bloomberg Washington\nCorrespondents Joe Mathieu and Kailey Leinz discuss President Donald\nTrump's cabinet meeting at the White House. On today's show, Cohen Group\nSenior Adviser Jen Gavito, Harvard Kennedy School Ash Center Visiting\nDemocracy Fellow Jeanne Sheehan Zaino and American Airlines CEO Robert\nIsom.\n\nChapters:\n00:00:00 - Balance of Power: Early Edition\n00:04:04 - Trump on Iran: It Really is Regime Change\n00:11:56 - Trump Says Nobody Will Control Hormuz but US Will Watch Over It\n00:16:46 - Trump: Not Sure We Should Make Iran Deal If No Abraham Accords \n00:21:12 - Trump on Iran: It Really is Regime Change\n00:22:02 - Trump on Iran: When They Behave We'll Let Them Have Their Money\n00:22:38 - Trump: Gas Tax Holidays is Something We Might Talk About\n00:23:03 - US Airlines Face Rising Fuel Costs\n00:24:28 - American Airlines CEO: People Want to Travel\n00:26:28 - American Airlines CEO: Seeing \"Tremendous\" Demand for Travel \n00:30:36 - American Airlines CEO: Still Projecting 2025 Level of Profitability in 2026\n00:33:59 - Trump: Not Sure We Should Make Iran Deal If No Abraham Accords \n00:36:22 - Nasa: Have a lot of Ability to Put Mass on the Moon's Surface \n--------\nMore on Bloomberg Television and Markets\n \nLike this video? Subscribe and turn on notifications so you don't miss any videos from Bloomberg Markets & Finance: https://tinyurl.com/ysu5b8a9\nVisit http://www.bloomberg.com for business news & analysis, up-to-the-minute market data, features, profiles and more.\n \nConnect with Bloomberg Television on:\nX: https://twitter.com/BloombergTV\nFacebook: https://www.facebook.com/BloombergTelevision\nInstagram: https://www.instagram.com/bloombergtv/\n \nConnect with Bloomberg Business on:\nX: https://twitter.com/business\nFacebook: https://www.facebook.com/bloombergbusiness\nInstagram: https://www.instagram.com/bloombergbusiness/\nTikTok: https://www.tiktok.com/@bloombergbusiness?lang=en\nReddit: https://www.reddit.com/r/bloomberg/\nLinkedIn: https://www.linkedin.com/company/bloomberg-news/\n \nMore from Bloomberg:\nBloomberg Radio: https://twitter.com/BloombergRadio\n\nBloomberg Surveillance: https://twitter.com/bsurveillance\nBloomberg Politics: https://twitter.com/bpolitics\nBloomberg Originals: https://twitter.com/bbgoriginals\n \nWatch more on YouTube:\nBloomberg Technology: https://www.youtube.com/@BloombergTechnology\nBloomberg Originals: https://www.youtube.com/@business\nBloomberg Quicktake: https://www.youtube.com/@BloombergQuicktake\nBloomberg Espanol: https://www.youtube.com/@bloomberg_espanol\nBloomberg Podcasts: https://www.youtube.com/@BloombergPodcasts",
@@ -150,45 +129,6 @@
       "watch_url": "https://www.youtube.com/watch?v=-VcCAXxG7o8",
       "duration_seconds": 2449,
       "duration_iso": "PT40M49S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "1XsPCPxy82c",
-      "title": "American Airlines CEO Sees Tremendous Demand for Travel",
-      "description": "American Airlines CEO Robert Isom discusses consumer demand amid the war in Iran, new offerings for customers, where he sees opportunities for growth, and how the company is set up to deal with higher fuel costs.\n--------\nMore on Bloomberg Television and Markets\n \nLike this video? Subscribe and turn on notifications so you don't miss any videos from Bloomberg Markets & Finance: https://tinyurl.com/ysu5b8a9\nVisit http://www.bloomberg.com for business news & analysis, up-to-the-minute market data, features, profiles and more.\n \nConnect with Bloomberg Television on:\nX: https://twitter.com/BloombergTV\nFacebook: https://www.facebook.com/BloombergTelevision\nInstagram: https://www.instagram.com/bloombergtv/\n \nConnect with Bloomberg Business on:\nX: https://twitter.com/business\nFacebook: https://www.facebook.com/bloombergbusiness\nInstagram: https://www.instagram.com/bloombergbusiness/\nTikTok: https://www.tiktok.com/@bloombergbusiness?lang=en\nReddit: https://www.reddit.com/r/bloomberg/\nLinkedIn: https://www.linkedin.com/company/bloomberg-news/\n \nMore from Bloomberg:\nBloomberg Radio: https://twitter.com/BloombergRadio\n\nBloomberg Surveillance: https://twitter.com/bsurveillance\nBloomberg Politics: https://twitter.com/bpolitics\nBloomberg Originals: https://twitter.com/bbgoriginals\n \nWatch more on YouTube:\nBloomberg Technology: https://www.youtube.com/@BloombergTechnology\nBloomberg Originals: https://www.youtube.com/@business\nBloomberg Quicktake: https://www.youtube.com/@BloombergQuicktake\nBloomberg Espanol: https://www.youtube.com/@bloomberg_espanol\nBloomberg Podcasts: https://www.youtube.com/@BloombergPodcasts",
-      "channel_id": "UCIALMKvObZNtJ6AmdCLP7Lg",
-      "channel_title": "Bloomberg Television",
-      "published_at": "2026-05-27T18:18:19+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/1XsPCPxy82c/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=1XsPCPxy82c",
-      "duration_seconds": 586,
-      "duration_iso": "PT9M46S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "9xUmHRQAvyc",
-      "title": "Why Oil, Fertilizer, and Metals Prices Are Climbing - World Bank Outlook",
-      "description": "Rising commodity prices can ripple through inflation, growth, and jobs, especially in developing economies. In this episode of Talking Development, World Bank Managing Director Anna Bjerde speaks with Ayhan Kose, World Bank Deputy Chief Economist and Director of the Prospects Group on the latest Commodity Markets Outlook and what recent developments in the Middle East could mean for energy, food, fertilizer, and metals, and for policy responses in times of crisis. Kose explains key forecasts and why the impacts extend beyond oil: fertilizer affordability, food insecurity risks, metals demand tied to AI investment and renewable energy, and what governments can do to respond effectively. Discussed in this video:\n\n- Energy prices expected to be 24% higher this year\n- Brent oil forecast at $86 (vs earlier projections)\n- Fertilizer prices 30% higher, urea 60% higher\n- Inflation in developing economies above 5%\n- Growth in developing economies at 3.6%, many seeing weaker growth\nLearn more: http://wrld.bg/zHHh50Z4qVB\n\n00:00 Commodity Markets Outlook overview\n01:14 Energy prices and oil forecast\n01:44 Fertilizer prices, urea, and food security risks\n02:22 Metals outlook (aluminum, copper, gold) + AI/renewables demand\n03:11 Inflation impacts in developing economies\n03:57 Growth impacts and fiscal constraints\n05:12 What countries can do to navigate crisis\n05:57 The “3 Ts” of fiscal support (timely, targeted, temporary)\n06:49 Food supply and the risks of export bans\n07:14 Turning crisis into reform: investment, business climate, capital\n08:03 Protecting people while staying focused on growth\n09:19 Summary and closing\n\n#CommodityMarkets #Inflation #EnergyPrices #Development\n\nABOUT 🌐 The World Bank Group is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-27T13:30:03+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/9xUmHRQAvyc/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=9xUmHRQAvyc",
-      "duration_seconds": 632,
-      "duration_iso": "PT10M32S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "7gMWVlWCi4M",
-      "title": "Info Session: 2026 Africa Sustainable Futures Awards",
-      "description": "Planning to apply to the Africa Sustainable Futures Awards? Watch the information session to learn how to submit a strong application ahead of the June 30 deadline.\n\nHosted by the World Bank Group’s MIGA in partnership with the Financial Times, the Awards recognize innovative private sector solutions driving jobs, growth, and development across Africa.\n\nIn this session covers:\n• what makes a competitive application from the Awards team and past winners\n• guidance on categories, eligibility, and requirements\n• questions submitted by the audience \n\nThe 2025 program attracted over 300 entries, reflecting strong interest from companies advancing scalable solutions on the continent. Winners will be announced at the FT Africa Summit in London on October 22, 2026.\n\n👤SPEAKERS \n- Nivi Sharma, CEO, Fika\n- Pierandrea Renna, Vice President - PAYG Programs, Sun King \n- Rahul Chaudhary, Group Head of Human Resources, Spiro\n- Chinwe Binitie, Co-Head of Partnerships, MIGA\nModerator\n- Jeff Wagner, Director, Special Projects, @FinancialTimesLive \n\n @IFC_org @MIGAWorldBank  @FinancialTimes \n\nABOUT US 🌐 The World Bank Group (WBG) is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org\n\nWORLDBANK.ORG/LIVE\n🔔 Sign up to receive updates about upcoming events: http://wrld.bg/cxHK50W56x3\n▶️ Watch past events: https://www.youtube.com/channel/UCE9mrcoX-oE-2f1BL-iPPoQ/streams/streams",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-26T13:36:49+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/7gMWVlWCi4M/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=7gMWVlWCi4M",
-      "duration_seconds": 2025,
-      "duration_iso": "PT33M45S",
       "mongolia_relevant": false
     },
     {
@@ -218,19 +158,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "witlT0b0JkI",
-      "title": "How Allison Ellsworth Turned a Homemade Soda Into a Billion-Dollar Brand | The WSJ Money Interview",
-      "description": "Allison Ellsworth, the co-founder of the soda brand Poppi, doesn’t sugarcoat the sacrifices required to build a successful business. \n\nFor The WSJ Money Interview, Gunjan Banerji traveled to her home in Austin, Texas to learn about the founder’s early days, her beliefs on work-life balance, and what was going through her mind when the brand sold to PepsiCo for $1.95 billion.\n\nSubscribers get access to full-length episodes of The WSJ Money Interview, plus the chance to have their questions answered by our millionaire guest. \n\nWatch the full episode here: https://on.wsj.com/4u9bjaR \n\nChapters:\n0:00 Founding and selling Poppi\n0:57 Going all in on beverages\n2:14 The ‘Shark Tank’ experience \n4:23 Juggling the business and a newborn\n5:44 A day in Allison’s life after pregnancy \n6:36 Starting a business with your husband\n8:00 Using TikTok to grow the business\n8:43 Selling the business\n10:24 When the money hit your bank account\n\nThe WSJ Money Interview\nWhat can some of the world’s most interesting tycoons teach us about money and success? WSJ’s Gunjan Banerji sits down with highfliers for a candid conversation about how they made it. Have an idea for a future episode? Or a topic you’d love our next guest to weigh in on? Write to the host at gunjan.banerji@wsj.com\n\n#Poppi #Money #WSJ",
-      "channel_id": "UCK7tptUDHh-RYDsdxO1-5QQ",
-      "channel_title": "WSJ",
-      "published_at": "2026-05-22T23:49:11+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/witlT0b0JkI/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=witlT0b0JkI",
-      "duration_seconds": 737,
-      "duration_iso": "PT12M17S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "ib-XMy-d_2I",
       "title": "Crypto’s Next Phase Is Bigger Than Bitcoin",
       "description": "The next phase of crypto’s public-market pitch is less about token prices and more about financial infrastructure. As trading revenue slows, companies including Coinbase, Robinhood, Circle, Bullish and Gemini are trying to show they can own the systems that issue, trade, settle and record assets. The question for investors is whether these new businesses can grow fast enough before the next crypto downturn puts the model under pressure again.\n\nChapters:\n0:00-00:28 Introduction\n00:29-1:28 The everything exchange\n1:29-3:32 Tokenized Wall Street\n3:33-5:24 Beyond stablecoins\n5:25-6:47 Treasury companies\n\nProduced by: Charlotte Morabito\nReporting by: Tanaya Macheel\nEdited by: Tasia Jensen\nAnimation: Jason Reginato, Emily Park\nSenior Managing Producer: Shawn Baldwin\nSenior Director of Video: Lindsey Jacobson\nAdditional Footage: Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nCrypto’s Next Phase Is Bigger Than Bitcoin",
@@ -241,45 +168,6 @@
       "watch_url": "https://www.youtube.com/watch?v=ib-XMy-d_2I",
       "duration_seconds": 408,
       "duration_iso": "PT6M48S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "qMbIvzMtl9o",
-      "title": "Why Everlane’s Sale to Fast-Fashion Giant Shein Is Rattling Customers | WSJ",
-      "description": "Everlane, a pioneer of \"radical transparency\" just sold to Shein, the titan of ultra-fast fashion. WSJ breaks down the fierce customer backlash and what it means for the future of ethical millennial brands.\n\nChapters:\n0:00 Everlane’s sale to Shein\n0:46 The promise of Everlane\n1:36 Shein enters the fold\n2:32 What this means for the industry\n\nNews Explainers\nSome days the high-speed news cycle can bring more questions than answers. WSJ’s news explainers break down the day's biggest stories into bite-size pieces to help you make sense of the news.\n\n#Everlane #Shein #WSJ",
-      "channel_id": "UCK7tptUDHh-RYDsdxO1-5QQ",
-      "channel_title": "WSJ",
-      "published_at": "2026-05-22T15:49:17+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/qMbIvzMtl9o/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=qMbIvzMtl9o",
-      "duration_seconds": 212,
-      "duration_iso": "PT3M32S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "gA7vkTqt2g4",
-      "title": "Youth Employment in Africa: What Having a Job Means (Kenya Stories)",
-      "description": "Across Africa, millions of young people are searching for work, stability, and opportunity. This video features young Kenyans sharing their lived experiences. What does a job really mean to a young person? \nFor some, it means dignity. For others, security, purpose, or the chance to support their family and build a different future. In their own words, young Kenyans share their hopes, their struggles, and what opportunity looks like in a rapidly changing world of work. The World Bank Group's International Development Association, or IDA, partners with countries like Kenya to expand that opportunity, one young person at a time. \n\n0:00 The Search for Opportunity\n0:13 Meet the Young Kenyans\n1:22 The Changing Reality of Work\n1:52 When You Hear the \"World Bank Group,\" What Comes to Mind?\n2:09 What Does Having a Job Mean to You?\n3:24 More Than Employment\n\nWHAT IS THE WORLD BANK GROUP 🌐 The World Bank Group is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-22T14:00:28+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/gA7vkTqt2g4/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=gA7vkTqt2g4",
-      "duration_seconds": 289,
-      "duration_iso": "PT4M49S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "CNPf-PmCiuI",
-      "title": "In Ukraine, Ground Drones Are Revolutionizing War and Saving Lives | WSJ",
-      "description": "Russia’s war against Ukraine has already shown the world a new type of warfare dominated by aerial drones. But on the ground, remotely controlled vehicles are the latest technological evolution.\n\nWSJ examines the unmanned ground vehicles, or UGVs, that free up manpower in a war of attrition. Watch the harrowing story of a Ukrainian drone commander and the wounded soldier he evacuated, as well as an exclusive look inside a drone manufacturer racing to meet demand from the Ukrainian military.\n\nChapters:\n0:00 Ground drones in Ukraine\n1:01 The manufacturer \n3:11 The evacuation\n7:53 What’s next?\n\nRussia-Ukraine War\nWSJ’s latest news coverage around the 2022-2026 Russia-Ukraine War.\n\n#Ukraine #Drones #WSJ",
-      "channel_id": "UCK7tptUDHh-RYDsdxO1-5QQ",
-      "channel_title": "WSJ",
-      "published_at": "2026-05-20T17:08:13+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/CNPf-PmCiuI/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=CNPf-PmCiuI",
-      "duration_seconds": 600,
-      "duration_iso": "PT10M",
       "mongolia_relevant": false
     },
     {
@@ -322,32 +210,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "DCzw9IkVxR0",
-      "title": "“C’est Moi” - How a Digital ID Helps Millions Access School & Finance in Benin",
-      "description": "Millions of people in Benin are gaining a legal identity through the World Bank supported WURI program and the national “C’est Moi” card, unlocking access to education, financial services, and essential opportunities, especially for women and children.\n\nIn this video, meet families whose lives are changing because official identification makes it possible to sit for school exams, open mobile money accounts, access credit, and participate more fully in society. The WURI approach—biometric enrollment, systematic registration, and a unique ID number—shows how digital public infrastructure can strengthen inclusion while ensuring “no one is left behind.”\n\nThe success of the WURI project in registering nearly the entire population demonstrates how digital identification can promote social and economic inclusion. Having a national ID card changes the lives of Beninese people. Thousands of women who have received an ID card can now become financially independent Learn more: http://wrld.bg/SQG950YZKUp\n\nSubscribe for more development stories and evidence-based impact. \n\n00:00 With “C’est Moi” card many students can take their exams\n01:29 Why legal identity gaps affected women most\n01:55 How the unique ID system works (biometrics + registration)\n2:28 Access to credit: a business grows with an ID\n3:09 Women’s financial independence through mobile money & loans\n4:39 Results - Finance, Enrollment and Economic Impact\n\n💬 Subtitles (CC) available\n\nABOUT US 🌐 The World Bank Group is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-18T15:06:55+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/DCzw9IkVxR0/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=DCzw9IkVxR0",
-      "duration_seconds": 334,
-      "duration_iso": "PT5M34S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "iNXzZi1azpU",
-      "title": "Bénin : L’identification des personnes pour faciliter l’inclusion sociale",
-      "description": "Le Projet Régional d’Identification des Personnes (WURI), financé par la Banque mondiale offre une identification légale à des millions de Béninois grâce à la carte « C’est Moi ». À travers des histoires de vie authentiques, cette vidéo met en lumière la manière dont l’obtention de documents officiels d’identité a transformé l’accès à l’éducation, aux services financiers et aux opportunités — notamment pour les femmes et les enfants. Le succès du projet, qui a permis l’enregistrement de presque toute la population, démontre comment l’identification numérique favorise l’inclusion sociale et économique.\n\n00:00 Grace à la carte « C’est Moi » de nombreux écoliers peuvent poursuivre leurs études scolaires\n01 :29 Avoir une carte d’identité nationale change la vie des Béninois\n02 :28 Des milliers de femmes bénéficiaires peuvent désormais être financièrement autonomes\n\nÀ PROPOS 🌐 Le Groupe de la Banque mondiale est l'une des plus importantes sources mondiales de financement et de connaissances pour les pays à faible revenu. Ses cinq institutions partagent un engagement commun à réduire la pauvreté, à accroître la prospérité partagée et à promouvoir le développement durable. http://www.banquemondiale.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-18T15:00:23+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/iNXzZi1azpU/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=iNXzZi1azpU",
-      "duration_seconds": 334,
-      "duration_iso": "PT5M34S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "_vhDblAOLnY",
       "title": "Why Investors Are Living Through President Trump's Stock Market",
       "description": "President Donald Trump has established a reputation as a pro-stock-market president, leading to record highs in the market, while also causing some of its most significant drops. These extreme fluctuations are driven more by headlines than by underlying fundamentals, especially those related to government policy. CNBC’s Sean Conlon breaks down how investors perceive Trump’s impact on the market and what this means for everyday investors.\n\nReporter: Sean Conlon\nProduced and Edited by: Jeff Huang\nAnimation: Jason Reginato, Emily Park\nManaging Producer: Anuz Thapa\nSenior Director of Video: Lindsey Jacobson\nAdditional Footage: Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC \n\nWhy Investors Are Living Through President Trump's Stock Market",
@@ -358,19 +220,6 @@
       "watch_url": "https://www.youtube.com/watch?v=_vhDblAOLnY",
       "duration_seconds": 279,
       "duration_iso": "PT4M39S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "Q88RBaCx2vY",
-      "title": "Changing the Future with Cooling Innovation",
-      "description": "Cooling is one of the most important development, climate, and resilience challenges of our time. It’s affecting healthcare, agriculture, and people’s everyday lives. Innovators supported through the WBG Sustainable Cooling Initiative are addressing these challenges by working in fundamentally different ways. New technologies are replacing standard compressors with ice batteries powered by solar, solving also for affordability. Financial innovation through models like pay-as-you-go is bringing cooling to underserved populations, and creating jobs for small and even micro-enterprises. Learn more about the World Bank Group Sustainable Cooling and Heat Resilience Initiative: http://wrld.bg/rq4a50YZ6Iu\n\n0:00 Cooling is a development and resilience challenge\n0:54 Innovative solutions for technology and financial models\n2:50 Changing the future through innovation\n\n\nABOUT THE WORLD BANK GROUP🌐 The World Bank Group is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-18T11:48:32+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/Q88RBaCx2vY/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=Q88RBaCx2vY",
-      "duration_seconds": 212,
-      "duration_iso": "PT3M32S",
       "mongolia_relevant": false
     },
     {
@@ -397,45 +246,6 @@
       "watch_url": "https://www.youtube.com/watch?v=MaXbK4B8wHM",
       "duration_seconds": 188,
       "duration_iso": "PT3M8S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "bJ3hr55YK0c",
-      "title": "Affordable Cooling for Africa: Solar Refrigeration & Pay‑As‑You‑Go Models (Nigeria Spotlight)",
-      "description": "Cooling is a development, climate, and resilience challenge and in Nigeria, it's not a luxury - it’s a necessity. Nigeria's population is lacking electricity access for food refrigeration, while less than 40% of healthcare providers have refrigeration for vaccines. Entrepreneurs, small and medium enterprises supported through the World Bank Group Sustainable Cooling Initiative are addressing these challenges through sustainable innovations. New technologies are replacing standard compressors with ice batteries powered by solar, solving also for affordability. Financial innovation through models like pay-as-you-go is bringing cooling to underserved populations, and creating jobs for small and even micro-enterprises. Sustainable cooling innovations are transforming healthcare, agriculture, and cold chains, including solar-powered refrigeration, ice battery technology, and pay‑as‑you‑go models expanding access for off-grid communities. This video explains\n\n- Why cooling is central to climate adaptation and economic productivity\n- How solar + ice batteries can replace standard compressors\n- Why better cold chains can reduce food loss and strengthen livelihoods\n- The role of affordability and pay‑as‑you‑go in scaling impact\n- Why reliable refrigeration matters for vaccines and public health\n\nLearn more on the WBG Sustainable Cooling and Heat Resilience Initiative: http://wrld.bg/rq4a50YZ6Iu\n\n0:00 Cooling is a development and resilience challenge\n0:44 Innovative solutions for technology and financial models\n01:14 Cold chain gaps: food loss and the opportunity\n02:19 “Cooling is the new gold”: value creation across supply chains\n2:58 Why Nigeria is central to the problem, and the solution\n\nABOUT US 🌐 The World Bank Group (WBG) is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-15T17:30:08+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/bJ3hr55YK0c/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=bJ3hr55YK0c",
-      "duration_seconds": 240,
-      "duration_iso": "PT4M",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "kCGti_AXO7M",
-      "title": "Equal Opportunity for Women: The Economic Case with Christine Lagarde - Talking Development",
-      "description": "Equal opportunity for women isn’t only a matter of fairness, it’s an economic growth strategy. In this episode of Talking Development, World Bank Managing Director Anna Bjerde and Christine Lagarde, President of the European Central Bank explore what the Women, Business and the Law 2026 findings reveal, and what it will take to unlock women’s economic potential. \n\nHow expanding women’s economic participation strengthens productivity, improves resilience, and drives measurable gains for countries and communities. Why closing gender gaps can drive higher GDP and productivity. Where inequality compounds across a woman’s life cycle (workforce entry, promotions, caregiving, retirement) and \nwhat the evidence says works: childcare investment, financial literacy, and gender budgeting\n\nHow the Women, Business and the Law 2026 findings help policymakers track progress from laws → implementation → enforcement. \n\n00:00 Unlocking women’s economic potential\n01:01 The economic case for equality\n04:00 Why life is a race for women\n10:15 The rights gap: what the data shows\n15:15 Women in leadership: what still needs to change\n\n💬 Subtitles (CC) available \n\nABOUT US 🌐 The World Bank Group (WBG) is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-13T23:54:22+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/kCGti_AXO7M/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=kCGti_AXO7M",
-      "duration_seconds": 1173,
-      "duration_iso": "PT19M33S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "CvSCg7qaLzk",
-      "title": "Women’s digital literacy: Unlocking opportunity",
-      "description": "A smartphone is more than a device, it’s a gateway to services, income, and opportunity. Yet 800 million women remain offline, largely in South Asia and Sub-Saharan Africa. The World Bank Group has committed to enabling 300 million more women to access and use broadband connectivity by 2030. This video explains why the gender digital divide persists, and what works to help women get online safely and confidently.\n\nExpanding access, skills, and opportunity can unlock the digital world for millions of women. Closing the gender gap online means opening doors to jobs, services, and economic growth. Based on evidence from 100+ digital literacy programs, we explain the four design features that make women-focused digital skills programs more effective: delivery channels, instructional approaches, practical learning models, and wraparound support. Learn more about what works to advance women’s digital literacy: \n\nBlog - http://wrld.bg/5oSz50YZ6l0\nReport - http://wrld.bg/LKnb50YVcwJ \n\n00:00 Smartphones as a gateway to opportunity\n01:09 What helps women get online safely and confidently?\n01:23 Digital literacy programs designed for women\n03:16 Mentoring, childcare, transport, community support\n03:42 Outcomes: skills, confidence, jobs, growth\n\nWhat barriers keep women offline in your context, and what solutions have you seen work? Share in the comments.\n\nABOUT US 🌐 The World Bank Group (WBG) is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-05-13T17:23:03+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/CvSCg7qaLzk/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=CvSCg7qaLzk",
-      "duration_seconds": 258,
-      "duration_iso": "PT4M18S",
       "mongolia_relevant": false
     }
   ]
