@@ -17,6 +17,9 @@ logs/*
 # per-day publish logs stay ignored.
 !logs/ig_publish_state.json
 
+# Allowlist: telegram_poster.py state file (same idempotency reason as ig_runner)
+!logs/telegram_publish_state.json
+
 # macOS system files
 .DS_Store
 **/.DS_Store
@@ -33,3 +36,7 @@ backups/
 
 # Old workflow backups
 .github/workflows/*.backup
+
+# GMBA thesis materials (personal academic work — local only)
+/scripts/thesis_capture/
+/figures/

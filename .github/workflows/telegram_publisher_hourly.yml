@@ -1,0 +1,159 @@
+# =============================================================================
+# Telegram Publisher Hourly — v1
+# =============================================================================
+# Цаг тутамд нэг пост Telegram channel руу илгээдэг workflow.
+# Архитектур: ig_publisher_hourly.yml-тэй ижил (idempotent state, slot retries).
+#
+# Хуваарь (MNT 08:00–17:00, UTC 00:00–09:00):
+#   idx 0  → 08:00 MNT (Market Watch)
+#   idx 1  → 09:00 MNT
+#   ...
+#   idx 9  → 17:00 MNT
+#
+# Үндсэн pipeline (orange_news.yml) translated_posts.json + assets/generated/-г
+# 06:00 MNT-д commit хийсний дараа уг workflow main-ээс уншиж явуулна.
+# =============================================================================
+
+name: Telegram Publisher Hourly
+
+on:
+  workflow_dispatch:
+    inputs:
+      enable_publishing:
+        description: 'Set ENABLE_TELEGRAM_PUBLISHING=1 (false=runner exits without work)'
+        required: false
+        default: false
+        type: boolean
+      dry_run:
+        description: 'true = log payload only, false = LIVE Telegram publish'
+        required: false
+        default: true
+        type: boolean
+      force_idx:
+        description: 'Override post index (0-9). Blank = hour-based logic.'
+        required: false
+        default: ''
+        type: string
+
+  schedule:
+    # MNT 08:00–17:00 (UTC 00:00–09:00), primary + 2 retries each slot
+    - cron: '0 0-9 * * *'    # primary  (:00)
+    - cron: '15 0-9 * * *'   # retry 1  (:15)
+    - cron: '30 0-9 * * *'   # retry 2  (:30)
+
+concurrency:
+  group: telegram-publisher
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    env:
+      TZ: Asia/Ulaanbaatar
+      PYTHONIOENCODING: utf-8
+      LANG: en_US.UTF-8
+      LC_ALL: en_US.UTF-8
+
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python dependencies
+        run: |
+          pip install --upgrade pip
+          pip install requests
+
+      - name: Run Telegram poster
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHANNEL_ID: ${{ secrets.TELEGRAM_CHANNEL_ID }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          ENABLE_TELEGRAM_PUBLISHING: ${{ (github.event_name == 'schedule' || inputs.enable_publishing) && '1' || '0' }}
+          # Kill switch repo variable
+          TELEGRAM_PUBLISH_ENABLED: ${{ vars.TELEGRAM_PUBLISH_ENABLED }}
+          DRY_RUN: ${{ inputs.dry_run && 'true' || 'false' }}
+          FORCE_IDX: ${{ inputs.force_idx }}
+        run: |
+          echo "📨 Telegram poster at $(date '+%H:%M:%S %Z')"
+          python3 telegram_poster.py
+
+      # State file commit-back (same pattern as IG publisher)
+      - name: Commit state file back to main
+        if: always()
+        run: |
+          set -euo pipefail
+          if [ ! -f logs/telegram_publish_state.json ]; then
+            echo "No state file produced; nothing to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logs/telegram_publish_state.json
+          if git diff --quiet --cached; then
+            echo "State file unchanged; nothing to commit."
+            exit 0
+          fi
+          git commit -m "chore(telegram): update telegram_publish_state.json [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
+
+      - name: Notify Slack (per-run)
+        if: always()
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          GH_WORKFLOW: ${{ github.workflow }}
+          GH_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          GH_JOB_STATUS: ${{ job.status }}
+        run: |
+          set -euo pipefail
+          if [ -z "$SLACK_WEBHOOK_URL" ]; then
+            echo "SLACK_WEBHOOK_URL not set — skipping notification"
+            exit 0
+          fi
+          STATUS_FILE="logs/telegram_publish_run_status.json"
+          if [ -f "$STATUS_FILE" ]; then
+            EXIT_PATH=$(jq -r '.exit_path // "unknown"' "$STATUS_FILE")
+            POST_IDX=$(jq -r '.post_idx // "—"' "$STATUS_FILE")
+            ERROR=$(jq -r '.error // ""' "$STATUS_FILE")
+            DATE_STR=$(jq -r '.date_str // ""' "$STATUS_FILE")
+          else
+            EXIT_PATH="no_status_file"
+            POST_IDX="—"
+            ERROR=""
+            DATE_STR=""
+          fi
+          case "$EXIT_PATH" in
+            publish_success)         EMOJI="✅"; DETAIL="published idx=$POST_IDX (date=$DATE_STR)" ;;
+            dry_run)                 EMOJI="🧪"; DETAIL="DRY_RUN idx=$POST_IDX (date=$DATE_STR)" ;;
+            out_of_window)           EMOJI="⏰"; DETAIL="MNT hour outside posting window" ;;
+            already_published_local) EMOJI="↩"; DETAIL="already published idx=$POST_IDX" ;;
+            idx_out_of_range)        EMOJI="📭"; DETAIL="idx=$POST_IDX out of range" ;;
+            input_missing)           EMOJI="❓"; DETAIL="translated_posts.json missing" ;;
+            publish_failure)         EMOJI="❌"; DETAIL="publish failed idx=$POST_IDX: $ERROR" ;;
+            config_missing)          EMOJI="🔧"; DETAIL="bot token / channel id missing" ;;
+            exception)               EMOJI="💥"; DETAIL="exception: $ERROR" ;;
+            no_status_file)          EMOJI="⚠"; DETAIL="no status file (crashed early)" ;;
+            *)                       EMOJI="ℹ"; DETAIL="exit_path=$EXIT_PATH" ;;
+          esac
+          PAYLOAD=$(jq -n \
+            --arg emoji "$EMOJI" \
+            --arg wf "$GH_WORKFLOW" \
+            --arg detail "$DETAIL" \
+            --arg url "$GH_RUN_URL" \
+            --arg js "$GH_JOB_STATUS" \
+            '{text: ($emoji + " " + $wf + ": " + $detail + "\nRun: " + $url + "\nJob status: " + $js)}')
+          curl -sS -X POST -H 'Content-Type: application/json' \
+            --data "$PAYLOAD" "$SLACK_WEBHOOK_URL" > /dev/null
+          echo "Slack heartbeat sent: $EXIT_PATH"
