@@ -142,7 +142,8 @@ def _format_post_text(post: dict) -> str:
         "🌐 www.orangenews.mn\n\n"
         "📘 facebook.com/orangenews.mn\n\n"
         "📷 instagram.com/orangenews.official\n\n"
-        "🧵 threads.net/@orangenews.official"
+        "🧵 threads.net/@orangenews.official\n\n"
+        "📨 Telegram: t.me/OrangeNewsMN"
     )
     head = f"{badge}\n\n{headline}\n\n" if headline.strip() else f"{badge}\n\n"
     return f"{head}{body}{footer}\n\n{htag_line}".strip()

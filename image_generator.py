@@ -26,6 +26,7 @@ from html.parser import HTMLParser
 
 OUTPUT_DIR = "assets/generated"
 LOGO_PATH = "assets/logo.png"
+TELEGRAM_QR_PATH = "assets/telegram_qr.png"  # Branded QR (orange + logo)
 IMG_W, IMG_H = 1200, 630
 PADDING_X = 90  # iOS FB feed safe zone (was 22, expanded for ~1.56:1 in-feed crop)
 
@@ -359,6 +360,42 @@ def generate_image(
         pass
 
     draw.text((wm_x, logo_y + 7), "orangenews.mn", font=get_font(16), fill=COLOR_GRAY)
+
+    # 7.5 Telegram QR (зүүн дээд буланд) — "Scan хийгээд Telegram-д нэгдээрэй"
+    try:
+        QR_SIZE = 90
+        qr = Image.open(TELEGRAM_QR_PATH).convert("RGBA")
+        qr = qr.resize((QR_SIZE, QR_SIZE), Image.LANCZOS)
+        # Bottom-right placement: PADDING_X-ийн адил тэгш зайтай
+        qr_x = IMG_W - PADDING_X - QR_SIZE
+        qr_y = IMG_H - BOTTOM_BAR - QR_SIZE - 10
+        # White rounded backdrop for QR (anti gradient bg)
+        backdrop_pad = 6
+        backdrop = Image.new(
+            "RGBA",
+            (QR_SIZE + 2 * backdrop_pad, QR_SIZE + 2 * backdrop_pad),
+            (255, 255, 255, 235),
+        )
+        mask = Image.new("L", backdrop.size, 0)
+        ImageDraw.Draw(mask).rounded_rectangle(
+            [(0, 0), backdrop.size], radius=10, fill=255
+        )
+        backdrop.putalpha(mask)
+        base.paste(backdrop, (qr_x - backdrop_pad, qr_y - backdrop_pad), backdrop)
+        base.paste(qr, (qr_x, qr_y), qr)
+        # "Telegram" caption
+        cap_font = get_font(12)
+        cap_text = "📨 Telegram"
+        cap_w = draw.textlength(cap_text, font=cap_font)
+        draw.text(
+            (qr_x + (QR_SIZE - cap_w) / 2, qr_y - 18),
+            cap_text,
+            font=cap_font,
+            fill=COLOR_GRAY,
+        )
+    except Exception as e:
+        # QR оруулж чадаагүй ч post үүсэх ёстой — fail-soft
+        pass
 
     # 8. Save
     today = datetime.now().strftime("%Y%m%d")

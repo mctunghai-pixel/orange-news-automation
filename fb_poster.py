@@ -40,7 +40,9 @@ FOOTER_LINKS = """
 
 📷 instagram.com/orangenews.official
 
-🧵 threads.net/@orangenews.official"""
+🧵 threads.net/@orangenews.official
+
+📨 Telegram: t.me/OrangeNewsMN"""
 
 # =============================================================================
 # image_generator холболт
