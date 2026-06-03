@@ -38,11 +38,11 @@ on:
   # already_published_local, so retries no-op when the :00 attempt succeeded.
   # OOW guard widened to MNT 19 (ig_runner.py WINDOW_END_HOUR_MNT) so :15/:30
   # retries that drift past 17:59 still publish (clamped to idx 9).
-  schedule:
+  # schedule:  # IG suspended 2026-05-21 — cron disabled 2026-06-03
     # MNT 08:00–17:00 (UTC 00:00–09:00) — slots 0-9, primary + 2 retries each.
-    - cron: '0 0-9 * * *'    # primary  (:00)
-    - cron: '15 0-9 * * *'   # retry 1  (:15)
-    - cron: '30 0-9 * * *'   # retry 2  (:30)
+    # - cron: '0 0-9 * * *'    # primary  (:00)
+    # - cron: '15 0-9 * * *'   # retry 1  (:15)
+    # - cron: '30 0-9 * * *'   # retry 2  (:30)
 
 # Serialize runs of this workflow. A delayed cron tick must not race with the
 # next on-time tick when both push logs/ig_publish_state.json back to main.
