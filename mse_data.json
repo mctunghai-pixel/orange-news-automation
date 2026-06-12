@@ -1,17 +1,10 @@
 {
-  "fetched_at_utc": "2026-06-12T06:44:54Z",
-  "fetched_at_mnt": "2026-06-12T14:44:54+08:00",
+  "fetched_at_utc": "2026-06-12T11:45:16Z",
+  "fetched_at_mnt": "2026-06-12T19:45:16+08:00",
   "action_id_used": "6d867ebd99fb6edef2f9537b22668cd0c00a71c2",
   "rediscovered": false,
   "errors": [],
   "marquee": [
-    {
-      "symbol": "INV",
-      "price": 7920.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
     {
       "symbol": "HBO",
       "price": 55.0,
@@ -20,39 +13,18 @@
       "direction": "flat"
     },
     {
-      "symbol": "MSE",
-      "price": 365.0,
-      "change_pct": 0.21,
-      "change_abs": 0.770012,
+      "symbol": "UYN",
+      "price": 960.0,
+      "change_pct": 6.29,
+      "change_abs": 56.84,
       "direction": "up"
     },
     {
-      "symbol": "AMT",
-      "price": 7.18,
-      "change_pct": 0.0,
-      "change_abs": 1.71661e-07,
-      "direction": "flat"
-    },
-    {
-      "symbol": "HRM",
-      "price": 194.0,
-      "change_pct": 0.03,
-      "change_abs": 0.05,
-      "direction": "up"
-    },
-    {
-      "symbol": "MBW",
-      "price": 176.9,
-      "change_pct": 1.09,
-      "change_abs": 1.9,
-      "direction": "up"
-    },
-    {
-      "symbol": "MFG",
-      "price": 1036.0,
-      "change_pct": 0.29,
-      "change_abs": 3.0,
-      "direction": "up"
+      "symbol": "SUU",
+      "price": 639.9,
+      "change_pct": -0.08,
+      "change_abs": -0.52,
+      "direction": "down"
     },
     {
       "symbol": "XOC",
@@ -62,6 +34,27 @@
       "direction": "down"
     },
     {
+      "symbol": "MNP",
+      "price": 535.0,
+      "change_pct": -0.67,
+      "change_abs": -3.6,
+      "direction": "down"
+    },
+    {
+      "symbol": "SEND",
+      "price": 139.99,
+      "change_pct": 1.92,
+      "change_abs": 2.63,
+      "direction": "up"
+    },
+    {
+      "symbol": "OMBS",
+      "price": 99.82,
+      "change_pct": 0.02,
+      "change_abs": 0.0199969,
+      "direction": "up"
+    },
+    {
       "symbol": "TDB",
       "price": 15270.0,
       "change_pct": 0.26,
@@ -69,11 +62,25 @@
       "direction": "up"
     },
     {
-      "symbol": "UYN",
-      "price": 960.0,
-      "change_pct": 6.29,
-      "change_abs": 56.84,
+      "symbol": "SNDB",
+      "price": 100.0,
+      "change_pct": 0.2,
+      "change_abs": 0.199997,
       "direction": "up"
+    },
+    {
+      "symbol": "NEH",
+      "price": 26.0,
+      "change_pct": -2.69,
+      "change_abs": -0.719999,
+      "direction": "down"
+    },
+    {
+      "symbol": "GRB",
+      "price": 1.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
     },
     {
       "symbol": "ERDN",
@@ -90,73 +97,45 @@
       "direction": "down"
     },
     {
-      "symbol": "ITLS",
-      "price": 75.0,
-      "change_pct": -5.06,
-      "change_abs": -4.0,
-      "direction": "down"
-    },
-    {
-      "symbol": "MFC",
-      "price": 83.98,
-      "change_pct": 0.66,
-      "change_abs": 0.539997,
+      "symbol": "JTB",
+      "price": 64.0,
+      "change_pct": 7.2,
+      "change_abs": 4.3,
       "direction": "up"
     },
     {
-      "symbol": "CUMN",
-      "price": 277.99,
-      "change_pct": 2.14,
-      "change_abs": 5.66001,
-      "direction": "up"
-    },
-    {
-      "symbol": "SNDB",
-      "price": 100.0,
-      "change_pct": 0.2,
-      "change_abs": 0.199997,
-      "direction": "up"
-    },
-    {
-      "symbol": "GRB",
-      "price": 1.0,
+      "symbol": "MVO",
+      "price": 1051.0,
       "change_pct": 0.0,
       "change_abs": 0.0,
       "direction": "flat"
     },
     {
-      "symbol": "ADU",
-      "price": 334.0,
-      "change_pct": -14.8,
-      "change_abs": -58.0,
-      "direction": "down"
+      "symbol": "ADB",
+      "price": 94.0,
+      "change_pct": 0.58,
+      "change_abs": 0.54,
+      "direction": "up"
     },
     {
-      "symbol": "AIC",
-      "price": 659.99,
-      "change_pct": 0.0,
-      "change_abs": 9.76562e-06,
-      "direction": "flat"
+      "symbol": "MBW",
+      "price": 176.9,
+      "change_pct": 1.09,
+      "change_abs": 1.9,
+      "direction": "up"
     },
     {
-      "symbol": "KHAN",
-      "price": 1385.0,
+      "symbol": "MIB",
+      "price": 69.0,
       "change_pct": 0.0,
       "change_abs": 0.0,
       "direction": "flat"
     },
     {
-      "symbol": "APU",
-      "price": 930.0,
-      "change_pct": -1.99,
-      "change_abs": -18.9,
-      "direction": "down"
-    },
-    {
-      "symbol": "AARD",
-      "price": 2900.0,
-      "change_pct": 1.28,
-      "change_abs": 37.0,
+      "symbol": "LEND",
+      "price": 156.9,
+      "change_pct": 0.16,
+      "change_abs": 0.250003,
       "direction": "up"
     },
     {
@@ -174,80 +153,17 @@
       "direction": "flat"
     },
     {
-      "symbol": "GLMT",
-      "price": 1162.0,
-      "change_pct": -0.68,
-      "change_abs": -8.0,
-      "direction": "down"
-    },
-    {
-      "symbol": "TUM",
-      "price": 360.0,
-      "change_pct": -1.05,
-      "change_abs": -3.82001,
-      "direction": "down"
-    },
-    {
-      "symbol": "LEND",
-      "price": 156.9,
-      "change_pct": 0.16,
-      "change_abs": 0.250003,
-      "direction": "up"
-    },
-    {
-      "symbol": "MNDL",
-      "price": 81.1,
-      "change_pct": 2.06,
-      "change_abs": 1.64,
-      "direction": "up"
-    },
-    {
-      "symbol": "NEH",
-      "price": 26.0,
-      "change_pct": -2.69,
-      "change_abs": -0.719999,
-      "direction": "down"
-    },
-    {
-      "symbol": "MNP",
-      "price": 535.0,
-      "change_pct": -0.67,
-      "change_abs": -3.6,
-      "direction": "down"
+      "symbol": "INV",
+      "price": 7920.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
     },
     {
       "symbol": "TGI",
       "price": 790.0,
       "change_pct": 5.07,
       "change_abs": 38.02,
-      "direction": "up"
-    },
-    {
-      "symbol": "MVO",
-      "price": 1051.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "XAC",
-      "price": 1170.0,
-      "change_pct": 0.86,
-      "change_abs": 10.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "JTB",
-      "price": 64.0,
-      "change_pct": 7.2,
-      "change_abs": 4.3,
-      "direction": "up"
-    },
-    {
-      "symbol": "BDS",
-      "price": 2930.0,
-      "change_pct": 1.03,
-      "change_abs": 30.0,
       "direction": "up"
     },
     {
@@ -258,24 +174,17 @@
       "direction": "down"
     },
     {
-      "symbol": "EER",
-      "price": 4400.0,
-      "change_pct": 9.73,
-      "change_abs": 390.0,
+      "symbol": "MFG",
+      "price": 1036.0,
+      "change_pct": 0.29,
+      "change_abs": 3.0,
       "direction": "up"
     },
     {
-      "symbol": "ADB",
-      "price": 94.0,
-      "change_pct": 0.58,
-      "change_abs": 0.54,
-      "direction": "up"
-    },
-    {
-      "symbol": "MLG",
-      "price": 140.0,
-      "change_pct": -9.65,
-      "change_abs": -14.95,
+      "symbol": "BODI",
+      "price": 75.0,
+      "change_pct": -3.82,
+      "change_abs": -2.98,
       "direction": "down"
     },
     {
@@ -286,32 +195,18 @@
       "direction": "up"
     },
     {
-      "symbol": "SEND",
-      "price": 139.99,
-      "change_pct": 1.92,
-      "change_abs": 2.63,
+      "symbol": "AARD",
+      "price": 2900.0,
+      "change_pct": 1.28,
+      "change_abs": 37.0,
       "direction": "up"
     },
     {
-      "symbol": "SUU",
-      "price": 639.9,
-      "change_pct": -0.08,
-      "change_abs": -0.52,
+      "symbol": "ADU",
+      "price": 334.0,
+      "change_pct": -14.8,
+      "change_abs": -58.0,
       "direction": "down"
-    },
-    {
-      "symbol": "BODI",
-      "price": 75.0,
-      "change_pct": -3.82,
-      "change_abs": -2.98,
-      "direction": "down"
-    },
-    {
-      "symbol": "MIB",
-      "price": 69.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
     },
     {
       "symbol": "SHKH",
@@ -321,11 +216,46 @@
       "direction": "up"
     },
     {
-      "symbol": "GAZR",
-      "price": 39.7,
-      "change_pct": 0.15,
-      "change_abs": 0.0600012,
+      "symbol": "TUM",
+      "price": 360.0,
+      "change_pct": -1.05,
+      "change_abs": -3.82001,
+      "direction": "down"
+    },
+    {
+      "symbol": "XAC",
+      "price": 1170.0,
+      "change_pct": 0.86,
+      "change_abs": 10.0,
       "direction": "up"
+    },
+    {
+      "symbol": "ALTT",
+      "price": 4900.0,
+      "change_pct": 2.94,
+      "change_abs": 140.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "MNDL",
+      "price": 81.1,
+      "change_pct": 2.06,
+      "change_abs": 1.64,
+      "direction": "up"
+    },
+    {
+      "symbol": "MFC",
+      "price": 83.98,
+      "change_pct": 0.66,
+      "change_abs": 0.539997,
+      "direction": "up"
+    },
+    {
+      "symbol": "APU",
+      "price": 930.0,
+      "change_pct": -1.99,
+      "change_abs": -18.9,
+      "direction": "down"
     },
     {
       "symbol": "HRD",
@@ -335,6 +265,41 @@
       "direction": "down"
     },
     {
+      "symbol": "KHAN",
+      "price": 1385.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
+    },
+    {
+      "symbol": "ITLS",
+      "price": 75.0,
+      "change_pct": -5.06,
+      "change_abs": -4.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "CUMN",
+      "price": 277.99,
+      "change_pct": 2.14,
+      "change_abs": 5.66001,
+      "direction": "up"
+    },
+    {
+      "symbol": "GLMT",
+      "price": 1162.0,
+      "change_pct": -0.68,
+      "change_abs": -8.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "EER",
+      "price": 4400.0,
+      "change_pct": 9.73,
+      "change_abs": 390.0,
+      "direction": "up"
+    },
+    {
       "symbol": "MBG",
       "price": 17.0,
       "change_pct": 0.0,
@@ -342,18 +307,53 @@
       "direction": "flat"
     },
     {
-      "symbol": "OMBS",
-      "price": 99.82,
-      "change_pct": 0.02,
-      "change_abs": 0.0199969,
+      "symbol": "GAZR",
+      "price": 39.7,
+      "change_pct": 0.15,
+      "change_abs": 0.0600012,
       "direction": "up"
     },
     {
-      "symbol": "ALTT",
-      "price": 4900.0,
-      "change_pct": 2.94,
-      "change_abs": 140.0,
+      "symbol": "MSE",
+      "price": 365.0,
+      "change_pct": 0.21,
+      "change_abs": 0.770012,
       "direction": "up"
+    },
+    {
+      "symbol": "BDS",
+      "price": 2930.0,
+      "change_pct": 1.03,
+      "change_abs": 30.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "HRM",
+      "price": 194.0,
+      "change_pct": 0.03,
+      "change_abs": 0.05,
+      "direction": "up"
+    },
+    {
+      "symbol": "MLG",
+      "price": 140.0,
+      "change_pct": -9.65,
+      "change_abs": -14.95,
+      "direction": "down"
+    },
+    {
+      "symbol": "AMT",
+      "price": 7.18,
+      "change_pct": 0.0,
+      "change_abs": 1.71661e-07,
+      "direction": "flat"
+    },
+    {
+      "symbol": "AIC",
+      "price": 659.99,
+      "change_pct": 0.0,
+      "change_abs": 9.76562e-06,
+      "direction": "flat"
     }
   ],
   "stock_amount": [
@@ -1263,5 +1263,5 @@
       "code": 568
     }
   ],
-  "elapsed_seconds": 7.97
+  "elapsed_seconds": 7.46
 }
