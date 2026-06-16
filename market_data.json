@@ -5,9 +5,9 @@
     "name": "S&P 500 Index",
     "assetClass": "index",
     "currency": "USD",
-    "price": 7554.29,
-    "change": 122.8301,
-    "changePct": 1.6528,
+    "price": NaN,
+    "change": NaN,
+    "changePct": NaN,
     "open": 7516.75,
     "prevClose": 7431.46,
     "dayHigh": 7577.9199,
@@ -41,7 +41,7 @@
       },
       {
         "date": "2026-06-15",
-        "close": 7554.29
+        "close": NaN
       }
     ],
     "history1m": [
@@ -163,10 +163,10 @@
       },
       {
         "date": "2026-06-15",
-        "close": 7554.29
+        "close": NaN
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:23Z"
+    "lastUpdated": "2026-06-16T05:44:29Z"
   },
   "dji": {
     "slug": "dji",
@@ -174,9 +174,9 @@
     "name": "Dow Jones Industrial",
     "assetClass": "index",
     "currency": "USD",
-    "price": 51671.0312,
-    "change": 468.7695,
-    "changePct": 0.9155,
+    "price": NaN,
+    "change": NaN,
+    "changePct": NaN,
     "open": 51364.5508,
     "prevClose": 51202.2617,
     "dayHigh": 51945.8906,
@@ -210,7 +210,7 @@
       },
       {
         "date": "2026-06-15",
-        "close": 51671.0312
+        "close": NaN
       }
     ],
     "history1m": [
@@ -332,10 +332,10 @@
       },
       {
         "date": "2026-06-15",
-        "close": 51671.0312
+        "close": NaN
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:23Z"
+    "lastUpdated": "2026-06-16T05:44:29Z"
   },
   "ixic": {
     "slug": "ixic",
@@ -343,9 +343,9 @@
     "name": "Nasdaq Composite",
     "assetClass": "index",
     "currency": "USD",
-    "price": 26683.9414,
-    "change": 795.1016,
-    "changePct": 3.0712,
+    "price": NaN,
+    "change": NaN,
+    "changePct": NaN,
     "open": 26447.2305,
     "prevClose": 25888.8398,
     "dayHigh": 26687.5566,
@@ -379,7 +379,7 @@
       },
       {
         "date": "2026-06-15",
-        "close": 26683.9414
+        "close": NaN
       }
     ],
     "history1m": [
@@ -501,10 +501,10 @@
       },
       {
         "date": "2026-06-15",
-        "close": 26683.9414
+        "close": NaN
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:23Z"
+    "lastUpdated": "2026-06-16T05:44:29Z"
   },
   "btc": {
     "slug": "btc",
@@ -512,13 +512,13 @@
     "name": "Bitcoin",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 66321.6797,
-    "change": 611.2812,
-    "changePct": 0.9303,
+    "price": 66040.0312,
+    "change": 329.6328,
+    "changePct": 0.5016,
     "open": 66287.4766,
     "prevClose": 65710.3984,
-    "dayHigh": 66324.5078,
-    "dayLow": 66287.4766,
+    "dayHigh": 66373.5469,
+    "dayLow": 65690.0859,
     "high52w": 126198.0703,
     "low52w": 59108.918,
     "history1w": [
@@ -548,7 +548,7 @@
       },
       {
         "date": "2026-06-16",
-        "close": 66321.6797
+        "close": 66040.0312
       }
     ],
     "history1m": [
@@ -670,11 +670,11 @@
       },
       {
         "date": "2026-06-16",
-        "close": 66321.6797
+        "close": 66040.0312
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:23Z",
-    "volume24h": 32546672640.0
+    "lastUpdated": "2026-06-16T05:44:29Z",
+    "volume24h": 31370739712.0
   },
   "eth": {
     "slug": "eth",
@@ -682,13 +682,13 @@
     "name": "Ethereum",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 1796.01,
-    "change": 71.3967,
-    "changePct": 4.1399,
+    "price": 1761.51,
+    "change": 36.8967,
+    "changePct": 2.1394,
     "open": 1794.9358,
     "prevClose": 1724.6133,
-    "dayHigh": 1794.9358,
-    "dayLow": 1794.4204,
+    "dayHigh": 1797.4673,
+    "dayLow": 1760.2039,
     "high52w": 4953.7329,
     "low52w": 1506.5057,
     "history1w": [
@@ -718,7 +718,7 @@
       },
       {
         "date": "2026-06-16",
-        "close": 1796.01
+        "close": 1761.51
       }
     ],
     "history1m": [
@@ -840,11 +840,11 @@
       },
       {
         "date": "2026-06-16",
-        "close": 1796.01
+        "close": 1761.51
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:23Z",
-    "volume24h": 17765490688.0
+    "lastUpdated": "2026-06-16T05:44:29Z",
+    "volume24h": 18023469056.0
   },
   "xau": {
     "slug": "xau",
@@ -852,20 +852,16 @@
     "name": "Gold Futures",
     "assetClass": "commodity",
     "currency": "USD",
-    "price": 4337.3999,
-    "change": 122.3999,
-    "changePct": 2.9039,
+    "price": 4344.7002,
+    "change": 16.7002,
+    "changePct": 0.3859,
     "open": 4331.2998,
-    "prevClose": 4215.0,
-    "dayHigh": 4340.7998,
+    "prevClose": 4328.0,
+    "dayHigh": 4354.1001,
     "dayLow": 4326.7002,
     "high52w": 5586.2002,
     "low52w": 3253.8,
     "history1w": [
-      {
-        "date": "2026-06-05",
-        "close": 4337.1001
-      },
       {
         "date": "2026-06-08",
         "close": 4335.8999
@@ -888,14 +884,14 @@
       },
       {
         "date": "2026-06-15",
-        "close": 4337.3999
+        "close": 4328.0
+      },
+      {
+        "date": "2026-06-16",
+        "close": 4344.7002
       }
     ],
     "history1m": [
-      {
-        "date": "2026-05-04",
-        "close": 4519.5
-      },
       {
         "date": "2026-05-05",
         "close": 4555.7998
@@ -1010,10 +1006,14 @@
       },
       {
         "date": "2026-06-15",
-        "close": 4337.3999
+        "close": 4328.0
+      },
+      {
+        "date": "2026-06-16",
+        "close": 4344.7002
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:23Z"
+    "lastUpdated": "2026-06-16T05:44:29Z"
   },
   "cl": {
     "slug": "cl",
@@ -1021,20 +1021,16 @@
     "name": "Crude Oil WTI",
     "assetClass": "commodity",
     "currency": "USD",
-    "price": 81.5,
-    "change": -3.38,
-    "changePct": -3.9821,
+    "price": 80.35,
+    "change": -0.4,
+    "changePct": -0.4954,
     "open": 81.1,
-    "prevClose": 84.88,
+    "prevClose": 80.75,
     "dayHigh": 81.58,
-    "dayLow": 80.92,
+    "dayLow": 80.28,
     "high52w": 119.48,
     "low52w": 54.98,
     "history1w": [
-      {
-        "date": "2026-06-05",
-        "close": 90.54
-      },
       {
         "date": "2026-06-08",
         "close": 91.3
@@ -1057,14 +1053,14 @@
       },
       {
         "date": "2026-06-15",
-        "close": 81.5
+        "close": 80.75
+      },
+      {
+        "date": "2026-06-16",
+        "close": 80.35
       }
     ],
     "history1m": [
-      {
-        "date": "2026-05-04",
-        "close": 106.42
-      },
       {
         "date": "2026-05-05",
         "close": 102.27
@@ -1179,10 +1175,14 @@
       },
       {
         "date": "2026-06-15",
-        "close": 81.5
+        "close": 80.75
+      },
+      {
+        "date": "2026-06-16",
+        "close": 80.35
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:24Z"
+    "lastUpdated": "2026-06-16T05:44:29Z"
   },
   "mntusd": {
     "slug": "mntusd",
@@ -1190,13 +1190,13 @@
     "name": "Mongolian Tögrög",
     "assetClass": "forex",
     "currency": "MNT",
-    "price": 3601.2136,
-    "change": 0.0,
-    "changePct": 0.0,
-    "open": 3601.2136,
+    "price": 3601.0725,
+    "change": -0.1411,
+    "changePct": -0.0039,
+    "open": 3601.0725,
     "prevClose": 3601.2136,
-    "dayHigh": 3601.2136,
-    "dayLow": 3601.2136,
+    "dayHigh": 3601.0725,
+    "dayLow": 3601.0725,
     "high52w": 3611.8682,
     "low52w": 3546.674,
     "history1w": [
@@ -1226,7 +1226,7 @@
       },
       {
         "date": "2026-06-16",
-        "close": 3601.2136
+        "close": 3601.0725
       }
     ],
     "history1m": [
@@ -1348,10 +1348,10 @@
       },
       {
         "date": "2026-06-16",
-        "close": 3601.2136
+        "close": 3601.0725
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:24Z"
+    "lastUpdated": "2026-06-16T05:44:29Z"
   },
   "msetop20": {
     "slug": "msetop20",
@@ -1359,14 +1359,14 @@
     "name": "MSE Top 20 Index",
     "assetClass": "index",
     "currency": "MNT",
-    "price": 51464.59,
-    "change": 182.5,
-    "changePct": 0.36,
-    "open": 51464.59,
-    "prevClose": 51282.09,
-    "dayHigh": 51464.59,
-    "dayLow": 51464.59,
-    "high52w": 51520.46,
+    "price": 52061.4,
+    "change": 596.81,
+    "changePct": 1.16,
+    "open": 52061.4,
+    "prevClose": 51464.59,
+    "dayHigh": 52061.4,
+    "dayLow": 52061.4,
+    "high52w": 52061.4,
     "low52w": 50484.09,
     "history1w": [
       {
@@ -1395,7 +1395,7 @@
       },
       {
         "date": "2026-06-16",
-        "close": 51464.59
+        "close": 52061.4
       }
     ],
     "history1m": [
@@ -1517,9 +1517,9 @@
       },
       {
         "date": "2026-06-16",
-        "close": 51464.59
+        "close": 52061.4
       }
     ],
-    "lastUpdated": "2026-06-16T00:09:24Z"
+    "lastUpdated": "2026-06-16T05:44:30Z"
   }
 }
