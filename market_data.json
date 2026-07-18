@@ -166,7 +166,7 @@
         "close": 7457.6899
       }
     ],
-    "lastUpdated": "2026-07-18T06:01:00Z"
+    "lastUpdated": "2026-07-18T08:16:46Z"
   },
   "dji": {
     "slug": "dji",
@@ -335,7 +335,7 @@
         "close": 52146.4219
       }
     ],
-    "lastUpdated": "2026-07-18T06:01:00Z"
+    "lastUpdated": "2026-07-18T08:16:46Z"
   },
   "ixic": {
     "slug": "ixic",
@@ -504,7 +504,7 @@
         "close": 25520.2402
       }
     ],
-    "lastUpdated": "2026-07-18T06:01:00Z"
+    "lastUpdated": "2026-07-18T08:16:46Z"
   },
   "btc": {
     "slug": "btc",
@@ -512,20 +512,16 @@
     "name": "Bitcoin",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 63914.0,
-    "change": 124.7188,
-    "changePct": 0.1955,
+    "price": 63930.0,
+    "change": 30.5391,
+    "changePct": 0.0478,
     "open": 63888.1992,
-    "prevClose": 63789.2812,
-    "dayHigh": 63973.2031,
+    "prevClose": 63899.4609,
+    "dayHigh": 63976.1172,
     "dayLow": 63854.4297,
     "high52w": 126198.0703,
     "low52w": 57747.7656,
     "history1w": [
-      {
-        "date": "2026-07-11",
-        "close": 63802.0273
-      },
       {
         "date": "2026-07-12",
         "close": 63758.2188
@@ -547,15 +543,15 @@
         "close": 63789.2812
       },
       {
+        "date": "2026-07-17",
+        "close": 63899.4609
+      },
+      {
         "date": "2026-07-18",
-        "close": 63914.0
+        "close": 63930.0
       }
     ],
     "history1m": [
-      {
-        "date": "2026-06-18",
-        "close": 62896.4727
-      },
       {
         "date": "2026-06-19",
         "close": 63540.8359
@@ -669,12 +665,16 @@
         "close": 63789.2812
       },
       {
+        "date": "2026-07-17",
+        "close": 63899.4609
+      },
+      {
         "date": "2026-07-18",
-        "close": 63914.0
+        "close": 63930.0
       }
     ],
-    "lastUpdated": "2026-07-18T06:01:00Z",
-    "volume24h": 23838158848.0
+    "lastUpdated": "2026-07-18T08:16:46Z",
+    "volume24h": 21322743808.0
   },
   "eth": {
     "slug": "eth",
@@ -682,20 +682,16 @@
     "name": "Ethereum",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 1844.5699,
-    "change": -18.6234,
-    "changePct": -0.9995,
+    "price": 1843.67,
+    "change": 2.6819,
+    "changePct": 0.1457,
     "open": 1840.656,
-    "prevClose": 1863.1934,
+    "prevClose": 1840.9882,
     "dayHigh": 1846.3837,
     "dayLow": 1839.038,
     "high52w": 4953.7329,
     "low52w": 1506.5057,
     "history1w": [
-      {
-        "date": "2026-07-11",
-        "close": 1788.0996
-      },
       {
         "date": "2026-07-12",
         "close": 1805.7881
@@ -717,15 +713,15 @@
         "close": 1863.1934
       },
       {
+        "date": "2026-07-17",
+        "close": 1840.9882
+      },
+      {
         "date": "2026-07-18",
-        "close": 1844.5699
+        "close": 1843.67
       }
     ],
     "history1m": [
-      {
-        "date": "2026-06-18",
-        "close": 1709.5334
-      },
       {
         "date": "2026-06-19",
         "close": 1710.9824
@@ -839,12 +835,16 @@
         "close": 1863.1934
       },
       {
+        "date": "2026-07-17",
+        "close": 1840.9882
+      },
+      {
         "date": "2026-07-18",
-        "close": 1844.5699
+        "close": 1843.67
       }
     ],
-    "lastUpdated": "2026-07-18T06:01:00Z",
-    "volume24h": 8656899072.0
+    "lastUpdated": "2026-07-18T08:16:46Z",
+    "volume24h": 7855340032.0
   },
   "xau": {
     "slug": "xau",
@@ -1013,7 +1013,7 @@
         "close": 4012.7
       }
     ],
-    "lastUpdated": "2026-07-18T06:01:00Z"
+    "lastUpdated": "2026-07-18T08:16:46Z"
   },
   "cl": {
     "slug": "cl",
@@ -1182,7 +1182,7 @@
         "close": 82.49
       }
     ],
-    "lastUpdated": "2026-07-18T06:01:01Z"
+    "lastUpdated": "2026-07-18T08:16:47Z"
   },
   "mntusd": {
     "slug": "mntusd",
@@ -1351,7 +1351,7 @@
         "close": 3621.5541
       }
     ],
-    "lastUpdated": "2026-07-18T06:01:01Z"
+    "lastUpdated": "2026-07-18T08:16:47Z"
   },
   "msetop20": {
     "slug": "msetop20",
