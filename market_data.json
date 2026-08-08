@@ -166,7 +166,7 @@
         "close": 7757.6401
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:01Z"
+    "lastUpdated": "2026-08-08T07:44:45Z"
   },
   "dji": {
     "slug": "dji",
@@ -335,7 +335,7 @@
         "close": 54036.9297
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:01Z"
+    "lastUpdated": "2026-08-08T07:44:45Z"
   },
   "ixic": {
     "slug": "ixic",
@@ -504,7 +504,7 @@
         "close": 26690.6191
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:02Z"
+    "lastUpdated": "2026-08-08T07:44:46Z"
   },
   "btc": {
     "slug": "btc",
@@ -512,20 +512,16 @@
     "name": "Bitcoin",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 64947.4297,
-    "change": 685.3164,
-    "changePct": 1.0664,
+    "price": 64910.2812,
+    "change": 30.0898,
+    "changePct": 0.0464,
     "open": 64884.1602,
-    "prevClose": 64262.1133,
+    "prevClose": 64880.1914,
     "dayHigh": 65010.5742,
     "dayLow": 64800.7188,
     "high52w": 126198.0703,
     "low52w": 57747.7656,
     "history1w": [
-      {
-        "date": "2026-08-01",
-        "close": 62763.3203
-      },
       {
         "date": "2026-08-02",
         "close": 63482.0
@@ -547,15 +543,15 @@
         "close": 64262.1133
       },
       {
+        "date": "2026-08-07",
+        "close": 64880.1914
+      },
+      {
         "date": "2026-08-08",
-        "close": 64947.4297
+        "close": 64910.2812
       }
     ],
     "history1m": [
-      {
-        "date": "2026-07-09",
-        "close": 63193.1484
-      },
       {
         "date": "2026-07-10",
         "close": 64127.1406
@@ -669,12 +665,16 @@
         "close": 64262.1133
       },
       {
+        "date": "2026-08-07",
+        "close": 64880.1914
+      },
+      {
         "date": "2026-08-08",
-        "close": 64947.4297
+        "close": 64910.2812
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:02Z",
-    "volume24h": 21663571968.0
+    "lastUpdated": "2026-08-08T07:44:46Z",
+    "volume24h": 21275488256.0
   },
   "eth": {
     "slug": "eth",
@@ -682,20 +682,16 @@
     "name": "Ethereum",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 1916.12,
-    "change": 14.0625,
-    "changePct": 0.7393,
+    "price": 1913.77,
+    "change": 0.4906,
+    "changePct": 0.0256,
     "open": 1913.2822,
-    "prevClose": 1902.0575,
+    "prevClose": 1913.2794,
     "dayHigh": 1917.5715,
     "dayLow": 1911.5477,
     "high52w": 4953.7329,
     "low52w": 1506.5057,
     "history1w": [
-      {
-        "date": "2026-08-01",
-        "close": 1843.4177
-      },
       {
         "date": "2026-08-02",
         "close": 1882.522
@@ -717,15 +713,15 @@
         "close": 1902.0575
       },
       {
+        "date": "2026-08-07",
+        "close": 1913.2794
+      },
+      {
         "date": "2026-08-08",
-        "close": 1916.12
+        "close": 1913.77
       }
     ],
     "history1m": [
-      {
-        "date": "2026-07-09",
-        "close": 1744.4846
-      },
       {
         "date": "2026-07-10",
         "close": 1795.6932
@@ -839,12 +835,16 @@
         "close": 1902.0575
       },
       {
+        "date": "2026-08-07",
+        "close": 1913.2794
+      },
+      {
         "date": "2026-08-08",
-        "close": 1916.12
+        "close": 1913.77
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:02Z",
-    "volume24h": 8401400832.0
+    "lastUpdated": "2026-08-08T07:44:46Z",
+    "volume24h": 8249665536.0
   },
   "xau": {
     "slug": "xau",
@@ -1013,7 +1013,7 @@
         "close": 4340.7002
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:02Z"
+    "lastUpdated": "2026-08-08T07:44:46Z"
   },
   "cl": {
     "slug": "cl",
@@ -1182,7 +1182,7 @@
         "close": 78.18
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:02Z"
+    "lastUpdated": "2026-08-08T07:44:46Z"
   },
   "mntusd": {
     "slug": "mntusd",
@@ -1351,7 +1351,7 @@
         "close": 3616.1341
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:02Z"
+    "lastUpdated": "2026-08-08T07:44:47Z"
   },
   "msetop20": {
     "slug": "msetop20",
@@ -1520,6 +1520,6 @@
         "close": 54843.38
       }
     ],
-    "lastUpdated": "2026-08-08T06:43:02Z"
+    "lastUpdated": "2026-08-08T07:44:48Z"
   }
 }
