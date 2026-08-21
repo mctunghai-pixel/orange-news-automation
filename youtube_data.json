@@ -1,13 +1,18 @@
 {
-  "fetched_at_utc": "2026-08-21T02:58:47Z",
-  "fetched_at_mnt": "2026-08-21T10:58:49+0800",
-  "channels_processed": 6,
-  "videos_total": 35,
-  "videos_filtered_short": 55,
+  "fetched_at_utc": "2026-08-21T04:33:39Z",
+  "fetched_at_mnt": "2026-08-21T12:33:40+0800",
+  "channels_processed": 2,
+  "videos_total": 15,
+  "videos_filtered_short": 15,
   "videos_filtered_denied": 0,
   "videos_filtered_no_duration": 0,
-  "errors": [],
-  "elapsed_seconds": 1.44,
+  "errors": [
+    "Reuters: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "Financial Times: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "CNBC: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "World Bank Group: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))"
+  ],
+  "elapsed_seconds": 0.77,
   "videos": [
     {
       "id": "K1gt4mGRh1w",
@@ -33,19 +38,6 @@
       "watch_url": "https://www.youtube.com/watch?v=K_NKCESXm7w",
       "duration_seconds": 1441,
       "duration_iso": "PT24M1S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "-i9me4_JMwY",
-      "title": "LIVE: Trial for alleged killer of Tupac Shakur",
-      "description": "The trial continues for Duane \"Keffe D\" ‌Davis, the ex-gang leader accused of orchestrating the drive-by killing of Tupac Shakur in 1996. He has pleaded not guilty. \n \n#tupac #tupacshakur #trial #crime #legal\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-08-21T00:06:15+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/-i9me4_JMwY/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=-i9me4_JMwY",
-      "duration_seconds": 13825,
-      "duration_iso": "PT3H50M25S",
       "mongolia_relevant": false
     },
     {
@@ -127,71 +119,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "Rpi6LHlXUnE",
-      "title": "LIVE: Lindsay Clancy murder trial continues",
-      "description": "Lindsay Clancy, the Massachusetts mom accused of killing her three young children in January 2023, appears in court. Clancy's defense team has argued she was suffering from postpartum mental health issues. \n\n#lindsayclancy #murdertrial #legal #law #clancy #mentalhealth #live #Reuters #News\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-08-20T20:30:13+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/Rpi6LHlXUnE/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=Rpi6LHlXUnE",
-      "duration_seconds": 7400,
-      "duration_iso": "PT2H3M20S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "r39i7_LTPOA",
-      "title": "LIVE: World Robot Conference in Beijing",
-      "description": "The 2026 World Robot Conference is on in Beijing, featuring more than 300 exhibiting companies and over 2,000 exhibits.\n\n#WorldRobotConference #WRC #robotics #robots #tech #technology#Beijing #China #live #Reuters #news\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-08-20T20:11:42+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/r39i7_LTPOA/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=r39i7_LTPOA",
-      "duration_seconds": 9457,
-      "duration_iso": "PT2H37M37S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "XJaGFdD7UjE",
-      "title": "LIVE: Rally against Tunisian president",
-      "description": "Activists and civil society groups in Tunisia protest against President Kais Saied, demanding an end to one-man rule and calling for the release of jailed activists and journalists.\n \n#tunisia #protest #kaissaied #rally #democracy #politics\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-08-20T19:05:53+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/XJaGFdD7UjE/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=XJaGFdD7UjE",
-      "duration_seconds": 3603,
-      "duration_iso": "PT1H3S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "0WL5iCMfb_c",
-      "title": "LIVE: Crowds march to Argentina's Economy Ministry",
-      "description": "Protesters march to Argentina's Economy Ministry in Buenos Aires to highlight issues over debt and the economy.\n \n#economy #argentina #americas #debt #protest #inflation #march\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-08-20T18:30:38+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/0WL5iCMfb_c/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=0WL5iCMfb_c",
-      "duration_seconds": 3500,
-      "duration_iso": "PT58M20S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "FFTZzJdPYag",
-      "title": "Micron’s $50 Billion Buildout In Its Hometown Of Boise Is Minting Millionaires",
-      "description": "Micron was founded in the basement of a dental office in Boise, Idaho, nearly 50 years ago and has remained an under-the-radar semiconductor company for decades. Now, suddenly it’s minting millionaires and spending $50 billion to build new factories that are transforming its hometown into America's latest boomtown. Unprecedented demand for memory has increased its stock value more than 10-fold since 2024. Sprawling homes are selling above listing price and Idaho has the fastest statewide population growth in the country. CNBC talked to wealth managers and real estate agents who now primarily work with Micron employees, jewelry store owners who say business is booming, and other Boise locals concerned about increasing traffic and strain on infrastructure, power and water.\n\nChapters:\n0:00 Introduction\n1:25 Made in Asia and America\n3:49 Minting millionaires\n5:35 People, power, water\n\nProduced by: Katie Tarasov\nEdited by: Zach Green, Erin Black\nCamera: Lucas Mullikin, Macklin Fishman\nAdditional Reporting: CJ Haddad, Toby Burns\nSenior Director of Video: Jeniece Pettitt\nAnimation: Jason Reginato, Emily Park\nAdditional Footage: Micron, Getty Images, SK Hynix, Samsung, College of Western Idaho\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nMicron’s $50 Billion Buildout In Its Hometown Of Boise Is Minting Millionaires",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-20T14:00:26+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/FFTZzJdPYag/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=FFTZzJdPYag",
-      "duration_seconds": 526,
-      "duration_iso": "PT8M46S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "GbB3vFfiaVU",
       "title": "Why the World’s Largest Megaproject Collapsed | WSJ",
       "description": "Saudi Arabia’s futuristic megaproject Neom has come to a standstill, as the extraordinary costs of the planned city have collided with financial reality. After sinking more than $50 billion into Saudi Crown Prince Mohammed bin Salman’s dreams of a sci-fi metropolis, the kingdom is now spending billions of dollars more to wind down contracts, leaving mammoth-sized partially built structures to gather sand in the desert. \n\nWSJ’s Eliot Brown analyzes internal documents and satellite images to show how and why the world’s largest construction project came to a halt, and what comes next for Neom.\n\nChapters:\n0:00 Neom’s failure\n0:39 The vision and design\n1:37 The latest updates on the project \n3:19 The origins\n5:13 Satellite images of projects today\n7:02 Ballooning costs \n9:43 Mutual delusion\n\nNews Explainers\nSome days the high-speed news cycle can bring more questions than answers. WSJ’s news explainers break down the day's biggest stories into bite-size pieces to help you make sense of the news.\n\n#SaudiArabia #Neom #WSJ",
@@ -202,19 +129,6 @@
       "watch_url": "https://www.youtube.com/watch?v=GbB3vFfiaVU",
       "duration_seconds": 654,
       "duration_iso": "PT10M54S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "iXzCPYAh3xo",
-      "title": "Why Car Dealerships Make Money Even When Car Sales Slow",
-      "description": "The auto industry is cyclical, but one segment seems to be far more resilient to downturns - the auto dealer. When times are good - dealers sell new cars. When they are bad, dealers can sell cheaper used cars, or parts and service for the shoppers who can’t afford a new vehicle. CNBC's Robert Ferris has more on the business of car dealerships and why there may be some challenges ahead.\n\nProduced by: Robert Ferris\nEdited by: Zach Green\nAnimation: Jason Reginato, Emily Park\nSenior Managing Producer: Tala Hadavi\nAdditional footage: Getty images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nHow Car Dealerships Hedge Against Downturns",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-19T14:00:20+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/iXzCPYAh3xo/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=iXzCPYAh3xo",
-      "duration_seconds": 236,
-      "duration_iso": "PT3M56S",
       "mongolia_relevant": false
     },
     {
@@ -231,19 +145,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "CDmJHWZ_X0g",
-      "title": "What Will TV Look Like In 3 Years?",
-      "description": "Media executives, including Jimmy Pitaro, Chris Winfrey, Anjali Sud and Jeff Zucker, share their predictions about what the TV market will look like three years from now with CNBC's Alex Sherman and Lillian Rizzo.\n\nChapters:\n0:00 Introduction\n1:22 In three years, will we have hit a floor on cable TV subscribers?\n2:41 What's one thinkg that will become a TV industry standard that doesn't exist today?\n4:22 Will there be a major government action to prevent a Big Tech company from getting bigger in the entertainment industry?\n6:01 Are we in a sports ratings bubble?\n8:34 What is another service you think will gain significant market share?\n\nProduced, Shot and Edited by Devan Burris\nReported and Hosted by Alex Sherman and Lillian Rizzo\nSenior Managing Producers: Shawn Baldwin and Jordan Smith\nSenior Director of Video: Lindsey Jacobson\nAnimation by: Jason Reginato\nAdditional Camera by: Rowan Buck\nAdditional Footage: Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWhat Will TV Look Like In 3 Years?",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-17T14:00:05+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/CDmJHWZ_X0g/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=CDmJHWZ_X0g",
-      "duration_seconds": 692,
-      "duration_iso": "PT11M32S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "KLw0AY-bsVs",
       "title": "How OpenAI’s Models Went Rogue to Hack Another Company | WSJ",
       "description": "Artificial-intelligence models from companies including OpenAI, Anthropic and Meta Platforms used the internet to hack other organizations in recent weeks, fueling concerns that businesses and individuals aren’t prepared for the cyber risks posed by the latest AI tools.\n\nWSJ break down how OpenAI’s models broke out of their training environment to hack the AI company Hugging Face and explain what the hacks mean for the Trump administration’s tech strategy.\n\nChapters:\n0:00 Rogue AI models\n0:47 How rogue attacks happen\n2:39 What these hacks mean\n3:25 U.S. vs. China\n4:50 AI guardrails\n\nNews Explainers\nSome days the high-speed news cycle can bring more questions than answers. WSJ’s news explainers break down the day's biggest stories into bite-size pieces to help you make sense of the news.\n\n#AI #OpenAI #WSJ",
@@ -257,32 +158,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "_FfIx2cOEYs",
-      "title": "Why High Tech Cars Might Age Like Smartphones",
-      "description": "Software defined vehicles offer advantages their analog rivals can‘t compete with. But the hardware and software in them needs to be maintained, and some owners have found their cars suddenly obsolete or without key features. CNBC talked with industry figures, including Rivian Chief Software Officer Wassym Bensaid about the promise of software defined vehicles and how his company is trying to handle the challenges this new form of ownership poses.\n\nChapters:\n00:00 Introduction\n01:22 Chapter 1: Software-defined cars \n02:34 Chapter 2: The problem \n04:39 Chapter 3: Keep it running \n\nProduced by: Robert Ferris\nShot and edited by: Darren Geeter\nAdditional Camera: Andrew Evers\nSenior Managing Producer: Tala Hadavi\nAdditional footage: Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWhy High Tech Cars Might Age Like Smartphones",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-15T14:00:30+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/_FfIx2cOEYs/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=_FfIx2cOEYs",
-      "duration_seconds": 446,
-      "duration_iso": "PT7M26S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "oLrvbPAsHMY",
-      "title": "Can Kazakhstan’s oil boom survive Putin’s war? | FT #shorts",
-      "description": "Oil helped transform Kazakhstan into Central Asia's largest economy. But much of its oil wealth depends on an export pipeline that crosses Russia - and that pipeline has come under attack from Ukrainian forces.\n\nCan shipping, manufacturing and critical minerals offer the country a future beyond oil?\n\n► Enjoying FT content? Get a daily slice of the very best FT journalism with FT Edit. Free for 30 days then just £4.99 a month\n\nSee if you get the FT for free as a student (http://ft.com/schoolsarefree) or start a £1 trial: https://subs.ft.com/spa3_trial?segmentId=3d4ba81b-96bb-cef0-9ece-29efd6ef2132.\n\n► Check out our Community tab for more stories: https://www.youtube.com/@FinancialTimes/community\n►  Listen to our podcasts: https://www.ft.com/podcasts\n►  Follow us on Instagram: https://www.instagram.com/financialtimes\n►  Follow us on Instagram: https://www.tiktok.com/@financialtimes",
-      "channel_id": "UCoUxsWakJucWg46KW5RsvPw",
-      "channel_title": "Financial Times",
-      "published_at": "2026-08-14T16:57:53+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/oLrvbPAsHMY/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=oLrvbPAsHMY",
-      "duration_seconds": 180,
-      "duration_iso": "PT3M",
-      "mongolia_relevant": false
-    },
-    {
       "id": "LDCvtZ4L_GM",
       "title": "How to Fix New York City’s $500M Trash Problem | WSJ Pro Perfected",
       "description": "New York City handles nearly 3 million tons of trash a year. And much of it ends up on the curb in loose plastic bags — before getting shipped to landfills outside of the city altogether, on barges and then trains. This system costs the city around $500 million a year. So, can the largest city in the United States modernize its waste management?\n\nWSJ explores how experts and city officials plan to tackle New York City’s giant trash problem.\n\nChapters:\n0:00 NYC’s trash problem\n0:34 Possible solutions\n1:10 Background on why the problem exists\n1:59 What the sanitation department does now\n3:34 The bigger problem: transfers, exports and landfills\n6:13 The bigger solution\n\nPro Perfected\nExperts in engineering and design break down a ubiquitous problem, examining how the world is built and what can make it better.\n\n#NYC #Trash #WSJ",
@@ -293,19 +168,6 @@
       "watch_url": "https://www.youtube.com/watch?v=LDCvtZ4L_GM",
       "duration_seconds": 413,
       "duration_iso": "PT6M53S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "8JiyJejo-e0",
-      "title": "Inside SK Hynix: We Went To Korea To See The World's Biggest AI Memory Buildout",
-      "description": "South Korean chip giant SK Hynix, which makes the majority of the world's high-bandwidth memory chips for artificial intelligence, is undergoing the world’s largest memory fab buildout, betting $720 billion to triple capacity by 2034. This secretive memory king is also the hottest new entrant to the U.S. market, following a blockbuster Nasdaq debut in July. \n\nSK Hynix, whose market cap has jumped more than fivefold in the past year and now tops $1 trillion, is making a big bet that extreme demand from AI is here to stay. Soaring memory prices exacerbated by capacity constraints are changing the fabric of the classic boom-and-bust industry, with AI chip giants like Nvidia willing to take on more risk as they scramble to secure supply. This is a never before seen look inside the highly secured company from the largest factory being built in South Korea to an inside look at a cleanroom where memory is made, to SK Hynix’s first ever U.S. facility coming in Indiana. \n\nPlus, CNBC’s Katie Tarasov got a rare chance to sit down with SK Group Chairman Chey Tae-won and SK Hynix technology leads to ask about the huge risks they're taking in hopes that AI has changed the memory business for good.\n\nChapters:\n0:00 Introduction\n2:09 $720 billion chip bet\n8:23 Making HBM in a hurry\n12:43 Boom and bust?\n17:42 Coming to America\n\nReporter and Producer: Katie Tarasov\nSenior Director of Video: Jeniece Pettitt\nEdited by: Erin Black, Andrew Evers\nAdditional Camera: Richard Larkin, Nenad Simic\nAnimation: Jason Reginato, Emily Park, Christina Locopo\nAdditional Footage: SK Hynix, AMD, Samsung, Micron, Getty Images, Solidigm, ASML\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-13T14:00:14+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/8JiyJejo-e0/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=8JiyJejo-e0",
-      "duration_seconds": 1362,
-      "duration_iso": "PT22M42S",
       "mongolia_relevant": false
     },
     {
@@ -335,19 +197,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "PMUOat0agFw",
-      "title": "Why Trump Is Hitting Canada With 50% Tariffs",
-      "description": "On August 19, the U.S. will begin to levy 50% tariffs on Canadian exports of cars, dairy, alcohol among other products. The White House said these higher tariff rates come in response to Canada’s discriminatory treatment of U.S. products. The move also coincides with ongoing USMCA trade negotiations and a broader effort to rebuild Trump's global tariff regime previously struck down by the U.S. Supreme Court. CNBC's Megan Cassella reports.\n\nReporter: Megan Cassella\nProduced, Shot and Edited by: Carlos Waters\nProduced by: Ashlee Trujillo\nAdditional Editing: Andrea Miller\nAnimation: Emily Park\nSenior Managing Producer: Shawn Baldwin\nAdditional Footage: Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWhy Trump Is Hitting Canada With 50% Tariffs",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-12T14:00:05+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/PMUOat0agFw/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=PMUOat0agFw",
-      "duration_seconds": 283,
-      "duration_iso": "PT4M43S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "7eZ3WCthsag",
       "title": "The Neon Color That Became Impossible to Make | WSJ Coveted",
       "description": "One type of green neon has already disappeared. As longtime neon makers retire and fewer people learn the trade, an iconic American craft faces an uncertain future. WSJ explores why preserving neon is about more than keeping old signs illuminated. \n\nChapters:\n0:00 The iconic neon signs\n1:40 How neon tubes are made\n3:32 Recreating colors\n5:24 LED vs. neon: glass bending \n8:15 The future of neon\n\nWSJ's Coveted highlights the precision and process behind expertly-crafted cult favorites — from the pencils beloved by Disney animators to the sushi knives breaking thousands of years of Japanese tradition. These stories show how the smallest everyday items can be transformed into the ultimate luxury splurge.\n\n#Neon #Business #WSJ",
@@ -358,110 +207,6 @@
       "watch_url": "https://www.youtube.com/watch?v=7eZ3WCthsag",
       "duration_seconds": 577,
       "duration_iso": "PT9M37S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "x2aeX-bu5h0",
-      "title": "Why The U.S. Is Struggling To Keep Food Safe",
-      "description": "Tens of thousands of people across 47 states are reporting illness linked to the cyclospora outbreak that started in mid-May. While pressure is mounting at the FDA to resolve the outbreak, experts tell CNBC issues in the U.S. food safety arena have been mounting for years. CNBC's Brandon Gomez explores the challenges facing both the private and public sector when it comes to controlling outbreaks of this magnitude.\n\nProduced and Shot by Devan Burris\nReporting by Brandon Gomez and Angelica Peebles\nEdited by Andrea Miller\nAnimation by Jason Reginato\nManaging Producer Anuz Thapa\nSenior Director of Video Lindsey Jacobson\nAdditional Footage Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWhy The U.S. Is Struggling To Keep Food Safe",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-09T14:00:09+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/x2aeX-bu5h0/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=x2aeX-bu5h0",
-      "duration_seconds": 417,
-      "duration_iso": "PT6M57S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "fY4eelX7HDM",
-      "title": "The Business Behind The World’s Largest Elevator Company",
-      "description": "Elevator giant Otis makes most of its profits from servicing elevators, not building new ones. The business hinges on long-term stability, but its stock has fallen over the past year due to setbacks in its service business and investors chasing the AI trade. Watch the video to learn more about how the company is trying to win back Wall Street.\n\nChapters:\n0:00 Introduction\n1:40 Chapter 1: Urbanization\n3:28 Chapter 2: The service engine\n7:12 Chapter 3: Business in China\n9:22 Chapter 4: The competitive landscape\n\nProduced and Shot by: Ryan Baker\nCamera by: Natalie Rice, Darren Geeter\nEdited by: Darren Geeter\nAnimation by: Jason Reginato, Emily Park\nAdditional Editing: Jason Reginato, Devan Burris\nSenior Managing Producer: Tala Hadavi\nSenior Director of Video: Lindsey Jacobson\nAdditional Footage: Getty Images, Otis\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWho Makes The Elevators Americans Ride Every Day?",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-08T14:00:05+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/fY4eelX7HDM/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=fY4eelX7HDM",
-      "duration_seconds": 650,
-      "duration_iso": "PT10M50S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "G8WYyEO5bmo",
-      "title": "How Better Roads Are Transforming Communities in Laos",
-      "description": "The World Bank Southeast Asia Regional Economic Corridor and Connectivity Project is upgrading an Asian Highway and streamlining border procedures to increase job opportunities through better connectivity across Thailand, the Lao PDR, and Viet Nam. In northern Laos, the project is revitalizing communities by improving secondary roads that connect to rural villages, improving road safety, and increasing access to markets, public services, and opportunities.\n\nLearn more: https://www.worldbank.org/en/news/feature/2026/07/23/corridor-to-trade-jobs-and-services?cid=ECR_YT_Worldbank_EN_EXT \n\n00:00 Introduction - the Corridor\n00:53 Connecting Villagers to Services and Opportunity\n01:48 Road Improvements and Connectivity\n03:09 The Software of an Economic Corridor\n04:41 Consultation and Impact\n\n💬 Subtitles (CC) available English\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-08-07T20:07:05+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/G8WYyEO5bmo/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=G8WYyEO5bmo",
-      "duration_seconds": 333,
-      "duration_iso": "PT5M33S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "lC0EK8RCwxk",
-      "title": "Why Crypto Is Betting Big On AI Agents",
-      "description": "For years, the crypto industry's biggest challenge has been finding users beyond traders. Now, some of its biggest companies have a new target: AI agents. While crypto is still largely driven by speculation, companies are betting AI can become a second growth engine by turning AI agents into users of crypto wallets, stablecoins, and blockchain payment networks.\n\nReporter: Tanaya Macheel\nProduced and Edited by: Jeff Huang\nAnimation: Jason Reginato, Emily Park\nManaging Producer: Anuz Thapa\nSenior Director of Video: Lindsey Jacobson\nAdditional Footage: Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWhy Crypto Is Betting Big On AI Agents",
-      "channel_id": "UCvJJ_dzjViJCoLf5uKUTwoA",
-      "channel_title": "CNBC",
-      "published_at": "2026-08-07T14:00:26+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/lC0EK8RCwxk/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=lC0EK8RCwxk",
-      "duration_seconds": 325,
-      "duration_iso": "PT5M25S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "dfJxFkKEdXU",
-      "title": "هل تعتقد أن الوظيفة هي الطريقة الوحيدة للعمل مع البنك الدولي؟ فكّر مرة أخرى",
-      "description": "هل ترغب بالعمل مع مجموعة البنك الدولي بدون الحاجة إلى التقديم لوظيفة؟ اكتشف كيفية العثور على مشاريع المشتريات والعقود المربحة التي تقدمها مجموعة البنك الدولي، والمشاركة في المناقصات، والفوز بها.\nيمكنك الوصول إلى الأدوات والإرشادات والتنبيهات على منصة البنك الدولي الخاصة بالموردين: http://wrld.bg/YG1v50Z4Ul7 من خلال منصة مجموعة البنك الدولي للموردين، تستطيع الشركات من جميع الأحجام الحصول على تمويل بمليارات الدولارات لمشاريع عالمية. يشرح هذا الفيديو كيفية إيجاد فرص التوريد، والتعامل مع منهجية التوريد المُحدَّثة، والمنافسة بنزاهة على العقود في مجالات السلع والأعمال والخدمات. مع أكثر من 1600 مشروع نشط في أكثر من 100 دولة، تشمل المشتريات الممولة من البنك الدولي ما يلي: الأعمال المدنية والمعدات أنظمة تكنولوجيا المعلومات والاستشارات خدمات فنية متخصصة للشركات الصغيرة والمتوسطة والشركات العالمية ما الجديد في هذا الإطار المُحدَّث؟ يركز النظام الجديد على أفضل قيمة (وليس مجرد أفضل سعر)، والمشاركة المبكرة في السوق، وخيارات دفع أفضل، ونظام شكاوى قوي لضمان عملية اختيار عادلة وشفافة. تعرّف على المزيد وسجّل عملك اليوم: http://wrld.bg/YG1v50Z4Ul7 \n\n\n🌐 تعد مجموعة البنك الدولي واحدة من أكبر مصادر التمويل والمعرفة في العالم بالنسبة للبلدان المنخفضة الدخل. تشترك مؤسساتها الخمس في الالتزام بالحد من الفقر وزيادة الرخاء المشترك وتعزيز التنمية المستدامة. http://www.albankaldawli.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-08-01T04:00:09+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/dfJxFkKEdXU/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=dfJxFkKEdXU",
-      "duration_seconds": 187,
-      "duration_iso": "PT3M7S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "R6CmjweKLEw",
-      "title": "Strengthening IDA21 with Portfolio Guarantee Platform",
-      "description": "In this episode exploring IDA's innovative financing tools, Mahmut Rustem Sen, Manager for IBRD-IDA Corporate Finance at the World Bank, explains what a Portfolio Guarantee Platform is, how it works and how it can help IDA unlock more financing to support countries most in need.\n\nCheck out the other episodes in this series:\nIntro\nhttps://www.youtube.com/watch?v=iV-3ombnmlg\nConcessional Partner Loans\nhttps://www.youtube.com/watch?v=zwX2amVl-6s\nHybrid Capital\nhttps://www.youtube.com/watch?si=vW8NVRDK1EfJTMTc&amp;v=xKBNiSar8fw&amp;feature=youtu.be\n\n0:00-0:20: Introduction\n0:20-1:29: What is a PGP?\n1:30-2:46: How does PGP unlock more financing for IDA?\n2:47-4:09: What's in it for donors?\n4:10-5:08: The value of PGP?\n5:09-5:26: Conclusion\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-07-30T13:00:31+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/R6CmjweKLEw/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=R6CmjweKLEw",
-      "duration_seconds": 326,
-      "duration_iso": "PT5M26S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "mYyciGeOOlA",
-      "title": "Will AI Make or Take the Next Billion Jobs? | The Development Podcast",
-      "description": "How will artificial intelligence reshape the future of work—and will it create enough opportunities for the next generation? \n\nOver the next decade, 1.2 billion young people are expected to enter the workforce, but only around 400 million jobs are currently projected to be available. In this episode, host Tanvir Gill explores whether AI could help close that gap—or make the challenge even greater. Entrepreneur and content creator, Marina Mogilko, explains how workers can build an advantage through AI systems, agents and “vibe coding.” Mohamed Eissa, IFC Chief Investment Officer and Global Head of Venture Capital and Direct Technology Investments, examines how AI could transform businesses and create opportunities across emerging markets. Sharat Raghavan, Director of Data Science and Research at LinkedIn, shares what their data reveals about changing jobs, rising skills and the future of career progression. \n\n\n\n[00:00] Will AI make or take the next billion jobs? \n[00:48] What Nairobi's tech community thinks \n[02:51] Marina Mogilko on vibe coding and AI as opportunity \n[05:06] AI and the future of content creation \n[08:00] The top skill for an AI economy \n[09:29] Introductions: Sharat Raghavan from LinkedIn & Mohamed Eissa from IFC \n[13:04] Human skills and AI entrepreneurship \n[14:40] AI opportunities in emerging markets \n[16:25] Where jobs are growing \n[17:25] AI for development: healthcare in Africa \n[18:35] The changing career ladder \n[21:44] AI disruption: reality or hype? \n[25:27] AI, SMEs and the missing middle \n[26:23] How to future-proof a career \n\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org\n\nÀ PROPOS DE LA BANQUE MONDIALE 🌐 La Banque mondiale est l'une des plus importantes sources mondiales de financement et de connaissances pour les pays à faible revenu. Ses cinq institutions partagent un engagement commun à réduire la pauvreté, à accroître la prospérité partagée et à promouvoir le développement durable. http://www.banquemondiale.org\n\nACERCA DEL BANCO MUNDIAL 🌐 El Banco Mundial, una de las fuentes más importantes de financiamiento y conocimiento para los países en desarrollo, está integrado por cinco instituciones que se han comprometido a reducir la pobreza, aumentar la prosperidad compartida y promover el desarrollo sostenible en un planeta habitable. https://www.bancomundial.org/\n\n🌐 تعد البنك الدولي واحدة من أكبر مصادر التمويل والمعرفة في العالم بالنسبة للبلدان المنخفضة الدخل. تشترك مؤسساتها الخمس في الالتزام بالحد من الفقر وزيادة الرخاء المشترك وتعزيز التنمية المستدامة. http://www.albankaldawli.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-07-28T21:00:30+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/mYyciGeOOlA/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=mYyciGeOOlA",
-      "duration_seconds": 1770,
-      "duration_iso": "PT29M30S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "CGgEivChtCE",
-      "title": "Solar Power in Bangladesh: Clean Energy and Jobs",
-      "description": "Renewable energy in Bangladesh is helping deliver reliable, clean, and affordable electricity while creating jobs and attracting private investment. World Bank has supported the Government of Bangladesh to expand grid connected renewable energy, as well as large scale solar plants and rooftop solar for industries. By mobilizing private financing, cutting carbon emissions, and creating employment across construction, operations, and maintenance, renewable energy is supporting economic growth, energy security, and a climate resilient future for Bangladesh.\n\n00:00 Energy access and the reliability challenge\n00:58 Climate-resilient solar design and local livelihoods\n01:35 Rooftop solar for industry and lower energy costs\n02:27 Renewable energy and job creation\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-07-14T13:00:18+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/CGgEivChtCE/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=CGgEivChtCE",
-      "duration_seconds": 207,
-      "duration_iso": "PT3M27S",
       "mongolia_relevant": false
     }
   ]
