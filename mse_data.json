@@ -1,36 +1,295 @@
 {
-  "fetched_at_utc": "2026-08-21T09:38:54Z",
-  "fetched_at_mnt": "2026-08-21T17:38:54+08:00",
+  "fetched_at_utc": "2026-08-24T03:05:01Z",
+  "fetched_at_mnt": "2026-08-24T11:05:01+08:00",
   "action_id_used": "6d867ebd99fb6edef2f9537b22668cd0c00a71c2",
   "rediscovered": false,
   "errors": [],
   "marquee": [
     {
-      "symbol": "TGI",
-      "price": 780.99,
-      "change_pct": -2.31,
-      "change_abs": -18.01,
+      "symbol": "KHAN",
+      "price": 1499.0,
+      "change_pct": 0.13,
+      "change_abs": 2.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "TUM",
+      "price": 452.0,
+      "change_pct": -0.22,
+      "change_abs": -1.0,
       "direction": "down"
     },
     {
+      "symbol": "MMX",
+      "price": 4085.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
+    },
+    {
+      "symbol": "INV",
+      "price": 7895.0,
+      "change_pct": 1.81,
+      "change_abs": 140.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "HGN",
+      "price": 35.0,
+      "change_pct": 9.38,
+      "change_abs": 3.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "TDB",
+      "price": 12200.0,
+      "change_pct": -0.33,
+      "change_abs": -40.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "QPAY",
+      "price": 380.0,
+      "change_pct": 7.06,
+      "change_abs": 25.05,
+      "direction": "up"
+    },
+    {
+      "symbol": "MDZ",
+      "price": 5800.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
+    },
+    {
+      "symbol": "ALTT",
+      "price": 5460.0,
+      "change_pct": 3.02,
+      "change_abs": 160.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "AARD",
+      "price": 3594.0,
+      "change_pct": 0.59,
+      "change_abs": 21.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "MBG",
+      "price": 18.49,
+      "change_pct": -0.05,
+      "change_abs": -0.01,
+      "direction": "down"
+    },
+    {
+      "symbol": "ADL",
+      "price": 372.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
+    },
+    {
+      "symbol": "MSE",
+      "price": 419.0,
+      "change_pct": 0.09,
+      "change_abs": 0.37,
+      "direction": "up"
+    },
+    {
+      "symbol": "GOV",
+      "price": 265.0,
+      "change_pct": -3.2,
+      "change_abs": -8.75,
+      "direction": "down"
+    },
+    {
+      "symbol": "SUU",
+      "price": 611.24,
+      "change_pct": 0.0,
+      "change_abs": -0.02,
+      "direction": "flat"
+    },
+    {
+      "symbol": "JTB",
+      "price": 64.99,
+      "change_pct": 3.16,
+      "change_abs": 1.99,
+      "direction": "up"
+    },
+    {
+      "symbol": "MNP",
+      "price": 585.0,
+      "change_pct": 0.17,
+      "change_abs": 1.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "MBW",
+      "price": 168.0,
+      "change_pct": 3.68,
+      "change_abs": 5.96,
+      "direction": "up"
+    },
+    {
+      "symbol": "ADB",
+      "price": 107.99,
+      "change_pct": -1.74,
+      "change_abs": -1.91,
+      "direction": "down"
+    },
+    {
+      "symbol": "TVT",
+      "price": 2891.0,
+      "change_pct": -14.97,
+      "change_abs": -509.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "ERDN",
+      "price": 17040.0,
+      "change_pct": 0.18,
+      "change_abs": 30.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "GAZR",
+      "price": 37.43,
+      "change_pct": 1.66,
+      "change_abs": 0.61,
+      "direction": "up"
+    },
+    {
+      "symbol": "ETR",
+      "price": 102.0,
+      "change_pct": -11.3,
+      "change_abs": -13.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "XAC",
+      "price": 1229.0,
+      "change_pct": -0.49,
+      "change_abs": -6.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "MFC",
+      "price": 78.19,
+      "change_pct": 0.08,
+      "change_abs": 0.06,
+      "direction": "up"
+    },
+    {
+      "symbol": "TTL",
+      "price": 43960.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
+    },
+    {
+      "symbol": "APU",
+      "price": 1045.0,
+      "change_pct": 0.77,
+      "change_abs": 8.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "NEH",
+      "price": 25.5,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
+    },
+    {
+      "symbol": "ITLS",
+      "price": 70.0,
+      "change_pct": 0.01,
+      "change_abs": 0.01,
+      "direction": "up"
+    },
+    {
+      "symbol": "TGI",
+      "price": 780.99,
+      "change_pct": 2.36,
+      "change_abs": 18.01,
+      "direction": "up"
+    },
+    {
+      "symbol": "DZG",
+      "price": 250.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
+    },
+    {
+      "symbol": "CUMN",
+      "price": 270.5,
+      "change_pct": 0.08,
+      "change_abs": 0.22,
+      "direction": "up"
+    },
+    {
+      "symbol": "RMC",
+      "price": 38.0,
+      "change_pct": 2.07,
+      "change_abs": 0.77,
+      "direction": "up"
+    },
+    {
+      "symbol": "SHV",
+      "price": 2125.0,
+      "change_pct": 6.25,
+      "change_abs": 125.0,
+      "direction": "up"
+    },
+    {
       "symbol": "FTI",
-      "price": 1056.0,
+      "price": 1057.0,
+      "change_pct": 0.19,
+      "change_abs": 2.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "MNDL",
+      "price": 89.99,
+      "change_pct": 0.3,
+      "change_abs": 0.27,
+      "direction": "up"
+    },
+    {
+      "symbol": "MLG",
+      "price": 155.0,
+      "change_pct": -6.06,
+      "change_abs": -10.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "BODI",
+      "price": 109.99,
+      "change_pct": 12.23,
+      "change_abs": 11.99,
+      "direction": "up"
+    },
+    {
+      "symbol": "HRM",
+      "price": 183.01,
       "change_pct": 0.0,
       "change_abs": 0.0,
       "direction": "flat"
     },
     {
-      "symbol": "HRL",
-      "price": 76.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
+      "symbol": "AIC",
+      "price": 639.88,
+      "change_pct": 1.66,
+      "change_abs": 10.46,
+      "direction": "up"
     },
     {
-      "symbol": "SBM",
-      "price": 483.0,
-      "change_pct": 0.46,
-      "change_abs": 2.23001,
+      "symbol": "LEND",
+      "price": 159.99,
+      "change_pct": 0.63,
+      "change_abs": 1.0,
       "direction": "up"
     },
     {
@@ -41,318 +300,73 @@
       "direction": "flat"
     },
     {
-      "symbol": "BRSF",
-      "price": 75.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "ALTT",
-      "price": 5300.0,
-      "change_pct": 0.76,
-      "change_abs": 40.0,
+      "symbol": "SEND",
+      "price": 149.93,
+      "change_pct": 0.4,
+      "change_abs": 0.59,
       "direction": "up"
-    },
-    {
-      "symbol": "GOV",
-      "price": 274.0,
-      "change_pct": 4.12,
-      "change_abs": 10.84,
-      "direction": "up"
-    },
-    {
-      "symbol": "ITLS",
-      "price": 69.99,
-      "change_pct": 0.01,
-      "change_abs": 0.00999664,
-      "direction": "up"
-    },
-    {
-      "symbol": "TAND",
-      "price": 78.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "MMX",
-      "price": 4085.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "RMC",
-      "price": 38.8,
-      "change_pct": -6.92,
-      "change_abs": -2.77,
-      "direction": "down"
-    },
-    {
-      "symbol": "ETR",
-      "price": 115.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "ADL",
-      "price": 372.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "MLG",
-      "price": 165.0,
-      "change_pct": 7.6,
-      "change_abs": 11.65,
-      "direction": "up"
-    },
-    {
-      "symbol": "MFG",
-      "price": 1182.0,
-      "change_pct": 0.17,
-      "change_abs": 2.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "MSE",
-      "price": 419.0,
-      "change_pct": 1.35,
-      "change_abs": 5.57,
-      "direction": "up"
-    },
-    {
-      "symbol": "JLT",
-      "price": 41.0,
-      "change_pct": -0.97,
-      "change_abs": -0.400002,
-      "direction": "down"
-    },
-    {
-      "symbol": "MNP",
-      "price": 584.0,
-      "change_pct": -0.17,
-      "change_abs": -1.0,
-      "direction": "down"
-    },
-    {
-      "symbol": "KHAN",
-      "price": 1495.0,
-      "change_pct": 0.88,
-      "change_abs": 13.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "TUM",
-      "price": 450.0,
-      "change_pct": 2.93,
-      "change_abs": 12.91,
-      "direction": "up"
-    },
-    {
-      "symbol": "GAZR",
-      "price": 36.99,
-      "change_pct": -0.46,
-      "change_abs": -0.170002,
-      "direction": "down"
-    },
-    {
-      "symbol": "MBG",
-      "price": 18.5,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "MNDL",
-      "price": 89.88,
-      "change_pct": -0.3,
-      "change_abs": -0.269998,
-      "direction": "down"
-    },
-    {
-      "symbol": "INVG",
-      "price": 100.01,
-      "change_pct": -0.05,
-      "change_abs": -0.0499976,
-      "direction": "down"
-    },
-    {
-      "symbol": "TDB",
-      "price": 12240.0,
-      "change_pct": 0.82,
-      "change_abs": 100.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "ADB",
-      "price": 102.0,
-      "change_pct": 10.01,
-      "change_abs": 10.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "XAC",
-      "price": 1233.0,
-      "change_pct": -2.37,
-      "change_abs": -30.0,
-      "direction": "down"
     },
     {
       "symbol": "XOC",
-      "price": 86.96,
-      "change_pct": 3.44,
-      "change_abs": 2.86,
-      "direction": "up"
-    },
-    {
-      "symbol": "MGLA",
-      "price": 290.0,
-      "change_pct": -3.96,
-      "change_abs": -11.88,
-      "direction": "down"
-    },
-    {
-      "symbol": "AARD",
-      "price": 3690.0,
-      "change_pct": 3.69,
-      "change_abs": 127.0,
+      "price": 87.78,
+      "change_pct": 2.11,
+      "change_abs": 1.81,
       "direction": "up"
     },
     {
       "symbol": "BDS",
-      "price": 1490.0,
-      "change_pct": 0.07,
-      "change_abs": 1.0,
+      "price": 1505.0,
+      "change_pct": 1.01,
+      "change_abs": 15.0,
       "direction": "up"
     },
     {
-      "symbol": "APU",
-      "price": 1040.0,
-      "change_pct": 1.17,
-      "change_abs": 12.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "AIC",
-      "price": 617.0,
-      "change_pct": -2.83,
-      "change_abs": -18.32,
+      "symbol": "OLL",
+      "price": 90.0,
+      "change_pct": -14.29,
+      "change_abs": -15.0,
       "direction": "down"
     },
     {
-      "symbol": "LEND",
-      "price": 158.99,
-      "change_pct": 0.01,
-      "change_abs": 0.0100043,
-      "direction": "up"
-    },
-    {
-      "symbol": "SUU",
-      "price": 611.97,
-      "change_pct": -0.12,
-      "change_abs": -0.709971,
-      "direction": "down"
-    },
-    {
-      "symbol": "MFC",
-      "price": 78.3,
-      "change_pct": -0.05,
-      "change_abs": -0.0399982,
-      "direction": "down"
-    },
-    {
-      "symbol": "GLMT",
-      "price": 1107.0,
-      "change_pct": 0.54,
-      "change_abs": 6.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "QPAY",
-      "price": 356.99,
-      "change_pct": 2.62,
-      "change_abs": 9.05999,
-      "direction": "up"
-    },
-    {
-      "symbol": "MIB",
-      "price": 71.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "INV",
-      "price": 7755.0,
-      "change_pct": 0.0,
-      "change_abs": 0.0,
-      "direction": "flat"
-    },
-    {
-      "symbol": "NEH",
-      "price": 25.5,
-      "change_pct": -1.16,
-      "change_abs": -0.299999,
-      "direction": "down"
-    },
-    {
-      "symbol": "CUMN",
-      "price": 272.76,
-      "change_pct": 2.18,
-      "change_abs": 5.76999,
-      "direction": "up"
-    },
-    {
-      "symbol": "ERDN",
-      "price": 17040.0,
-      "change_pct": -0.12,
-      "change_abs": -20.0,
+      "symbol": "MFG",
+      "price": 1180.0,
+      "change_pct": -0.17,
+      "change_abs": -2.0,
       "direction": "down"
     },
     {
       "symbol": "AMT",
-      "price": 5.0,
-      "change_pct": 1.0,
-      "change_abs": 0.05,
+      "price": 5.75,
+      "change_pct": 13.86,
+      "change_abs": 0.7,
       "direction": "up"
     },
     {
-      "symbol": "SEND",
-      "price": 149.0,
-      "change_pct": -0.61,
-      "change_abs": -0.919995,
-      "direction": "down"
-    },
-    {
-      "symbol": "JTB",
-      "price": 63.0,
-      "change_pct": 0.02,
-      "change_abs": 0.00999832,
+      "symbol": "SBM",
+      "price": 485.0,
+      "change_pct": 0.3,
+      "change_abs": 1.47,
       "direction": "up"
     },
     {
-      "symbol": "TTL",
-      "price": 44000.0,
-      "change_pct": 0.92,
-      "change_abs": 400.0,
+      "symbol": "UID",
+      "price": 3199.0,
+      "change_pct": 4.07,
+      "change_abs": 125.0,
       "direction": "up"
     },
     {
-      "symbol": "BODI",
-      "price": 98.0,
-      "change_pct": 2.08,
-      "change_abs": 2.0,
-      "direction": "up"
+      "symbol": "MNH",
+      "price": 10000.0,
+      "change_pct": 0.0,
+      "change_abs": 0.0,
+      "direction": "flat"
     },
     {
-      "symbol": "HRM",
-      "price": 185.6,
-      "change_pct": 1.05,
-      "change_abs": 1.90999,
+      "symbol": "GLMT",
+      "price": 1140.0,
+      "change_pct": 2.98,
+      "change_abs": 33.0,
       "direction": "up"
     },
     {
@@ -365,23 +379,43 @@
   ],
   "stock_amount": [
     {
-      "symbol": "MGLA",
-      "name": "Эм Жи Эл Акуа ХК",
-      "code": 572,
+      "symbol": "TDB",
+      "name": "Худалдаа Хөгжлийн банк",
+      "code": 567,
       "logo_url": "",
-      "amount_mnt": 228066746.88,
-      "change_pct": -3.96,
-      "change_abs": -11.88,
+      "amount_mnt": 120475450.0,
+      "change_pct": -0.33,
+      "change_abs": -40.0,
       "direction": "down"
     },
     {
-      "symbol": "AARD",
-      "name": "Ард санхүүгийн нэгдэл ХК",
-      "code": 326,
+      "symbol": "APU",
+      "name": "АПУ ХК",
+      "code": 90,
       "logo_url": "",
-      "amount_mnt": 63148609.0,
-      "change_pct": 3.69,
-      "change_abs": 127.0,
+      "amount_mnt": 29903138.0,
+      "change_pct": 0.77,
+      "change_abs": 8.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "TUM",
+      "name": "Түмэн шувуут ХК",
+      "code": 549,
+      "logo_url": "",
+      "amount_mnt": 28826354.82,
+      "change_pct": -0.22,
+      "change_abs": -1.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "GLMT",
+      "name": "Голомт Банк ХК",
+      "code": 562,
+      "logo_url": "",
+      "amount_mnt": 28066216.0,
+      "change_pct": 2.98,
+      "change_abs": 33.0,
       "direction": "up"
     },
     {
@@ -389,19 +423,19 @@
       "name": "Хаан банк ХК",
       "code": 563,
       "logo_url": "",
-      "amount_mnt": 60767848.0,
-      "change_pct": 0.88,
-      "change_abs": 13.0,
+      "amount_mnt": 20941853.0,
+      "change_pct": 0.13,
+      "change_abs": 2.0,
       "direction": "up"
     },
     {
-      "symbol": "APU",
-      "name": "АПУ ХК",
-      "code": 90,
+      "symbol": "ERDN",
+      "name": "Эрдэнэ Ресурс Девелопмент Корпорэйшн",
+      "code": 546,
       "logo_url": "",
-      "amount_mnt": 52078489.0,
-      "change_pct": 1.17,
-      "change_abs": 12.0,
+      "amount_mnt": 20282590.0,
+      "change_pct": 0.18,
+      "change_abs": 30.0,
       "direction": "up"
     },
     {
@@ -409,27 +443,7 @@
       "name": "Таван толгой ХК",
       "code": 458,
       "logo_url": "",
-      "amount_mnt": 51780560.0,
-      "change_pct": 0.92,
-      "change_abs": 400.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "GLMT",
-      "name": "Голомт Банк ХК",
-      "code": 562,
-      "logo_url": "",
-      "amount_mnt": 28675933.0,
-      "change_pct": 0.54,
-      "change_abs": 6.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "INV",
-      "name": "Инвескор ББСБ ХК",
-      "code": 553,
-      "logo_url": "",
-      "amount_mnt": 20186420.0,
+      "amount_mnt": 17801880.0,
       "change_pct": 0.0,
       "change_abs": 0.0,
       "direction": "flat"
@@ -439,101 +453,41 @@
       "name": "Монголын хөрөнгийн бирж ХК",
       "code": 510,
       "logo_url": "",
-      "amount_mnt": 20017584.82,
-      "change_pct": 1.35,
-      "change_abs": 5.57,
+      "amount_mnt": 11686895.86,
+      "change_pct": 0.09,
+      "change_abs": 0.37,
       "direction": "up"
     },
     {
-      "symbol": "ADB",
-      "name": "Ард кредит ББСБ ХК",
-      "code": 550,
+      "symbol": "SBM",
+      "name": "Төрийн Банк ХК",
+      "code": 564,
       "logo_url": "",
-      "amount_mnt": 17909133.28,
-      "change_pct": 10.01,
-      "change_abs": 10.0,
+      "amount_mnt": 6989669.5,
+      "change_pct": 0.3,
+      "change_abs": 1.47,
       "direction": "up"
     },
     {
-      "symbol": "XAC",
-      "name": "Хас Банк",
-      "code": 568,
+      "symbol": "SUU",
+      "name": "Сүү ХК",
+      "code": 135,
       "logo_url": "",
-      "amount_mnt": 15718467.0,
-      "change_pct": -2.37,
-      "change_abs": -30.0,
-      "direction": "down"
+      "amount_mnt": 6908897.71,
+      "change_pct": 0.0,
+      "change_abs": -0.02,
+      "direction": "flat"
     }
   ],
   "stock_up": [
     {
-      "symbol": "ADB",
-      "name": "Ард кредит ББСБ ХК",
-      "code": 550,
+      "symbol": "AMT",
+      "name": "Эрдэнэс сольюшинс ХК",
+      "code": 175,
       "logo_url": "",
-      "price": 109.9,
-      "change_pct": 10.01,
-      "change_abs": 10.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "MLG",
-      "name": "Монложистикс Холдинг ХК",
-      "code": 569,
-      "logo_url": "",
-      "price": 165.0,
-      "change_pct": 7.6,
-      "change_abs": 11.65,
-      "direction": "up"
-    },
-    {
-      "symbol": "GOV",
-      "name": "Говь ХК",
-      "code": 354,
-      "logo_url": "",
-      "price": 273.75,
-      "change_pct": 4.12,
-      "change_abs": 10.84,
-      "direction": "up"
-    },
-    {
-      "symbol": "AARD",
-      "name": "Ард санхүүгийн нэгдэл ХК",
-      "code": 326,
-      "logo_url": "",
-      "price": 0.0,
-      "change_pct": 3.69,
-      "change_abs": 127.0,
-      "direction": "up"
-    },
-    {
-      "symbol": "TUM",
-      "name": "Түмэн шувуут ХК",
-      "code": 549,
-      "logo_url": "",
-      "price": 453.0,
-      "change_pct": 2.93,
-      "change_abs": 12.91,
-      "direction": "up"
-    },
-    {
-      "symbol": "QPAY",
-      "name": "Инновэйшн инвестмент ХК",
-      "code": 570,
-      "logo_url": "",
-      "price": 354.95,
-      "change_pct": 2.62,
-      "change_abs": 9.05999,
-      "direction": "up"
-    },
-    {
-      "symbol": "CUMN",
-      "name": "Премиум Нэксус ХК",
-      "code": 557,
-      "logo_url": "",
-      "price": 270.28,
-      "change_pct": 2.18,
-      "change_abs": 5.76999,
+      "price": 5.75,
+      "change_pct": 13.86,
+      "change_abs": 0.7,
       "direction": "up"
     },
     {
@@ -541,61 +495,151 @@
       "name": "Бодь Даатгал ХК",
       "code": 554,
       "logo_url": "",
-      "price": 98.0,
-      "change_pct": 2.08,
-      "change_abs": 2.0,
+      "price": 109.99,
+      "change_pct": 12.23,
+      "change_abs": 11.99,
       "direction": "up"
     },
     {
-      "symbol": "MSE",
-      "name": "Монголын хөрөнгийн бирж ХК",
-      "code": 510,
+      "symbol": "HGN",
+      "name": "Хөх ган ХК",
+      "code": 532,
       "logo_url": "",
-      "price": 418.63,
-      "change_pct": 1.35,
-      "change_abs": 5.57,
+      "price": 35.0,
+      "change_pct": 9.38,
+      "change_abs": 3.0,
       "direction": "up"
     },
     {
-      "symbol": "APU",
-      "name": "АПУ ХК",
-      "code": 90,
+      "symbol": "QPAY",
+      "name": "Инновэйшн инвестмент ХК",
+      "code": 570,
+      "logo_url": "",
+      "price": 380.0,
+      "change_pct": 7.06,
+      "change_abs": 25.05,
+      "direction": "up"
+    },
+    {
+      "symbol": "SHV",
+      "name": "Шивээ овоо ХК",
+      "code": 460,
       "logo_url": "",
       "price": 0.0,
-      "change_pct": 1.17,
-      "change_abs": 12.0,
+      "change_pct": 6.25,
+      "change_abs": 125.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "UID",
+      "name": "Улсын их дэлгүүр ХК",
+      "code": 484,
+      "logo_url": "",
+      "price": 0.0,
+      "change_pct": 4.07,
+      "change_abs": 125.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "MBW",
+      "name": "Монгол Базальт ХК",
+      "code": 544,
+      "logo_url": "",
+      "price": 168.0,
+      "change_pct": 3.68,
+      "change_abs": 5.96,
+      "direction": "up"
+    },
+    {
+      "symbol": "JTB",
+      "name": "Женко тур бюро ХК",
+      "code": 521,
+      "logo_url": "",
+      "price": 64.99,
+      "change_pct": 3.16,
+      "change_abs": 1.99,
+      "direction": "up"
+    },
+    {
+      "symbol": "GLMT",
+      "name": "Голомт Банк ХК",
+      "code": 562,
+      "logo_url": "",
+      "price": 0.0,
+      "change_pct": 2.98,
+      "change_abs": 33.0,
+      "direction": "up"
+    },
+    {
+      "symbol": "TGI",
+      "name": "Тэнгэр Даатгал ХК",
+      "code": 573,
+      "logo_url": "",
+      "price": 780.99,
+      "change_pct": 2.36,
+      "change_abs": 18.01,
       "direction": "up"
     }
   ],
   "stock_down": [
     {
-      "symbol": "RMC",
-      "name": "Ремикон ХК",
-      "code": 530,
+      "symbol": "TVT",
+      "name": "Хар тарвагатай ХК",
+      "code": 455,
       "logo_url": "",
-      "price": 37.23,
-      "change_pct": -6.92,
-      "change_abs": -2.77,
+      "price": 0.0,
+      "change_pct": -14.97,
+      "change_abs": -509.0,
       "direction": "down"
     },
     {
-      "symbol": "MGLA",
-      "name": "Эм Жи Эл Акуа ХК",
-      "code": 572,
+      "symbol": "OLL",
+      "name": "Оллоо ХК",
+      "code": 527,
       "logo_url": "",
-      "price": 288.12,
-      "change_pct": -3.96,
-      "change_abs": -11.88,
+      "price": 90.0,
+      "change_pct": -14.29,
+      "change_abs": -15.0,
       "direction": "down"
     },
     {
-      "symbol": "AIC",
-      "name": "Ард Даатгал ХК",
-      "code": 548,
+      "symbol": "ETR",
+      "name": "Э-Транс ложистикс XК",
+      "code": 537,
       "logo_url": "",
-      "price": 629.42,
-      "change_pct": -2.83,
-      "change_abs": -18.32,
+      "price": 102.0,
+      "change_pct": -11.3,
+      "change_abs": -13.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "MLG",
+      "name": "Монложистикс Холдинг ХК",
+      "code": 569,
+      "logo_url": "",
+      "price": 155.0,
+      "change_pct": -6.06,
+      "change_abs": -10.0,
+      "direction": "down"
+    },
+    {
+      "symbol": "GOV",
+      "name": "Говь ХК",
+      "code": 354,
+      "logo_url": "",
+      "price": 265.0,
+      "change_pct": -3.2,
+      "change_abs": -8.75,
+      "direction": "down"
+    },
+    {
+      "symbol": "ADB",
+      "name": "Ард кредит ББСБ ХК",
+      "code": 550,
+      "logo_url": "",
+      "price": 107.99,
+      "change_pct": -1.74,
+      "change_abs": -1.91,
       "direction": "down"
     },
     {
@@ -604,68 +648,38 @@
       "code": 568,
       "logo_url": "",
       "price": 0.0,
-      "change_pct": -2.37,
-      "change_abs": -30.0,
+      "change_pct": -0.49,
+      "change_abs": -6.0,
       "direction": "down"
     },
     {
-      "symbol": "TGI",
-      "name": "Тэнгэр Даатгал ХК",
-      "code": 573,
+      "symbol": "TDB",
+      "name": "Худалдаа Хөгжлийн банк",
+      "code": 567,
       "logo_url": "",
-      "price": 762.98,
-      "change_pct": -2.31,
-      "change_abs": -18.01,
+      "price": 0.0,
+      "change_pct": -0.33,
+      "change_abs": -40.0,
       "direction": "down"
     },
     {
-      "symbol": "NEH",
-      "name": "Дархан нэхий ХК",
-      "code": 71,
+      "symbol": "TUM",
+      "name": "Түмэн шувуут ХК",
+      "code": 549,
       "logo_url": "",
-      "price": 25.5,
-      "change_pct": -1.16,
-      "change_abs": -0.299999,
+      "price": 452.0,
+      "change_pct": -0.22,
+      "change_abs": -1.0,
       "direction": "down"
     },
     {
-      "symbol": "JLT",
-      "name": "Ногоон хөгжил үндэсний нэгдэл ХК",
-      "code": 201,
+      "symbol": "MBG",
+      "name": "Булигаар ХК",
+      "code": 38,
       "logo_url": "",
-      "price": 41.0,
-      "change_pct": -0.97,
-      "change_abs": -0.400002,
-      "direction": "down"
-    },
-    {
-      "symbol": "SEND",
-      "name": "Сэндли ББСБ ХК",
-      "code": 561,
-      "logo_url": "",
-      "price": 149.34,
-      "change_pct": -0.61,
-      "change_abs": -0.919995,
-      "direction": "down"
-    },
-    {
-      "symbol": "GAZR",
-      "name": "Газар Шим Үйлдвэр ХК",
-      "code": 565,
-      "logo_url": "",
-      "price": 36.82,
-      "change_pct": -0.46,
-      "change_abs": -0.170002,
-      "direction": "down"
-    },
-    {
-      "symbol": "MNDL",
-      "name": "Мандал Даатгал ХК",
-      "code": 547,
-      "logo_url": "",
-      "price": 89.72,
-      "change_pct": -0.3,
-      "change_abs": -0.269998,
+      "price": 18.49,
+      "change_pct": -0.05,
+      "change_abs": -0.01,
       "direction": "down"
     }
   ],
@@ -1270,5 +1284,5 @@
       "code": 568
     }
   ],
-  "elapsed_seconds": 7.19
+  "elapsed_seconds": 7.8
 }
