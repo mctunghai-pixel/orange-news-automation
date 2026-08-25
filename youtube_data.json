@@ -1,13 +1,17 @@
 {
-  "fetched_at_utc": "2026-08-25T01:03:10Z",
-  "fetched_at_mnt": "2026-08-25T09:03:11+0800",
-  "channels_processed": 6,
-  "videos_total": 35,
-  "videos_filtered_short": 55,
+  "fetched_at_utc": "2026-08-25T02:54:41Z",
+  "fetched_at_mnt": "2026-08-25T10:54:42+0800",
+  "channels_processed": 3,
+  "videos_total": 24,
+  "videos_filtered_short": 21,
   "videos_filtered_denied": 0,
   "videos_filtered_no_duration": 0,
-  "errors": [],
-  "elapsed_seconds": 0.9,
+  "errors": [
+    "WSJ: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "Financial Times: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "World Bank Group: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))"
+  ],
+  "elapsed_seconds": 0.91,
   "videos": [
     {
       "id": "1D2Z1m09Q5s",
@@ -192,19 +196,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "nEWZMFpa22w",
-      "title": "LIVE: Treasury Secretary Bessent speaks about further sanctions against Iran",
-      "description": "U.S. Treasury Secretary Scott Bessent holds a news conference to outline an economic pressure campaign against Iran that he and President Donald Trump have described as an \"economic D-Day.\"\n \n#economicdday #treasury #sanctions #iran #iranwar #live #Reuters #News\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
-      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
-      "channel_title": "Reuters",
-      "published_at": "2026-08-24T17:23:02+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/nEWZMFpa22w/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=nEWZMFpa22w",
-      "duration_seconds": 1051,
-      "duration_iso": "PT17M31S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "viwG_sFgu_0",
       "title": "What Makes Paramount Skydance's Deal For Warner Bros. Discovery So Unique",
       "description": "Paramount Skydance's proposed acquisition of Warner Bros. Discovery is in regulatory limbo as state attorneys general seek to block the deal. CNBC's Julia Boorstin, Lillian Rizzo and Alex Sherman discuss the twists and turns of the megamerger, what it means for media M&amp;A at large, and what happens next.\n\nChapters: \n0:00-0:48 Introduction\n0:49-2:56 How we got here\n2:57-5:26 Regulatory hurdles\n5:27-8:25 What comes next\n\nReporting by Julia Boorstin, Lillian Rizzo, Alex Sherman\nProduced and Shot by Devan Burris\nEdited by Darren Geeter\nSenior Managing Producer Tala Hadavi\nAddditional Camera Rowan Buck and Andrew Katchen\nAnimation by Jason Reginato\nAdditional Footage Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWhat Makes Paramount Skydance's Deal For Warner Bros. Discovery So Unique",
@@ -215,19 +206,6 @@
       "watch_url": "https://www.youtube.com/watch?v=viwG_sFgu_0",
       "duration_seconds": 515,
       "duration_iso": "PT8M35S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "EsdqCEuoI8M",
-      "title": "Are graduates prepared for the AI era? | FT Working It",
-      "description": "How are global education institutions helping graduates in the race to find rewarding first jobs? Working It editor Isabel Berwick finds a selection of tools and skills that students need to drive successful job searches.\n\n► Enjoying FT content? Get a daily slice of the very best FT journalism with FT Edit. Free for 30 days then just £4.99 a month\n\nSee if you get the FT for free as a student (http://ft.com/schoolsarefree) or start a £1 trial: https://subs.ft.com/spa3_trial?segmentId=3d4ba81b-96bb-cef0-9ece-29efd6ef2132.\n\n► Check out our Community tab for more stories: https://www.youtube.com/@FinancialTimes/community\n►  Listen to our podcasts: https://www.ft.com/podcasts\n►  Follow us on Instagram: https://www.instagram.com/financialtimes\n►  Follow us on Instagram: https://www.tiktok.com/@financialtimes",
-      "channel_id": "UCoUxsWakJucWg46KW5RsvPw",
-      "channel_title": "Financial Times",
-      "published_at": "2026-08-24T09:58:17+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/EsdqCEuoI8M/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=EsdqCEuoI8M",
-      "duration_seconds": 1140,
-      "duration_iso": "PT19M",
       "mongolia_relevant": false
     },
     {
@@ -270,19 +248,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "n1fMhMnCmdA",
-      "title": "Supporting Rohingya and Host Communities in Cox’s Bazar, Bangladesh",
-      "description": "Since 2017, more than one million Rohingya have taken shelter in Cox’s Bazar in Bangladesh, placing pressure on local services and infrastructure. The World Bank is helping provide essential services for displaced Rohingya people and host communities—from water, sanitation, health and nutrition to food security, safety, protection, and resilience. These efforts are helping improve daily life, strengthen resilience, and support dignity for displaced Rohingya until the safe and voluntary return and the host community.\n\n00:32 Water, Sanitation, and Dignity\n01:30 Health, Nutrition, and Care\n02:18 Work, Safety, and Protection\n02:37 Safe Spaces for Women\n\n\n\nABOUT THE WORLD BANK 🌐 The World Bank Group is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-08-21T04:00:10+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/n1fMhMnCmdA/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=n1fMhMnCmdA",
-      "duration_seconds": 237,
-      "duration_iso": "PT3M57S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "FFTZzJdPYag",
       "title": "Micron’s $50 Billion Buildout In Its Hometown Of Boise Is Minting Millionaires",
       "description": "Micron was founded in the basement of a dental office in Boise, Idaho, nearly 50 years ago and has remained an under-the-radar semiconductor company for decades. Now, suddenly it’s minting millionaires and spending $50 billion to build new factories that are transforming its hometown into America's latest boomtown. Unprecedented demand for memory has increased its stock value more than 10-fold since 2024. Sprawling homes are selling above listing price and Idaho has the fastest statewide population growth in the country. CNBC talked to wealth managers and real estate agents who now primarily work with Micron employees, jewelry store owners who say business is booming, and other Boise locals concerned about increasing traffic and strain on infrastructure, power and water.\n\nChapters:\n0:00 Introduction\n1:25 Made in Asia and America\n3:49 Minting millionaires\n5:35 People, power, water\n\nProduced by: Katie Tarasov\nEdited by: Zach Green, Erin Black\nCamera: Lucas Mullikin, Macklin Fishman\nAdditional Reporting: CJ Haddad, Toby Burns\nSenior Director of Video: Jeniece Pettitt\nAnimation: Jason Reginato, Emily Park\nAdditional Footage: Micron, Getty Images, SK Hynix, Samsung, College of Western Idaho\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nMicron’s $50 Billion Buildout In Its Hometown Of Boise Is Minting Millionaires",
@@ -293,19 +258,6 @@
       "watch_url": "https://www.youtube.com/watch?v=FFTZzJdPYag",
       "duration_seconds": 526,
       "duration_iso": "PT8M46S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "GbB3vFfiaVU",
-      "title": "Why the World’s Largest Megaproject Collapsed | WSJ",
-      "description": "Saudi Arabia’s futuristic megaproject Neom has come to a standstill, as the extraordinary costs of the planned city have collided with financial reality. After sinking more than $50 billion into Saudi Crown Prince Mohammed bin Salman’s dreams of a sci-fi metropolis, the kingdom is now spending billions of dollars more to wind down contracts, leaving mammoth-sized partially built structures to gather sand in the desert. \n\nWSJ’s Eliot Brown analyzes internal documents and satellite images to show how and why the world’s largest construction project came to a halt, and what comes next for Neom.\n\nChapters:\n0:00 Neom’s failure\n0:39 The vision and design\n1:37 The latest updates on the project \n3:19 The origins\n5:13 Satellite images of projects today\n7:02 Ballooning costs \n9:43 Mutual delusion\n\nNews Explainers\nSome days the high-speed news cycle can bring more questions than answers. WSJ’s news explainers break down the day's biggest stories into bite-size pieces to help you make sense of the news.\n\n#SaudiArabia #Neom #WSJ",
-      "channel_id": "UCK7tptUDHh-RYDsdxO1-5QQ",
-      "channel_title": "WSJ",
-      "published_at": "2026-08-19T16:30:17+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/GbB3vFfiaVU/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=GbB3vFfiaVU",
-      "duration_seconds": 654,
-      "duration_iso": "PT10M54S",
       "mongolia_relevant": false
     },
     {
@@ -322,19 +274,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "RGcRuej-LVE",
-      "title": "How the U.S. Space Force Is Actually Used in Wars Today | WSJ",
-      "description": "From Venezuela to Iran, the U.S. has leveraged satellites and other space capabilities to gain an advantage in warfare. Space technologies can help detect missile launches, synchronize strikes, get a clear view of the battlefield and degrade an enemy’s ability to operate. \n\nWSJ’s Shelby Holliday spoke with Gen. Chance Saltzman about the U.S. Space Force’s pivotal year, and about how the military must prepare for a future in which adversaries like China seek to threaten America’s advantage in space. Watch the interview here. \n\nChapters:\n0:00 Space warfare\n1:16 How important space is to the U.S. \n4:00 The future of space: U.S. vs. China \n9:10 The importance of different orbits\n13:10 Hiding satellites and high-altitude platforms\n15:11 Why the moon is so important to space \n17:09 Electronic warfare and interceptors\n19:46 How AI is changing space warfare\n21:55 Intercepting missiles and roles in the Iran War\n26:26 Jamming satellites and satellite imagery\n30:29 Training Guardians and what’s next\n\nWSJ Originals features in-depth reporting, investigations and on-the-ground journalism that uncovers the forces shaping business, politics and the world around us.\n\n#Space #War #WSJ",
-      "channel_id": "UCK7tptUDHh-RYDsdxO1-5QQ",
-      "channel_title": "WSJ",
-      "published_at": "2026-08-17T20:30:36+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/RGcRuej-LVE/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=RGcRuej-LVE",
-      "duration_seconds": 2053,
-      "duration_iso": "PT34M13S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "CDmJHWZ_X0g",
       "title": "What Will TV Look Like In 3 Years?",
       "description": "Media executives, including Jimmy Pitaro, Chris Winfrey, Anjali Sud and Jeff Zucker, share their predictions about what the TV market will look like three years from now with CNBC's Alex Sherman and Lillian Rizzo.\n\nChapters:\n0:00 Introduction\n1:22 In three years, will we have hit a floor on cable TV subscribers?\n2:41 What's one thinkg that will become a TV industry standard that doesn't exist today?\n4:22 Will there be a major government action to prevent a Big Tech company from getting bigger in the entertainment industry?\n6:01 Are we in a sports ratings bubble?\n8:34 What is another service you think will gain significant market share?\n\nProduced, Shot and Edited by Devan Burris\nReported and Hosted by Alex Sherman and Lillian Rizzo\nSenior Managing Producers: Shawn Baldwin and Jordan Smith\nSenior Director of Video: Lindsey Jacobson\nAnimation by: Jason Reginato\nAdditional Camera by: Rowan Buck\nAdditional Footage: Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWhat Will TV Look Like In 3 Years?",
@@ -348,19 +287,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "KLw0AY-bsVs",
-      "title": "How OpenAI’s Models Went Rogue to Hack Another Company | WSJ",
-      "description": "Artificial-intelligence models from companies including OpenAI, Anthropic and Meta Platforms used the internet to hack other organizations in recent weeks, fueling concerns that businesses and individuals aren’t prepared for the cyber risks posed by the latest AI tools.\n\nWSJ break down how OpenAI’s models broke out of their training environment to hack the AI company Hugging Face and explain what the hacks mean for the Trump administration’s tech strategy.\n\nChapters:\n0:00 Rogue AI models\n0:47 How rogue attacks happen\n2:39 What these hacks mean\n3:25 U.S. vs. China\n4:50 AI guardrails\n\nNews Explainers\nSome days the high-speed news cycle can bring more questions than answers. WSJ’s news explainers break down the day's biggest stories into bite-size pieces to help you make sense of the news.\n\n#AI #OpenAI #WSJ",
-      "channel_id": "UCK7tptUDHh-RYDsdxO1-5QQ",
-      "channel_title": "WSJ",
-      "published_at": "2026-08-16T16:00:26+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/KLw0AY-bsVs/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=KLw0AY-bsVs",
-      "duration_seconds": 352,
-      "duration_iso": "PT5M52S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "_FfIx2cOEYs",
       "title": "Why High Tech Cars Might Age Like Smartphones",
       "description": "Software defined vehicles offer advantages their analog rivals can‘t compete with. But the hardware and software in them needs to be maintained, and some owners have found their cars suddenly obsolete or without key features. CNBC talked with industry figures, including Rivian Chief Software Officer Wassym Bensaid about the promise of software defined vehicles and how his company is trying to handle the challenges this new form of ownership poses.\n\nChapters:\n00:00 Introduction\n01:22 Chapter 1: Software-defined cars \n02:34 Chapter 2: The problem \n04:39 Chapter 3: Keep it running \n\nProduced by: Robert Ferris\nShot and edited by: Darren Geeter\nAdditional Camera: Andrew Evers\nSenior Managing Producer: Tala Hadavi\nAdditional footage: Getty Images\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n \n#CNBC\n\nWhy High Tech Cars Might Age Like Smartphones",
@@ -371,19 +297,6 @@
       "watch_url": "https://www.youtube.com/watch?v=_FfIx2cOEYs",
       "duration_seconds": 446,
       "duration_iso": "PT7M26S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "LDCvtZ4L_GM",
-      "title": "How to Fix New York City’s $500M Trash Problem | WSJ Pro Perfected",
-      "description": "New York City handles nearly 3 million tons of trash a year. And much of it ends up on the curb in loose plastic bags — before getting shipped to landfills outside of the city altogether, on barges and then trains. This system costs the city around $500 million a year. So, can the largest city in the United States modernize its waste management?\n\nWSJ explores how experts and city officials plan to tackle New York City’s giant trash problem.\n\nChapters:\n0:00 NYC’s trash problem\n0:34 Possible solutions\n1:10 Background on why the problem exists\n1:59 What the sanitation department does now\n3:34 The bigger problem: transfers, exports and landfills\n6:13 The bigger solution\n\nPro Perfected\nExperts in engineering and design break down a ubiquitous problem, examining how the world is built and what can make it better.\n\n#NYC #Trash #WSJ",
-      "channel_id": "UCK7tptUDHh-RYDsdxO1-5QQ",
-      "channel_title": "WSJ",
-      "published_at": "2026-08-14T16:30:13+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/LDCvtZ4L_GM/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=LDCvtZ4L_GM",
-      "duration_seconds": 413,
-      "duration_iso": "PT6M53S",
       "mongolia_relevant": false
     },
     {
@@ -410,58 +323,6 @@
       "watch_url": "https://www.youtube.com/watch?v=PMUOat0agFw",
       "duration_seconds": 283,
       "duration_iso": "PT4M43S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "G8WYyEO5bmo",
-      "title": "How Better Roads Are Transforming Communities in Laos",
-      "description": "The World Bank Southeast Asia Regional Economic Corridor and Connectivity Project is upgrading an Asian Highway and streamlining border procedures to increase job opportunities through better connectivity across Thailand, the Lao PDR, and Viet Nam. In northern Laos, the project is revitalizing communities by improving secondary roads that connect to rural villages, improving road safety, and increasing access to markets, public services, and opportunities.\n\nLearn more: https://www.worldbank.org/en/news/feature/2026/07/23/corridor-to-trade-jobs-and-services?cid=ECR_YT_Worldbank_EN_EXT \n\n00:00 Introduction - the Corridor\n00:53 Connecting Villagers to Services and Opportunity\n01:48 Road Improvements and Connectivity\n03:09 The Software of an Economic Corridor\n04:41 Consultation and Impact\n\n💬 Subtitles (CC) available English\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-08-07T20:07:05+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/G8WYyEO5bmo/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=G8WYyEO5bmo",
-      "duration_seconds": 333,
-      "duration_iso": "PT5M33S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "dfJxFkKEdXU",
-      "title": "هل تعتقد أن الوظيفة هي الطريقة الوحيدة للعمل مع البنك الدولي؟ فكّر مرة أخرى",
-      "description": "هل ترغب بالعمل مع مجموعة البنك الدولي بدون الحاجة إلى التقديم لوظيفة؟ اكتشف كيفية العثور على مشاريع المشتريات والعقود المربحة التي تقدمها مجموعة البنك الدولي، والمشاركة في المناقصات، والفوز بها.\nيمكنك الوصول إلى الأدوات والإرشادات والتنبيهات على منصة البنك الدولي الخاصة بالموردين: http://wrld.bg/YG1v50Z4Ul7 من خلال منصة مجموعة البنك الدولي للموردين، تستطيع الشركات من جميع الأحجام الحصول على تمويل بمليارات الدولارات لمشاريع عالمية. يشرح هذا الفيديو كيفية إيجاد فرص التوريد، والتعامل مع منهجية التوريد المُحدَّثة، والمنافسة بنزاهة على العقود في مجالات السلع والأعمال والخدمات. مع أكثر من 1600 مشروع نشط في أكثر من 100 دولة، تشمل المشتريات الممولة من البنك الدولي ما يلي: الأعمال المدنية والمعدات أنظمة تكنولوجيا المعلومات والاستشارات خدمات فنية متخصصة للشركات الصغيرة والمتوسطة والشركات العالمية ما الجديد في هذا الإطار المُحدَّث؟ يركز النظام الجديد على أفضل قيمة (وليس مجرد أفضل سعر)، والمشاركة المبكرة في السوق، وخيارات دفع أفضل، ونظام شكاوى قوي لضمان عملية اختيار عادلة وشفافة. تعرّف على المزيد وسجّل عملك اليوم: http://wrld.bg/YG1v50Z4Ul7 \n\n\n🌐 تعد مجموعة البنك الدولي واحدة من أكبر مصادر التمويل والمعرفة في العالم بالنسبة للبلدان المنخفضة الدخل. تشترك مؤسساتها الخمس في الالتزام بالحد من الفقر وزيادة الرخاء المشترك وتعزيز التنمية المستدامة. http://www.albankaldawli.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-08-01T04:00:09+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/dfJxFkKEdXU/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=dfJxFkKEdXU",
-      "duration_seconds": 187,
-      "duration_iso": "PT3M7S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "R6CmjweKLEw",
-      "title": "Strengthening IDA21 with Portfolio Guarantee Platform",
-      "description": "In this episode exploring IDA's innovative financing tools, Mahmut Rustem Sen, Manager for IBRD-IDA Corporate Finance at the World Bank, explains what a Portfolio Guarantee Platform is, how it works and how it can help IDA unlock more financing to support countries most in need.\n\nCheck out the other episodes in this series:\nIntro\nhttps://www.youtube.com/watch?v=iV-3ombnmlg\nConcessional Partner Loans\nhttps://www.youtube.com/watch?v=zwX2amVl-6s\nHybrid Capital\nhttps://www.youtube.com/watch?si=vW8NVRDK1EfJTMTc&amp;v=xKBNiSar8fw&amp;feature=youtu.be\n\n0:00-0:20: Introduction\n0:20-1:29: What is a PGP?\n1:30-2:46: How does PGP unlock more financing for IDA?\n2:47-4:09: What's in it for donors?\n4:10-5:08: The value of PGP?\n5:09-5:26: Conclusion\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-07-30T13:00:31+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/R6CmjweKLEw/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=R6CmjweKLEw",
-      "duration_seconds": 326,
-      "duration_iso": "PT5M26S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "mYyciGeOOlA",
-      "title": "Will AI Make or Take the Next Billion Jobs? | The Development Podcast",
-      "description": "How will artificial intelligence reshape the future of work—and will it create enough opportunities for the next generation? \n\nOver the next decade, 1.2 billion young people are expected to enter the workforce, but only around 400 million jobs are currently projected to be available. In this episode, host Tanvir Gill explores whether AI could help close that gap—or make the challenge even greater. Entrepreneur and content creator, Marina Mogilko, explains how workers can build an advantage through AI systems, agents and “vibe coding.” Mohamed Eissa, IFC Chief Investment Officer and Global Head of Venture Capital and Direct Technology Investments, examines how AI could transform businesses and create opportunities across emerging markets. Sharat Raghavan, Director of Data Science and Research at LinkedIn, shares what their data reveals about changing jobs, rising skills and the future of career progression. \n\n\n\n[00:00] Will AI make or take the next billion jobs? \n[00:48] What Nairobi's tech community thinks \n[02:51] Marina Mogilko on vibe coding and AI as opportunity \n[05:06] AI and the future of content creation \n[08:00] The top skill for an AI economy \n[09:29] Introductions: Sharat Raghavan from LinkedIn & Mohamed Eissa from IFC \n[13:04] Human skills and AI entrepreneurship \n[14:40] AI opportunities in emerging markets \n[16:25] Where jobs are growing \n[17:25] AI for development: healthcare in Africa \n[18:35] The changing career ladder \n[21:44] AI disruption: reality or hype? \n[25:27] AI, SMEs and the missing middle \n[26:23] How to future-proof a career \n\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org\n\nÀ PROPOS DE LA BANQUE MONDIALE 🌐 La Banque mondiale est l'une des plus importantes sources mondiales de financement et de connaissances pour les pays à faible revenu. Ses cinq institutions partagent un engagement commun à réduire la pauvreté, à accroître la prospérité partagée et à promouvoir le développement durable. http://www.banquemondiale.org\n\nACERCA DEL BANCO MUNDIAL 🌐 El Banco Mundial, una de las fuentes más importantes de financiamiento y conocimiento para los países en desarrollo, está integrado por cinco instituciones que se han comprometido a reducir la pobreza, aumentar la prosperidad compartida y promover el desarrollo sostenible en un planeta habitable. https://www.bancomundial.org/\n\n🌐 تعد البنك الدولي واحدة من أكبر مصادر التمويل والمعرفة في العالم بالنسبة للبلدان المنخفضة الدخل. تشترك مؤسساتها الخمس في الالتزام بالحد من الفقر وزيادة الرخاء المشترك وتعزيز التنمية المستدامة. http://www.albankaldawli.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-07-28T21:00:30+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/mYyciGeOOlA/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=mYyciGeOOlA",
-      "duration_seconds": 1770,
-      "duration_iso": "PT29M30S",
       "mongolia_relevant": false
     }
   ]
