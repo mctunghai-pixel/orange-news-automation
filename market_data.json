@@ -166,7 +166,7 @@
         "close": 7711.7598
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:48Z"
+    "lastUpdated": "2026-08-30T06:10:42Z"
   },
   "dji": {
     "slug": "dji",
@@ -335,7 +335,7 @@
         "close": 53559.9883
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:48Z"
+    "lastUpdated": "2026-08-30T06:10:42Z"
   },
   "ixic": {
     "slug": "ixic",
@@ -504,7 +504,7 @@
         "close": 26402.4199
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:48Z"
+    "lastUpdated": "2026-08-30T06:10:42Z"
   },
   "btc": {
     "slug": "btc",
@@ -512,20 +512,16 @@
     "name": "Bitcoin",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 78199.3594,
-    "change": -2058.1797,
-    "changePct": -2.5645,
+    "price": 78109.9531,
+    "change": 279.6641,
+    "changePct": 0.3593,
     "open": 78234.75,
-    "prevClose": 80257.5391,
+    "prevClose": 77830.2891,
     "dayHigh": 78277.0078,
-    "dayLow": 78171.8125,
+    "dayLow": 78009.9453,
     "high52w": 126198.0703,
     "low52w": 57747.7656,
     "history1w": [
-      {
-        "date": "2026-08-22",
-        "close": 77083.4141
-      },
       {
         "date": "2026-08-23",
         "close": 77755.2656
@@ -547,15 +543,15 @@
         "close": 80257.5391
       },
       {
+        "date": "2026-08-28",
+        "close": 77830.2891
+      },
+      {
         "date": "2026-08-30",
-        "close": 78199.3594
+        "close": 78109.9531
       }
     ],
     "history1m": [
-      {
-        "date": "2026-07-30",
-        "close": 64725.3086
-      },
       {
         "date": "2026-07-31",
         "close": 62813.7461
@@ -669,12 +665,16 @@
         "close": 80257.5391
       },
       {
+        "date": "2026-08-28",
+        "close": 77830.2891
+      },
+      {
         "date": "2026-08-30",
-        "close": 78199.3594
+        "close": 78109.9531
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:48Z",
-    "volume24h": 14008001536.0
+    "lastUpdated": "2026-08-30T06:10:42Z",
+    "volume24h": 13605828608.0
   },
   "eth": {
     "slug": "eth",
@@ -682,20 +682,16 @@
     "name": "Ethereum",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 2461.76,
-    "change": -48.6501,
-    "changePct": -1.9379,
+    "price": 2455.4299,
+    "change": 12.894,
+    "changePct": 0.5279,
     "open": 2457.449,
-    "prevClose": 2510.4102,
+    "prevClose": 2442.5359,
     "dayHigh": 2464.0208,
-    "dayLow": 2455.9785,
+    "dayLow": 2452.7202,
     "high52w": 4763.3613,
     "low52w": 1506.5057,
     "history1w": [
-      {
-        "date": "2026-08-22",
-        "close": 2424.2512
-      },
       {
         "date": "2026-08-23",
         "close": 2463.8159
@@ -717,15 +713,15 @@
         "close": 2510.4102
       },
       {
+        "date": "2026-08-28",
+        "close": 2442.5359
+      },
+      {
         "date": "2026-08-30",
-        "close": 2461.76
+        "close": 2455.4299
       }
     ],
     "history1m": [
-      {
-        "date": "2026-07-30",
-        "close": 1917.3729
-      },
       {
         "date": "2026-07-31",
         "close": 1860.3459
@@ -839,12 +835,16 @@
         "close": 2510.4102
       },
       {
+        "date": "2026-08-28",
+        "close": 2442.5359
+      },
+      {
         "date": "2026-08-30",
-        "close": 2461.76
+        "close": 2455.4299
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:48Z",
-    "volume24h": 5787316224.0
+    "lastUpdated": "2026-08-30T06:10:43Z",
+    "volume24h": 5914920960.0
   },
   "xau": {
     "slug": "xau",
@@ -852,15 +852,15 @@
     "name": "Gold Futures",
     "assetClass": "commodity",
     "currency": "USD",
-    "price": 4478.1001,
-    "change": -131.6001,
-    "changePct": -2.8549,
-    "open": 4599.2998,
+    "price": 4529.8999,
+    "change": -79.8003,
+    "changePct": -1.7311,
+    "open": 4656.0,
     "prevClose": 4609.7002,
-    "dayHigh": 4625.5,
-    "dayLow": 4451.7998,
+    "dayHigh": 4688.0,
+    "dayLow": 4495.0,
     "high52w": 5586.2002,
-    "low52w": 3426.6001,
+    "low52w": 3485.7,
     "history1w": [
       {
         "date": "2026-08-20",
@@ -888,7 +888,7 @@
       },
       {
         "date": "2026-08-28",
-        "close": 4478.1001
+        "close": 4529.8999
       }
     ],
     "history1m": [
@@ -1010,10 +1010,10 @@
       },
       {
         "date": "2026-08-28",
-        "close": 4478.1001
+        "close": 4529.8999
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:48Z"
+    "lastUpdated": "2026-08-30T06:10:43Z"
   },
   "cl": {
     "slug": "cl",
@@ -1182,7 +1182,7 @@
         "close": 83.4
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:48Z"
+    "lastUpdated": "2026-08-30T06:10:43Z"
   },
   "mntusd": {
     "slug": "mntusd",
@@ -1351,7 +1351,7 @@
         "close": 3630.1477
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:49Z"
+    "lastUpdated": "2026-08-30T06:10:43Z"
   },
   "msetop20": {
     "slug": "msetop20",
@@ -1520,6 +1520,6 @@
         "close": 57861.73
       }
     ],
-    "lastUpdated": "2026-08-30T00:30:49Z"
+    "lastUpdated": "2026-08-30T06:10:43Z"
   }
 }
