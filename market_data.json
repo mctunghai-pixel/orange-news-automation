@@ -5,9 +5,9 @@
     "name": "S&P 500 Index",
     "assetClass": "index",
     "currency": "USD",
-    "price": NaN,
-    "change": NaN,
-    "changePct": NaN,
+    "price": 7747.71,
+    "change": 81.1099,
+    "changePct": 1.058,
     "open": 7686.71,
     "prevClose": 7666.6001,
     "dayHigh": 7756.7598,
@@ -41,7 +41,7 @@
       },
       {
         "date": "2026-09-03",
-        "close": NaN
+        "close": 7747.71
       }
     ],
     "history1m": [
@@ -163,10 +163,10 @@
       },
       {
         "date": "2026-09-03",
-        "close": NaN
+        "close": 7747.71
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:18Z"
+    "lastUpdated": "2026-09-04T09:49:38Z"
   },
   "dji": {
     "slug": "dji",
@@ -174,9 +174,9 @@
     "name": "Dow Jones Industrial",
     "assetClass": "index",
     "currency": "USD",
-    "price": NaN,
-    "change": NaN,
-    "changePct": NaN,
+    "price": 53686.1094,
+    "change": 624.1602,
+    "changePct": 1.1763,
     "open": 53309.1719,
     "prevClose": 53061.9492,
     "dayHigh": 53746.5,
@@ -210,7 +210,7 @@
       },
       {
         "date": "2026-09-03",
-        "close": NaN
+        "close": 53686.1094
       }
     ],
     "history1m": [
@@ -332,10 +332,10 @@
       },
       {
         "date": "2026-09-03",
-        "close": NaN
+        "close": 53686.1094
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:18Z"
+    "lastUpdated": "2026-09-04T09:49:38Z"
   },
   "ixic": {
     "slug": "ixic",
@@ -343,13 +343,13 @@
     "name": "Nasdaq Composite",
     "assetClass": "index",
     "currency": "USD",
-    "price": NaN,
-    "change": NaN,
-    "changePct": NaN,
-    "open": 26336.3223,
+    "price": 26584.0605,
+    "change": 366.2305,
+    "changePct": 1.3969,
+    "open": 26336.3203,
     "prevClose": 26217.8301,
-    "dayHigh": 26644.5684,
-    "dayLow": 26325.0625,
+    "dayHigh": 26644.5703,
+    "dayLow": 26325.0605,
     "high52w": 27190.2109,
     "low52w": 20690.25,
     "history1w": [
@@ -379,7 +379,7 @@
       },
       {
         "date": "2026-09-03",
-        "close": NaN
+        "close": 26584.0605
       }
     ],
     "history1m": [
@@ -501,10 +501,10 @@
       },
       {
         "date": "2026-09-03",
-        "close": NaN
+        "close": 26584.0605
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:18Z"
+    "lastUpdated": "2026-09-04T09:49:38Z"
   },
   "btc": {
     "slug": "btc",
@@ -512,13 +512,13 @@
     "name": "Bitcoin",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 81104.1719,
-    "change": 3803.6953,
-    "changePct": 4.9207,
+    "price": 81082.7969,
+    "change": 3782.3203,
+    "changePct": 4.893,
     "open": 81271.9219,
     "prevClose": 77300.4766,
     "dayHigh": 81392.3047,
-    "dayLow": 80686.2656,
+    "dayLow": 80622.6562,
     "high52w": 126198.0703,
     "low52w": 57747.7656,
     "history1w": [
@@ -548,7 +548,7 @@
       },
       {
         "date": "2026-09-04",
-        "close": 81104.1719
+        "close": 81082.7969
       }
     ],
     "history1m": [
@@ -670,11 +670,11 @@
       },
       {
         "date": "2026-09-04",
-        "close": 81104.1719
+        "close": 81082.7969
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:19Z",
-    "volume24h": 41724022784.0
+    "lastUpdated": "2026-09-04T09:49:38Z",
+    "volume24h": 43246575616.0
   },
   "eth": {
     "slug": "eth",
@@ -682,12 +682,12 @@
     "name": "Ethereum",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 2514.8201,
-    "change": 123.3191,
-    "changePct": 5.1566,
+    "price": 2523.48,
+    "change": 131.979,
+    "changePct": 5.5187,
     "open": 2507.7039,
     "prevClose": 2391.501,
-    "dayHigh": 2523.3521,
+    "dayHigh": 2539.7729,
     "dayLow": 2498.9414,
     "high52w": 4763.3613,
     "low52w": 1506.5057,
@@ -718,7 +718,7 @@
       },
       {
         "date": "2026-09-04",
-        "close": 2514.8201
+        "close": 2523.48
       }
     ],
     "history1m": [
@@ -840,11 +840,11 @@
       },
       {
         "date": "2026-09-04",
-        "close": 2514.8201
+        "close": 2523.48
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:19Z",
-    "volume24h": 18999158784.0
+    "lastUpdated": "2026-09-04T09:49:38Z",
+    "volume24h": 20330616832.0
   },
   "xau": {
     "slug": "xau",
@@ -852,20 +852,16 @@
     "name": "Gold Futures",
     "assetClass": "commodity",
     "currency": "USD",
-    "price": 4514.7002,
-    "change": 148.4004,
-    "changePct": 3.3988,
+    "price": 4514.2998,
+    "change": 22.5996,
+    "changePct": 0.5031,
     "open": 4522.0,
-    "prevClose": 4366.2998,
-    "dayHigh": 4533.6001,
-    "dayLow": 4512.0,
+    "prevClose": 4491.7002,
+    "dayHigh": 4537.7998,
+    "dayLow": 4506.6001,
     "high52w": 5586.2002,
     "low52w": 3549.8999,
     "history1w": [
-      {
-        "date": "2026-08-26",
-        "close": 4598.2002
-      },
       {
         "date": "2026-08-27",
         "close": 4609.7002
@@ -887,15 +883,15 @@
         "close": 4366.2998
       },
       {
+        "date": "2026-09-03",
+        "close": 4491.7002
+      },
+      {
         "date": "2026-09-04",
-        "close": 4514.7002
+        "close": 4514.2998
       }
     ],
     "history1m": [
-      {
-        "date": "2026-07-24",
-        "close": 4067.6001
-      },
       {
         "date": "2026-07-27",
         "close": 4074.5
@@ -1009,11 +1005,15 @@
         "close": 4366.2998
       },
       {
+        "date": "2026-09-03",
+        "close": 4491.7002
+      },
+      {
         "date": "2026-09-04",
-        "close": 4514.7002
+        "close": 4514.2998
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:19Z"
+    "lastUpdated": "2026-09-04T09:49:38Z"
   },
   "cl": {
     "slug": "cl",
@@ -1021,20 +1021,16 @@
     "name": "Crude Oil WTI",
     "assetClass": "commodity",
     "currency": "USD",
-    "price": 91.45,
-    "change": 0.44,
-    "changePct": 0.4835,
+    "price": 90.8,
+    "change": -0.5,
+    "changePct": -0.5476,
     "open": 91.67,
-    "prevClose": 91.01,
+    "prevClose": 91.3,
     "dayHigh": 92.17,
-    "dayLow": 91.4,
+    "dayLow": 90.38,
     "high52w": 119.48,
     "low52w": 54.98,
     "history1w": [
-      {
-        "date": "2026-08-26",
-        "close": 82.23
-      },
       {
         "date": "2026-08-27",
         "close": 83.53
@@ -1056,15 +1052,15 @@
         "close": 91.01
       },
       {
+        "date": "2026-09-03",
+        "close": 91.3
+      },
+      {
         "date": "2026-09-04",
-        "close": 91.45
+        "close": 90.8
       }
     ],
     "history1m": [
-      {
-        "date": "2026-07-24",
-        "close": 89.31
-      },
       {
         "date": "2026-07-27",
         "close": 82.61
@@ -1178,11 +1174,15 @@
         "close": 91.01
       },
       {
+        "date": "2026-09-03",
+        "close": 91.3
+      },
+      {
         "date": "2026-09-04",
-        "close": 91.45
+        "close": 90.8
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:19Z"
+    "lastUpdated": "2026-09-04T09:49:39Z"
   },
   "mntusd": {
     "slug": "mntusd",
@@ -1351,7 +1351,7 @@
         "close": 3579.3379
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:19Z"
+    "lastUpdated": "2026-09-04T09:49:39Z"
   },
   "msetop20": {
     "slug": "msetop20",
@@ -1359,14 +1359,14 @@
     "name": "MSE Top 20 Index",
     "assetClass": "index",
     "currency": "MNT",
-    "price": 62666.94,
-    "change": 0.0,
-    "changePct": 0.0,
-    "open": 62666.94,
+    "price": 63866.15,
+    "change": 1199.21,
+    "changePct": 1.91,
+    "open": 63866.15,
     "prevClose": 62666.94,
-    "dayHigh": 62666.94,
-    "dayLow": 62666.94,
-    "high52w": 62666.94,
+    "dayHigh": 63866.15,
+    "dayLow": 63866.15,
+    "high52w": 63866.15,
     "low52w": 54765.09,
     "history1w": [
       {
@@ -1395,7 +1395,7 @@
       },
       {
         "date": "2026-09-04",
-        "close": 62666.94
+        "close": 63866.15
       }
     ],
     "history1m": [
@@ -1517,9 +1517,9 @@
       },
       {
         "date": "2026-09-04",
-        "close": 62666.94
+        "close": 63866.15
       }
     ],
-    "lastUpdated": "2026-09-04T05:24:19Z"
+    "lastUpdated": "2026-09-04T09:49:39Z"
   }
 }
