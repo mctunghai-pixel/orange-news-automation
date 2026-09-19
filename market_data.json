@@ -166,7 +166,7 @@
         "close": 7650.5
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:01Z"
+    "lastUpdated": "2026-09-19T02:53:16Z"
   },
   "dji": {
     "slug": "dji",
@@ -335,7 +335,7 @@
         "close": 51682.6406
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:01Z"
+    "lastUpdated": "2026-09-19T02:53:16Z"
   },
   "ixic": {
     "slug": "ixic",
@@ -504,7 +504,7 @@
         "close": 26522.5449
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:01Z"
+    "lastUpdated": "2026-09-19T02:53:16Z"
   },
   "btc": {
     "slug": "btc",
@@ -512,13 +512,13 @@
     "name": "Bitcoin",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 80890.5,
-    "change": 4486.7266,
-    "changePct": 5.8724,
-    "open": 76350.6797,
+    "price": 81272.3438,
+    "change": 4868.5703,
+    "changePct": 6.3722,
+    "open": 80877.2734,
     "prevClose": 76403.7734,
-    "dayHigh": 81316.9375,
-    "dayLow": 76300.2188,
+    "dayHigh": 81636.375,
+    "dayLow": 80837.0469,
     "high52w": 126198.0703,
     "low52w": 57747.7656,
     "history1w": [
@@ -547,8 +547,8 @@
         "close": 76403.7734
       },
       {
-        "date": "2026-09-18",
-        "close": 80890.5
+        "date": "2026-09-19",
+        "close": 81272.3438
       }
     ],
     "history1m": [
@@ -669,12 +669,12 @@
         "close": 76403.7734
       },
       {
-        "date": "2026-09-18",
-        "close": 80890.5
+        "date": "2026-09-19",
+        "close": 81272.3438
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:01Z",
-    "volume24h": 40355971072.0
+    "lastUpdated": "2026-09-19T02:53:16Z",
+    "volume24h": 41114550272.0
   },
   "eth": {
     "slug": "eth",
@@ -682,13 +682,13 @@
     "name": "Ethereum",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 2610.1299,
-    "change": 163.0232,
-    "changePct": 6.6619,
-    "open": 2445.4851,
+    "price": 2619.72,
+    "change": 172.6133,
+    "changePct": 7.0538,
+    "open": 2611.1133,
     "prevClose": 2447.1067,
-    "dayHigh": 2641.1907,
-    "dayLow": 2438.1611,
+    "dayHigh": 2625.9358,
+    "dayLow": 2606.1133,
     "high52w": 4755.2202,
     "low52w": 1506.5057,
     "history1w": [
@@ -717,8 +717,8 @@
         "close": 2447.1067
       },
       {
-        "date": "2026-09-18",
-        "close": 2610.1299
+        "date": "2026-09-19",
+        "close": 2619.72
       }
     ],
     "history1m": [
@@ -839,12 +839,12 @@
         "close": 2447.1067
       },
       {
-        "date": "2026-09-18",
-        "close": 2610.1299
+        "date": "2026-09-19",
+        "close": 2619.72
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:01Z",
-    "volume24h": 22421409792.0
+    "lastUpdated": "2026-09-19T02:53:16Z",
+    "volume24h": 22906066944.0
   },
   "xau": {
     "slug": "xau",
@@ -1013,7 +1013,7 @@
         "close": 4415.8999
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:01Z"
+    "lastUpdated": "2026-09-19T02:53:17Z"
   },
   "cl": {
     "slug": "cl",
@@ -1182,7 +1182,7 @@
         "close": 95.47
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:01Z"
+    "lastUpdated": "2026-09-19T02:53:17Z"
   },
   "mntusd": {
     "slug": "mntusd",
@@ -1190,20 +1190,16 @@
     "name": "Mongolian Tögrög",
     "assetClass": "forex",
     "currency": "MNT",
-    "price": 3628.0541,
-    "change": 9.2559,
-    "changePct": 0.2558,
-    "open": 3628.0541,
-    "prevClose": 3618.7982,
-    "dayHigh": 3628.0541,
-    "dayLow": 3628.0541,
+    "price": 3569.4978,
+    "change": -58.5563,
+    "changePct": -1.614,
+    "open": 3569.4978,
+    "prevClose": 3628.0541,
+    "dayHigh": 3569.4978,
+    "dayLow": 3569.4978,
     "high52w": 3637.9692,
     "low52w": 3375.8519,
     "history1w": [
-      {
-        "date": "2026-09-12",
-        "close": 3630.0725
-      },
       {
         "date": "2026-09-13",
         "close": 3626.9888
@@ -1227,13 +1223,13 @@
       {
         "date": "2026-09-18",
         "close": 3628.0541
+      },
+      {
+        "date": "2026-09-19",
+        "close": 3569.4978
       }
     ],
     "history1m": [
-      {
-        "date": "2026-08-20",
-        "close": 3577.626
-      },
       {
         "date": "2026-08-21",
         "close": 3578.3356
@@ -1349,9 +1345,13 @@
       {
         "date": "2026-09-18",
         "close": 3628.0541
+      },
+      {
+        "date": "2026-09-19",
+        "close": 3569.4978
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:01Z"
+    "lastUpdated": "2026-09-19T02:53:17Z"
   },
   "msetop20": {
     "slug": "msetop20",
@@ -1359,20 +1359,16 @@
     "name": "MSE Top 20 Index",
     "assetClass": "index",
     "currency": "MNT",
-    "price": 64505.35,
-    "change": -148.07,
-    "changePct": -0.23,
-    "open": 64505.35,
+    "price": 64900.55,
+    "change": 247.13,
+    "changePct": 0.38,
+    "open": 64900.55,
     "prevClose": 64653.42,
-    "dayHigh": 64505.35,
-    "dayLow": 64505.35,
-    "high52w": 64653.42,
-    "low52w": 56226.71,
+    "dayHigh": 64900.55,
+    "dayLow": 64900.55,
+    "high52w": 64900.55,
+    "low52w": 56664.44,
     "history1w": [
-      {
-        "date": "2026-09-12",
-        "close": 63054.98
-      },
       {
         "date": "2026-09-13",
         "close": 63054.98
@@ -1396,13 +1392,13 @@
       {
         "date": "2026-09-18",
         "close": 64505.35
+      },
+      {
+        "date": "2026-09-19",
+        "close": 64900.55
       }
     ],
     "history1m": [
-      {
-        "date": "2026-08-20",
-        "close": 56226.71
-      },
       {
         "date": "2026-08-21",
         "close": 56664.44
@@ -1518,8 +1514,12 @@
       {
         "date": "2026-09-18",
         "close": 64505.35
+      },
+      {
+        "date": "2026-09-19",
+        "close": 64900.55
       }
     ],
-    "lastUpdated": "2026-09-18T23:50:02Z"
+    "lastUpdated": "2026-09-19T02:53:17Z"
   }
 }
