@@ -166,7 +166,7 @@
         "close": 7650.5
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:34Z"
+    "lastUpdated": "2026-09-20T06:37:10Z"
   },
   "dji": {
     "slug": "dji",
@@ -335,7 +335,7 @@
         "close": 51682.6406
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:34Z"
+    "lastUpdated": "2026-09-20T06:37:10Z"
   },
   "ixic": {
     "slug": "ixic",
@@ -504,7 +504,7 @@
         "close": 26522.5391
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:35Z"
+    "lastUpdated": "2026-09-20T06:37:10Z"
   },
   "btc": {
     "slug": "btc",
@@ -512,13 +512,13 @@
     "name": "Bitcoin",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 81183.4922,
-    "change": 282.0312,
-    "changePct": 0.3486,
+    "price": 80425.9766,
+    "change": -475.4844,
+    "changePct": -0.5877,
     "open": 81226.6172,
     "prevClose": 80901.4609,
     "dayHigh": 81301.8047,
-    "dayLow": 81079.875,
+    "dayLow": 80218.25,
     "high52w": 126198.0703,
     "low52w": 57747.7656,
     "history1w": [
@@ -548,7 +548,7 @@
       },
       {
         "date": "2026-09-20",
-        "close": 81183.4922
+        "close": 80425.9766
       }
     ],
     "history1m": [
@@ -670,11 +670,11 @@
       },
       {
         "date": "2026-09-20",
-        "close": 81183.4922
+        "close": 80425.9766
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:35Z",
-    "volume24h": 19635335168.0
+    "lastUpdated": "2026-09-20T06:37:10Z",
+    "volume24h": 22680965120.0
   },
   "eth": {
     "slug": "eth",
@@ -682,13 +682,13 @@
     "name": "Ethereum",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 2624.1499,
-    "change": 12.8027,
-    "changePct": 0.4903,
+    "price": 2578.47,
+    "change": -32.8772,
+    "changePct": -1.259,
     "open": 2631.7798,
     "prevClose": 2611.3472,
     "dayHigh": 2631.7798,
-    "dayLow": 2622.4819,
+    "dayLow": 2573.1367,
     "high52w": 4755.2202,
     "low52w": 1506.5057,
     "history1w": [
@@ -718,7 +718,7 @@
       },
       {
         "date": "2026-09-20",
-        "close": 2624.1499
+        "close": 2578.47
       }
     ],
     "history1m": [
@@ -840,11 +840,11 @@
       },
       {
         "date": "2026-09-20",
-        "close": 2624.1499
+        "close": 2578.47
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:35Z",
-    "volume24h": 9327865856.0
+    "lastUpdated": "2026-09-20T06:37:10Z",
+    "volume24h": 10623781888.0
   },
   "xau": {
     "slug": "xau",
@@ -860,7 +860,7 @@
     "dayHigh": 4439.7998,
     "dayLow": 4372.2002,
     "high52w": 5586.2002,
-    "low52w": 3664.3999,
+    "low52w": 3718.1001,
     "history1w": [
       {
         "date": "2026-09-10",
@@ -1013,7 +1013,7 @@
         "close": 4424.8999
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:35Z"
+    "lastUpdated": "2026-09-20T06:37:10Z"
   },
   "cl": {
     "slug": "cl",
@@ -1021,13 +1021,13 @@
     "name": "Crude Oil WTI",
     "assetClass": "commodity",
     "currency": "USD",
-    "price": 100.3,
-    "change": -1.61,
-    "changePct": -1.5798,
+    "price": 96.08,
+    "change": -5.83,
+    "changePct": -5.7207,
     "open": 101.06,
     "prevClose": 101.91,
-    "dayHigh": 103.48,
-    "dayLow": 99.19,
+    "dayHigh": 98.01,
+    "dayLow": 94.83,
     "high52w": 119.48,
     "low52w": 54.98,
     "history1w": [
@@ -1057,7 +1057,7 @@
       },
       {
         "date": "2026-09-18",
-        "close": 100.3
+        "close": 96.08
       }
     ],
     "history1m": [
@@ -1179,10 +1179,10 @@
       },
       {
         "date": "2026-09-18",
-        "close": 100.3
+        "close": 96.08
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:35Z"
+    "lastUpdated": "2026-09-20T06:37:10Z"
   },
   "mntusd": {
     "slug": "mntusd",
@@ -1351,7 +1351,7 @@
         "close": 3611.4829
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:35Z"
+    "lastUpdated": "2026-09-20T06:37:10Z"
   },
   "msetop20": {
     "slug": "msetop20",
@@ -1520,6 +1520,6 @@
         "close": 64900.55
       }
     ],
-    "lastUpdated": "2026-09-20T01:21:36Z"
+    "lastUpdated": "2026-09-20T06:37:11Z"
   }
 }
