@@ -44,7 +44,6 @@ try:
 except ImportError:
     pass
 
-import httpx as _httpx
 import anthropic
 
 try:
@@ -70,7 +69,7 @@ NEWS_OUTPUT_LIMIT = 9
 
 # Gemini primary (google-genai SDK)
 GEMINI_MODEL_PRIMARY   = "gemini-2.5-pro"
-GEMINI_MODEL_FALLBACKS = []
+GEMINI_MODEL_FALLBACKS = ["gemini-2.5-flash"]  # free-tier safe fallback before paid Claude
 ACTIVE_GEMINI_MODEL    = None  # set by get_working_gemini_model()
 _GEMINI_CLIENT         = None  # genai.Client instance, set at probe time
 
@@ -78,6 +77,7 @@ _GEMINI_CLIENT         = None  # genai.Client instance, set at probe time
 CLAUDE_MODEL         = "claude-haiku-4-5-20251001"
 CLAUDE_MAX_TOKENS    = 2500
 COST_PER_CLAUDE_USD  = 0.015
+MIN_NEWS_POSTS       = 3   # fewer than this = treat run as failed
 
 # Validation
 BANNED_PHRASES        = ["аж ахуйн нэгж"]
@@ -85,9 +85,9 @@ CAMELCASE_CYRILLIC_RE = re.compile(r"[А-ЯӨҮ][а-яөү]+[А-ЯӨҮ][а-яө�
 SOURCE_TAG_RE         = re.compile(r"Эх сурвалж\s*[:：]")
 
 # Claude client (kept for fallback)
-claude_client = anthropic.Anthropic(
-    http_client=_httpx.Client(verify=certifi.where())
-)
+# anthropic>=1.0 rejects a raw httpx.Client (SDK moved to httpx2) — this crashed
+# every run since 2026-08-20. The default client already verifies TLS via certifi.
+claude_client = anthropic.Anthropic() if os.environ.get("ANTHROPIC_API_KEY") else None
 
 # =============================================================================
 # КАТЕГОРИ (7 төрөл) — unchanged
@@ -1698,6 +1698,18 @@ def main():
         else:
             print("  ❌ Skipped (both APIs failed)")
         print()
+
+    # Guard: never overwrite yesterday's file with a Market-Watch-only day.
+    # Exit non-zero so the workflow fails loudly (alert) and publishers skip.
+    if news_count < MIN_NEWS_POSTS:
+        print(f"❌ Only {news_count} news posts translated (min {MIN_NEWS_POSTS}). "
+              f"Not writing {OUTPUT_FILE}; failing the run.")
+        sys.exit(1)
+
+    # Stamp freshness (consumers check this — file mtime is unreliable in CI)
+    generated_date = datetime.now(MNT_TZ).date().isoformat()
+    for post in translated:
+        post["generated_date"] = generated_date
 
     # Persist translations
     with open(OUTPUT_FILE, "w", encoding="utf-8") as f:

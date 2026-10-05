@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   run-pipeline:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 60
 
     env:
@@ -59,7 +59,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install anthropic google-genai python-dotenv feedparser httpx certifi python-dateutil yfinance Pillow requests readability-lxml beautifulsoup4
+          pip install "anthropic>=1.0,<2" "google-genai>=1.0,<3" python-dotenv feedparser httpx certifi python-dateutil yfinance Pillow requests readability-lxml beautifulsoup4
 
       # -----------------------------------------------------------------
       # Phase 1: RSS цуглуулах
@@ -152,15 +152,23 @@ jobs:
       # -----------------------------------------------------------------
       # Phase 8.1: Slack notification on workflow failure
       # -----------------------------------------------------------------
-      - name: Notify Slack on failure
+      - name: Alert on failure (Telegram DM + optional Slack)
         if: failure()
-        uses: 8398a7/action-slack@v3
-        with:
-          status: ${{ job.status }}
-          fields: repo,message,commit,author,workflow,job
-          text: |
-            🚨 Workflow failed: ${{ github.workflow }}
-            Run: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            Trigger: ${{ github.event_name }}
         env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MSG: "🚨 ${{ github.workflow }} FAILED (${{ github.event_name }})\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+        run: |
+          TEXT="$(printf '%b' "$MSG")"
+          sent=0
+          if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_ALERT_CHAT_ID" ]; then
+            curl -sS -m 20 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+              --data-urlencode "chat_id=${TELEGRAM_ALERT_CHAT_ID}" \
+              --data-urlencode "text=${TEXT}" > /dev/null && sent=1 && echo "Telegram alert sent"
+          fi
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            jq -n --arg t "$TEXT" '{text:$t}' | curl -sS -m 20 -X POST -H 'Content-Type: application/json' \
+              --data @- "$SLACK_WEBHOOK_URL" > /dev/null && sent=1 && echo "Slack alert sent"
+          fi
+          [ "$sent" = 1 ] || echo "::warning::No alert channel configured (set TELEGRAM_ALERT_CHAT_ID secret)"

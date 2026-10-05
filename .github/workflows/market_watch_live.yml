@@ -28,7 +28,7 @@ permissions:
 
 jobs:
   publish:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
 
     env:
@@ -54,7 +54,7 @@ jobs:
       - name: Install Python dependencies
         run: |
           pip install --upgrade pip
-          pip install anthropic google-genai python-dotenv feedparser httpx certifi python-dateutil yfinance Pillow requests readability-lxml beautifulsoup4
+          pip install "anthropic>=1.0,<2" "google-genai>=1.0,<3" python-dotenv feedparser httpx certifi python-dateutil yfinance Pillow requests readability-lxml beautifulsoup4
 
       # -----------------------------------------------------------------
       # Phase 1: RSS цуглуулах (translator-ийн INPUT_FILE = top_news.json)
@@ -157,26 +157,23 @@ jobs:
       # -----------------------------------------------------------------
       # Phase 8.1: Slack notification on workflow failure
       # -----------------------------------------------------------------
-      - name: Notify Slack on failure
+      - name: Alert on failure (Telegram DM + optional Slack)
         if: failure()
         env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_ALERT_CHAT_ID: ${{ secrets.TELEGRAM_ALERT_CHAT_ID }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-          GH_WORKFLOW: ${{ github.workflow }}
-          GH_RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          GH_EVENT: ${{ github.event_name }}
-          GH_JOB_STATUS: ${{ job.status }}
+          MSG: "🚨 ${{ github.workflow }} FAILED (${{ github.event_name }})\n${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
         run: |
-          set -euo pipefail
-          if [ -z "$SLACK_WEBHOOK_URL" ]; then
-            echo "SLACK_WEBHOOK_URL not set — skipping notification"
-            exit 0
+          TEXT="$(printf '%b' "$MSG")"
+          sent=0
+          if [ -n "$TELEGRAM_BOT_TOKEN" ] && [ -n "$TELEGRAM_ALERT_CHAT_ID" ]; then
+            curl -sS -m 20 "https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage" \
+              --data-urlencode "chat_id=${TELEGRAM_ALERT_CHAT_ID}" \
+              --data-urlencode "text=${TEXT}" > /dev/null && sent=1 && echo "Telegram alert sent"
           fi
-          PAYLOAD=$(jq -n \
-            --arg wf "$GH_WORKFLOW" \
-            --arg url "$GH_RUN_URL" \
-            --arg ev "$GH_EVENT" \
-            --arg js "$GH_JOB_STATUS" \
-            '{text: ("🚨 Workflow failed: " + $wf + "\nRun: " + $url + "\nTrigger: " + $ev + "\nJob status: " + $js)}')
-          curl -sS -X POST -H 'Content-Type: application/json' \
-            --data "$PAYLOAD" "$SLACK_WEBHOOK_URL" > /dev/null
-          echo "Slack failure notification sent"
+          if [ -n "$SLACK_WEBHOOK_URL" ]; then
+            jq -n --arg t "$TEXT" '{text:$t}' | curl -sS -m 20 -X POST -H 'Content-Type: application/json' \
+              --data @- "$SLACK_WEBHOOK_URL" > /dev/null && sent=1 && echo "Slack alert sent"
+          fi
+          [ "$sent" = 1 ] || echo "::warning::No alert channel configured (set TELEGRAM_ALERT_CHAT_ID secret)"

@@ -35,6 +35,8 @@ from typing import Optional
 
 import requests
 
+from freshness import posts_are_fresh, posts_generated_date
+
 # =============================================================================
 # CONFIG
 # =============================================================================
@@ -352,6 +354,10 @@ def run(cli_idx: Optional[int], dry_run_cli: bool) -> int:
 
     with open(INPUT_FILE, "r", encoding="utf-8") as f:
         posts = json.load(f)
+    if not posts_are_fresh(posts, date_str):
+        _log(f"⛔ Stale input: generated_date={posts_generated_date(posts)} ≠ {date_str} — skip (no re-post)")
+        _save_run_status({"exit_path": "stale_input", "generated_date": posts_generated_date(posts)})
+        return 0
     if idx >= len(posts):
         _log(f"idx={idx} >= len(posts)={len(posts)} — out of range")
         _save_run_status({"exit_path": "idx_out_of_range", "post_idx": idx})
