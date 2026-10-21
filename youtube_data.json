@@ -1,13 +1,16 @@
 {
-  "fetched_at_utc": "2026-10-20T22:54:21Z",
-  "fetched_at_mnt": "2026-10-21T06:54:22+0800",
-  "channels_processed": 6,
-  "videos_total": 40,
-  "videos_filtered_short": 50,
+  "fetched_at_utc": "2026-10-21T03:11:48Z",
+  "fetched_at_mnt": "2026-10-21T11:11:49+0800",
+  "channels_processed": 4,
+  "videos_total": 28,
+  "videos_filtered_short": 31,
   "videos_filtered_denied": 0,
-  "videos_filtered_no_duration": 0,
-  "errors": [],
-  "elapsed_seconds": 1.18,
+  "videos_filtered_no_duration": 1,
+  "errors": [
+    "Financial Times: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))",
+    "World Bank Group: RSS эвдэрсэн (<unknown>:3:11: not well-formed (invalid token))"
+  ],
+  "elapsed_seconds": 0.93,
   "videos": [
     {
       "id": "mV1V0FXixDE",
@@ -166,19 +169,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "MwNZJ3T5hAI",
-      "title": "Business As Usual After Liquid Hack: Back",
-      "description": "Adam Back, co-founder & CEO Blockstream, joins Scarlet Fu and James Seyffart on \"Bloomberg Crypto.\" The Liquid Network, a Bitcoin-linked blockchain started by Blockstream in 2018, was hit by a $320 million hack that drained about 4,000 Bitcoin. The hackers, who claimed to be so-called white hats exposing security flaws in the network, later returned some of the Bitcoin.\n--------\nMore on Bloomberg Television and Markets\n \nLike this video? Subscribe and turn on notifications so you don't miss any videos from Bloomberg Markets & Finance: https://tinyurl.com/ysu5b8a9\nVisit http://www.bloomberg.com for business news & analysis, up-to-the-minute market data, features, profiles and more.\n \nConnect with Bloomberg Television on:\nX: https://twitter.com/BloombergTV\nFacebook: https://www.facebook.com/BloombergTelevision\nInstagram: https://www.instagram.com/bloombergtv/\n \nConnect with Bloomberg Business on:\nX: https://twitter.com/business\nFacebook: https://www.facebook.com/bloombergbusiness\nInstagram: https://www.instagram.com/bloombergbusiness/\nTikTok: https://www.tiktok.com/@bloombergbusiness?lang=en\nReddit: https://www.reddit.com/r/bloomberg/\nLinkedIn: https://www.linkedin.com/company/bloomberg-news/\n \nMore from Bloomberg:\nBloomberg Radio: https://twitter.com/BloombergRadio\n\nBloomberg Surveillance: https://twitter.com/bsurveillance\nBloomberg Politics: https://twitter.com/bpolitics\nBloomberg Originals: https://twitter.com/bbgoriginals\n \nWatch more on YouTube:\nBloomberg Technology: https://www.youtube.com/@BloombergTechnology\nBloomberg Originals: https://www.youtube.com/@business\nBloomberg Quicktake: https://www.youtube.com/@BloombergQuicktake\nBloomberg Espanol: https://www.youtube.com/@bloomberg_espanol\nBloomberg Podcasts: https://www.youtube.com/@BloombergPodcasts",
-      "channel_id": "UCIALMKvObZNtJ6AmdCLP7Lg",
-      "channel_title": "Bloomberg Television",
-      "published_at": "2026-10-20T20:23:46+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/MwNZJ3T5hAI/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=MwNZJ3T5hAI",
-      "duration_seconds": 545,
-      "duration_iso": "PT9M5S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "09ClwCtovQQ",
       "title": "Sudan market strike kills more than 150 people | Reuters World News",
       "description": "France’s riots plunge Emmanuel Macron’s final months as president deeper into turmoil, with Marine Le Pen standing to gain from the fallout. A drone strike on the border between Sudan and South Sudan leaves more than 150 dead. Alberta votes to remain a part of Canada. The UK plans to send fighter jets to Saudi Arabia to support the fight against the Iran-backed Houthis. And how one hacker used AI agents to breach over 100 companies.\n\n#News #Reuters #Newsfeed \n\n👉 Subscribe: https://reut.rs/4b8fRGn\n\nKeep up with the latest news from around the world: https://www.reuters.com/\nFollow Reuters on Facebook: https://www.facebook.com/Reuters\nFollow Reuters on X: https://twitter.com/Reuters\nFollow Reuters on Instagram: https://www.instagram.com/reuters/?hl=en",
@@ -218,71 +208,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "FEtqvzYf1tA",
-      "title": "Small AI. Big Impact. | Global AI and Digital Summit",
-      "description": "How can artificial intelligence create more and better jobs in developing economies? “Small AI,” practical and locally adapted AI tools designed to solve everyday challenges, is making technology more accessible and useful.\n\nAt the Global AI & Digital Summit in Seoul, leaders, innovators, and practitioners explore how AI can support farmers and teachers, help small businesses grow, expand opportunity, and contribute to a more inclusive digital future.\n\nSpeakers:\n • Ajay Banga, President, World Bank Group\n • Bosun Tijani, Minister of Communications, Innovation & Digital Economy, Federal Republic of Nigeria\n • Hoshik Shin, CEO, Tridge, Korea\n • Kate Kallot, Founder & CEO, Amini\n\nModerator:\n • Mark Tetto, Co-CEO, TCK Investments\n\nLearn more about the Global AI & Digital Summit: https://live.worldbank.org/en/series/2026/global-ai-and-digital-summit-livestream?cid=ECR_YT_Worldbank_EN_EXT \n\n🌐 The World Bank Group is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org\n\n#ArtificialIntelligence #AI #Jobs #digitaldevelopment",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-20T02:40:26+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/FEtqvzYf1tA/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=FEtqvzYf1tA",
-      "duration_seconds": 4554,
-      "duration_iso": "PT1H15M54S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "MPtIv7CZGzg",
-      "title": "작은 AI, 큰 영향력 | 2026 글로벌 AI 및 디지털 서밋",
-      "description": "AI의 가장 큰 영향력이 거대 모델이 아니라, 일상의 과제를 해결하는 실용적인 도구에서 비롯된다면 어떨까요? 농업인과 교사를 지원하고 소기업의 성장을 돕는 ‘작은 AI’는 기술의 접근성과 유용성을 높이고 있습니다. 각계의 리더, 혁신가, 현장 실무자들과 함께 현지 맞춤형 AI 솔루션이 어떻게 일자리를 창출하고 기회를 확대하며 더욱 포용적인 디지털 미래를 만들어 갈 수 있을지 살펴보세요.\n\n세계은행그룹이 대한민국 재정경제부 및 과학기술정보통신부와 공동으로 주최하는 글로벌 AI 및 디지털 서밋이 10월 19일부터 22일까지 서울에서 열립니다. 정부 지도자, 개발 협력 파트너, 민간 부문 리더들이 모여 AI와 디지털 기술을 통해 일자리를 창출하고 생산성을 높이며 서비스 접근성을 확대하는 방안을 모색합니다. 일부 세션은  worldbank.org/live 에서 온라인으로 생중계됩니다.\nhttps://live.worldbank.org/ko/series/2026/global-ai-and-digital-summit-livestream",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-20T02:29:51+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/MPtIv7CZGzg/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=MPtIv7CZGzg",
-      "duration_seconds": 4562,
-      "duration_iso": "PT1H16M2S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "WoqyDh2AjGg",
-      "title": "Petites IA. Grand impact | Sommet mondial sur l’IA et le numérique 2026",
-      "description": "Et si le plus grand impact de l’IA venait non pas des modèles les plus puissants, mais d’outils pratiques conçus pour répondre aux défis du quotidien ? Du soutien aux agriculteurs et aux enseignants à l’accompagnement de la croissance des petites entreprises, les « petites IA » rendent la technologie plus accessible et plus utile. Retrouvez des dirigeants, des innovateurs et des praticiens pour explorer comment des solutions d’IA adaptées aux contextes locaux peuvent créer des emplois, élargir les opportunités et contribuer à un avenir numérique plus inclusif.\n\n📅 Suivez l’événement en direct le 20 octobre. https://live.banquemondiale.org/fr/evenement/2026/global-ai-digital-summit-small-ai?cid=ECR_YT_Worldbank_FR_EXT\n\n🔔 Abonnez-vous pour ne rater aucun de nos événements à venir : http://wrld.bg/JU2u50W56pp\n▶️ Voir d'autres vidéos en français : https://www.youtube.com/watch?v=0QFopXLY0Ck&amp;list=PL2365BDB4784D3035\n\nÀ PROPOS DE LA BANQUE MONDIALE 🌐 Le Groupe de la Banque mondiale est l'une des principales sources mondiales de financement et de partage de connaissances au service des pays à revenu faible et intermédiaire. Il regroupe cinq institutions qui poursuivent un objectif commun : réduire la pauvreté, accroître une prospérité partagée et promouvoir un développement durable.\n\n#WBGmeetings",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-20T02:29:04+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/WoqyDh2AjGg/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=WoqyDh2AjGg",
-      "duration_seconds": 4539,
-      "duration_iso": "PT1H15M39S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "1vZhxOTTnsU",
-      "title": "IA de pequeña escala. Gran impacto | Cumbre Mundial sobre IA y Tecnologías Digitales",
-      "description": "¿Y si el mayor impacto de la IA no proviene de los modelos más grandes, sino de herramientas prácticas diseñadas para resolver los desafíos cotidianos? Desde apoyar a agricultores y docentes hasta ayudar a las pequeñas empresas a crecer, la «IA de pequeña escala» hace que la tecnología sea más accesible y útil. Acompaña a líderes, innovadores y profesionales para explorar cómo las soluciones de IA adaptadas a los contextos locales pueden crear empleos, ampliar las oportunidades y contribuir a un futuro digital más inclusivo.\n\n📅 Sigue la transmisión en vivo el 20 de octubre: https://envivo.bancomundial.org/es/series/2026/cumbre-global-de-ia-y-tecnologia-digital?cid=ECR_YT_Worldbank_ES_EXT\n\nBANCOMUNDIAL.ORG/ENVIVO\n🔔 ¡Suscríbete para recibir alertas sobre los próximos eventos! http://wrld.bg/bGq050X2lew\n▶️ Ver más eventos en vivo https://www.youtube.com/playlist?list=PL9bQoShV1RWuVEryYF4zNQ2_ryXxsDnbY\n\nACERCA DEL BANCO MUNDIAL 🌐 El Banco Mundial, una de las fuentes más importantes de financiamiento y conocimiento para los países en desarrollo, está integrado por cinco instituciones que se han comprometido a reducir la pobreza, aumentar la prosperidad compartida y promover el desarrollo sostenible en un planeta habitable. https://www.bancomundial.org/",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-20T02:18:32+00:00",
-      "thumbnail_url": "https://i2.ytimg.com/vi/1vZhxOTTnsU/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=1vZhxOTTnsU",
-      "duration_seconds": 4642,
-      "duration_iso": "PT1H17M22S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "Zq0Xg5MdBOE",
-      "title": "ذكاء اصطناعي صغير النطاق وكبير الأثر | القمة العالمية للذكاء الاصطناعي والتكنولوجيا الرقمية",
-      "description": "ماذا لو كان الأثر الأكبر للذكاء الاصطناعي لا يأتي من النماذج الأكبر حجمًا، بل من أدوات عملية مصممة لمعالجة التحديات اليومية؟ من دعم المزارعين والمعلمين إلى مساعدة الشركات الصغيرة على النمو، يجعل «الذكاء الاصطناعي المصغر» التكنولوجيا أكثر إتاحة وفائدة. انضموا إلى القادة والمبتكرين والممارسين لاستكشاف كيف يمكن لحلول الذكاء الاصطناعي الملائمة للسياق المحلي أن تخلق فرص عمل وتوسّع الفرص وتساهم في رسم ملامح مستقبل رقمي أكثر شمولًا.\n\nhttps://live.albankaldawli.org/ar/event/2026/global-ai-digital-summit-small-ai?cid=ECR_YT_Worldbank_AR_EXT\n\nALBANKALDAWLI.ORG/LIVE\nسجِّل لتلقّي التحديثات حول الفعاليات القادمة:\nhttp://wrld.bg/A2Eg50X8LYS\nشاهد الفعاليات السابقة:\nhttps://www.youtube.com/watch?v=-BKIMAuPetY&amp;list=PL5E7BABB475E47699\n\n🌐 تعد مجموعة البنك الدولي واحدة من أكبر مصادر التمويل والمعرفة في العالم بالنسبة للبلدان المنخفضة الدخل. تشترك مؤسساتها الخمس في الإلتزام بالحد من الفقر وزيادة الرخاء المشترك وتعزيز التنمية المستدامة. http://www.albankaldawli.org\n\n#WBGmeetings",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-20T02:15:25+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/Zq0Xg5MdBOE/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=Zq0Xg5MdBOE",
-      "duration_seconds": 4535,
-      "duration_iso": "PT1H15M35S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "Wh1zlJXKy1M",
       "title": "The Race To Power AI Is Reshaping America's Electric Grid",
       "description": "AI data centers are driving unprecedented demand for electricity and putting renewed pressure on America’s power grid to modernize its equipment and develop greener, more efficient sources of power. Google, Meta, Microsoft and Amazon are all spending millions of dollars on local infrastructure upgrades and companies like SpaceXAI are even building off-grid power plants to power their data centers.\n\nGoogle says its planned 780-megawatt data center in Pine Island, Minnesota, could offer a model for powering the AI boom. In a proposed agreement with Xcel Energy, Google says it will support 1,900 megawatts of new wind, solar and battery capacity, while minimum payments and exit fees are intended to protect local ratepayers if demand falls short.\n\nCNBC examines whether projects like Pine Island can make the grid cleaner without shifting costs to existing customers, why some energy experts argue that smaller data centers could make better use of infrastructure already in place, and how utilities’ financial incentives can complicate efforts to build less.\n\nChapters:\n0:00 - 2:06 Introduction\n2:07 - 4:49 Off-grid solutions\n4:50 - 9:00 Upgrading the grid\n9:01 - 11:44 Smaller data centers\n\nProduced by: Jeffrey Kopp\nSenior Director of Video: Jeniece Pettitt\nTech Correspondent:  MacKenzie Sigalos\nEdited by: Erin Black, Matt Soto\nCamera: Donny Rowles\nAnimation: Jason Reginato, Emily Park\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n\n#CNBC\n\nThe Race To Power AI Is Reshaping America's Electric Grid",
@@ -293,19 +218,6 @@
       "watch_url": "https://www.youtube.com/watch?v=Wh1zlJXKy1M",
       "duration_seconds": 705,
       "duration_iso": "PT11M45S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "t3v-EBXuNN8",
-      "title": "Uzbekistan and IDA: A Partnership for Progress",
-      "description": "From bold economic reforms to millions lifted out of poverty, Uzbekistan's remarkable development journey shows what's possible through sustained investment and strong partnerships. As the country prepares to host the IDA21 Mid-Term Review (MTR) and launch of IDA22, this video explores Uzbekistan's development journey and the role of the World Bank's International Development Association (IDA) in supporting its progress.\n\n0:00-0:24: Intro\n0:25-0:45: Paschal Donohoe, World Bank Group\n046-1:30: Why Uzbekistan?\n1:31-1:45: Umid Abidkhadjaev, Ministry of Economy and Finance, Uzbekistan\n1:46-2:26: IDA's role in Uzbekistan\n2:27-3:56: The journey towards the MTR\n\n💬 Subtitles (CC) available in Arabic, English, French, Spanish\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-19T13:00:33+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/t3v-EBXuNN8/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=t3v-EBXuNN8",
-      "duration_seconds": 235,
-      "duration_iso": "PT3M55S",
       "mongolia_relevant": false
     },
     {
@@ -322,32 +234,6 @@
       "mongolia_relevant": false
     },
     {
-      "id": "cxU52hf4gq8",
-      "title": "Is American democracy safe? | Martin Wolf on the US midterms",
-      "description": "As Americans prepare to vote in the November 3 midterm elections, FT chief economics commentator Martin Wolf asks what the result will mean for Donald Trump, the future of US democracy and America's place in the world. \n\nIn the first of a six-part series of interviews with leading historians and political analysts, Martin speaks to the scholar and former Republican adviser Robert Kagan, who has spent a decade warning about Trump's authoritarian ambitions. \n\nThey discuss how Trump has accumulated so much power, whether America's democratic institutions can still constrain him, and what might happen if Republicans lose control of Congress. Could these elections mark a turning point for American democracy or has the country already gone too far down the road towards authoritarianism?\n \nTo enjoy future episodes, be sure to subscribe to ‘Martin Wolf on the World’ wherever you get your podcasts. You can also watch Martin’s podcast series on the FT’s YouTube channel here: \n\nhttps://www.youtube.com/@FinancialTimes\n\nHost: Martin Wolf\nProducer: Mischa Frankl-Duval\nSenior Producer: Laurence Knight\nExecutive Producer: Manuela Saragosa\nVideo Editor: Richard Topping\nAudio engineering: Breen Turner\nBroadcast engineers: Andrew Georgiades\nPodcast development: Laura Clarke\nFT Global Head of Audio: Flo Phillips \n\nLearn more at www.ft.com/martin-wolf-on-the-world\n\n► Enjoying FT content? Get a daily slice of the very best FT journalism with FT Edit. Free for 30 days then just £4.99 a month\n\nSee if you get the FT for free as a student (http://ft.com/schoolsarefree) or start a £1 trial: https://subs.ft.com/spa3_trial?segmentId=3d4ba81b-96bb-cef0-9ece-29efd6ef2132.\n\n► Check out our Community tab for more stories: https://www.youtube.com/@FinancialTimes/community\n►  Listen to our podcasts: https://www.ft.com/podcasts\n►  Follow us on Instagram: https://www.instagram.com/financialtimes\n►  Follow us on Instagram: https://www.tiktok.com/@financialtimes",
-      "channel_id": "UCoUxsWakJucWg46KW5RsvPw",
-      "channel_title": "Financial Times",
-      "published_at": "2026-10-17T04:00:23+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/cxU52hf4gq8/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=cxU52hf4gq8",
-      "duration_seconds": 2608,
-      "duration_iso": "PT43M28S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "BYYCj4pXsvE",
-      "title": "Ajay Banga's Plenary Remarks | 2026 Annual Meetings",
-      "description": "In his Annual Meetings Plenary speech, World Bank Group President, Ajay Banga, outlined a development model centered on creating jobs at scale by bringing together public finance, private investment, philanthropy, and technology around country priorities. He highlighted progress in mobilizing private capital, expanding access to energy, health, and water, supporting MSMEs, and putting practical AI to work. His message: with 1.2 billion young people entering the workforce, development must move faster and deliver opportunity at scale.\n\nABOUT THE WORLD BANK 🌐 The World Bank is one of the world’s largest sources of funding and knowledge for low-income countries. Its five institutions share a commitment to reducing poverty, increasing shared prosperity, and promoting sustainable development on a livable planet. http://www.worldbank.org",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-16T20:30:25+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/BYYCj4pXsvE/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=BYYCj4pXsvE",
-      "duration_seconds": 1178,
-      "duration_iso": "PT19M38S",
-      "mongolia_relevant": false
-    },
-    {
       "id": "_-pMa5-LdGY",
       "title": "Why More Americans Regret College And Homeownership",
       "description": "For generations, mortgages and student loans have been held up as textbook examples of “good debt,\".This borrowing promises to  build wealth or increase your earning power over time. On the other side of the coin is so-called “bad debt”, things like auto loans or credit card debt that don’t provide a financial return over time. As the costs of buying a home and getting a degree have continued to climb, more Americans are questioning whether those “good debt” investments are actually paying off.\n\nProducer: Juhohn Lee\nReporter: Stephanie Dhue\nCamera by: Macklin Fishman\nEdited by: Nic Henry. Dennis Donovan\nAnimation: Jason Reginato, Emily Park\nSenior Director of Video: Jessica Leibowitz\nAdditional Footage: Getty Images, Bryanna Hambrick, Katie Frederick\n\n» Subscribe to CNBC: https://cnb.cx/SubscribeCNBC \n» Subscribe to CNBC TV: https://cnb.cx/SubscribeCNBCtelevision  \n\nAbout CNBC: From 'Wall Street' to 'Main Street' to award winning original documentaries and Reality TV series, CNBC has you covered. Experience special sneak peeks of your favorite shows, exclusive video and more. \n\nWant to get ahead at work? Then you need to learn how to make effective small talk. In CNBC’s new online course, How To Talk To People At Work, expert instructors teach you how to use everyday conversation to gain visibility, build meaningful relationships and advance your career. Sign up now: https://cnb.cx/4sGlSkh\n\nConnect with CNBC News Online \nGet the latest news: https://www.cnbc.com/ \nFollow CNBC on LinkedIn: https://cnb.cx/LinkedInCNBC \nFollow CNBC News on Instagram: https://cnb.cx/InstagramCNBC \nFollow CNBC News on Facebook: https://cnb.cx/LikeCNBC \nFollow CNBC on Threads: https://cnb.cx/threads \nFollow CNBC News on X: https://cnb.cx/FollowCNBC \nFollow CNBC on WhatsApp: https://cnb.cx/WhatsAppCNBC \n\n#CNBC\n\nWhy More Americans Regret College And Homeownership",
@@ -358,45 +244,6 @@
       "watch_url": "https://www.youtube.com/watch?v=_-pMa5-LdGY",
       "duration_seconds": 629,
       "duration_iso": "PT10M29S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "4gdfFsw2K5g",
-      "title": "Sesión plenaria de las Reuniones Anuales de 2026",
-      "description": "La sesión plenaria de las Reuniones Anuales comenzó con una vibrante celebración de música y danza tailandesas, seguida de las intervenciones de Carlos Carvallo Spalding, presidente de las Reuniones Anuales y presidente del Banco Central del Paraguay, y Kristalina Georgieva, directora gerente del FMI. Ajay Banga, presidente del Grupo Banco Mundial, presentó un modelo de desarrollo centrado en crear empleo a gran escala, uniendo financiamiento público, inversión privada, filantropía y tecnología en torno a las prioridades de los países. Destacó los avances en movilizar capital privado, ampliar el acceso a energía, salud y agua, apoyar a las mipymes y aplicar la inteligencia artificial de pequeña escala de forma práctica. Su mensaje: dado que 1.200 millones de jóvenes se incorporarán a la fuerza laboral, el desarrollo debe avanzar más rápido y generar oportunidades a gran escala.\n\nhttps://envivo.bancomundial.org/es/evento/2026/reuniones-anuales-sesion-plenaria?cid=ECR_YT_Worldbank_ES_EXT\n\nBANCOMUNDIAL.ORG/ENVIVO\n🔔 ¡Suscríbete para recibir alertas sobre los próximos eventos! http://wrld.bg/bGq050X2lew\n▶️ Ver más eventos en vivo https://www.youtube.com/playlist?list=PL9bQoShV1RWuVEryYF4zNQ2_ryXxsDnbY\n\nACERCA DEL BANCO MUNDIAL 🌐 El Banco Mundial, una de las fuentes más importantes de financiamiento y conocimiento para los países en desarrollo, está integrado por cinco instituciones que se han comprometido a reducir la pobreza, aumentar la prosperidad compartida y promover el desarrollo sostenible en un planeta habitable. https://www.bancomundial.org/\n\n#WBGmeetings",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-16T04:05:18+00:00",
-      "thumbnail_url": "https://i1.ytimg.com/vi/4gdfFsw2K5g/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=4gdfFsw2K5g",
-      "duration_seconds": 4800,
-      "duration_iso": "PT1H20M",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "vR8aaz9X0SE",
-      "title": "الجلسة العامة للاجتماعات السنوية لعام 2026",
-      "description": "افتُتحت الجلسة العامة للاجتماعات السنوية باحتفال نابض بالموسيقى والرقص التايلانديين، أعقبته كلمات لكارلوس كارفالو سبالدينغ، رئيس الاجتماعات السنوية ومحافظ البنك المركزي في باراغواي، وكريستالينا غورغييفا، المديرة العامة لصندوق النقد الدولي. وعرض أجاي بانغا، رئيس مجموعة البنك الدولي، نموذجًا للتنمية يركز على خلق فرص العمل على نطاق واسع، من خلال الجمع بين التمويل العام والاستثمار الخاص والعمل الخيري والتكنولوجيا حول أولويات البلدان. وسلط الضوء على التقدم في تعبئة رأس المال الخاص وتوسيع الحصول على الطاقة والخدمات الصحية والمياه ودعم المنشآت المتناهية الصغر والصغيرة والمتوسطة وتوظيف الذكاء الاصطناعي عمليًا. وخلاصة رسالته: مع دخول 1.2 مليار شاب سوق العمل، يجب تسريع وتيرة التنمية وتوفير الفرص على نطاق واسع.\n\nhttps://live.albankaldawli.org/ar/event/2026/annual-meetings-plenary?cid=ECR_YT_Worldbank_AR_EXT\n\nALBANKALDAWLI.ORG/LIVE\nسجِّل لتلقّي التحديثات حول الفعاليات القادمة:\nhttp://wrld.bg/A2Eg50X8LYS\nشاهد الفعاليات السابقة:\nhttps://www.youtube.com/watch?v=-BKIMAuPetY&amp;list=PL5E7BABB475E47699\n\n🌐 تعد مجموعة البنك الدولي واحدة من أكبر مصادر التمويل والمعرفة في العالم بالنسبة للبلدان المنخفضة الدخل. تشترك مؤسساتها الخمس في الإلتزام بالحد من الفقر وزيادة الرخاء المشترك وتعزيز التنمية المستدامة. http://www.albankaldawli.org\n\n#WBGmeetings",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-16T03:56:06+00:00",
-      "thumbnail_url": "https://i3.ytimg.com/vi/vR8aaz9X0SE/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=vR8aaz9X0SE",
-      "duration_seconds": 4803,
-      "duration_iso": "PT1H20M3S",
-      "mongolia_relevant": false
-    },
-    {
-      "id": "gp1ox_1w-mw",
-      "title": "Séance plénière des Assemblées annuelles 2026",
-      "description": "La plénière des Assemblées annuelles s’est ouverte par une vibrante célébration de la musique et de la danse thaïlandaises, suivie des interventions de Carlos Carvallo Spalding, président des Assemblées annuelles et gouverneur de la Banque centrale du Paraguay, et de Kristalina Georgieva, directrice générale du FMI. Ajay Banga, président du Groupe de la Banque mondiale, a ensuite présenté une approche du développement axée sur la création d’emplois à grande échelle, qui mobilise financements publics, investissements privés, philanthropie et technologie en fonction des priorités de chaque pays. Il a souligné les progrès réalisés pour mobiliser davantage de capitaux privés, élargir l’accès à l’énergie, à la santé et à l’eau, soutenir les MPME et mettre l’IA au service de solutions concrètes. Son message : alors que 1,2 milliard de jeunes entreront sur le marché du travail, le développement doit accélérer pour créer des opportunités à grande échelle.\n\nEn savoir plus: https://live.banquemondiale.org/fr/evenement/2026/assemblees-annuelles-seance-pleniere?cid=ECR_YT_Worldbank_FR_EXT\n\n🔔 Abonnez-vous pour ne rater aucun de nos événements à venir : http://wrld.bg/JU2u50W56pp\n▶️ Voir d'autres vidéos en français : https://www.youtube.com/watch?v=0QFopXLY0Ck&amp;list=PL2365BDB4784D3035\n\nÀ PROPOS DE LA BANQUE MONDIALE 🌐 Le Groupe de la Banque mondiale est l'une des principales sources mondiales de financement et de partage de connaissances au service des pays à revenu faible et intermédiaire. Il regroupe cinq institutions qui poursuivent un objectif commun : réduire la pauvreté, accroître une prospérité partagée et promouvoir un développement durable.\n\n#WBGmeetings",
-      "channel_id": "UCE9mrcoX-oE-2f1BL-iPPoQ",
-      "channel_title": "World Bank Group",
-      "published_at": "2026-10-16T03:53:13+00:00",
-      "thumbnail_url": "https://i4.ytimg.com/vi/gp1ox_1w-mw/hqdefault.jpg",
-      "watch_url": "https://www.youtube.com/watch?v=gp1ox_1w-mw",
-      "duration_seconds": 4800,
-      "duration_iso": "PT1H20M",
       "mongolia_relevant": false
     },
     {
