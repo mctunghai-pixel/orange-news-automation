@@ -82,13 +82,13 @@ def get_post_image(post: dict, idx: int):
         or post.get("category") == "market_watch"
     )
     if is_mw:
-        if os.path.exists(MARKET_WATCH_IMAGE):
-            return MARKET_WATCH_IMAGE
-        # Fallback: үүсгэсэн зургийг ашиглах
+        # Visual Standard v1: today's live data card first, static thumbnail last
         today = datetime.now().strftime("%Y%m%d")
         candidate = f"assets/generated/post_{idx:02d}_{today}.png"
         if os.path.exists(candidate):
             return candidate
+        if os.path.exists(MARKET_WATCH_IMAGE):
+            return MARKET_WATCH_IMAGE
         return None
 
     # 1. Өмнө үүссэн файл

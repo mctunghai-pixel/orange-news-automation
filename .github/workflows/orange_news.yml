@@ -93,6 +93,8 @@ jobs:
       # Phase 2.5: Image generator
       # -----------------------------------------------------------------
       - name: Phase 2.5 - Image generator
+        env:
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         run: |
           echo "🎨 Image generator at $(date '+%H:%M:%S %Z')"
           python3 image_generator.py
