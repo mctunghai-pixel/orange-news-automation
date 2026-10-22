@@ -31,6 +31,7 @@ CATEGORY_LABEL = {   # Mongolian labels, one accent colour per category
     "ai":       ("ХИЙМЭЛ ОЮУН", (170, 110, 255)),
     "crypto":   ("КРИПТО",     (247, 190, 30)),
     "energy":   ("ЭРЧИМ ХҮЧ",  (255, 140, 40)),
+    "commodity": ("ТҮҮХИЙ ЭД", (212, 160, 23)),
     "mongolia": ("МОНГОЛ",     (0, 170, 120)),
     "video":    ("ВИДЕО МЭДЭЭ", (235, 60, 60)),
 }
@@ -108,7 +109,10 @@ def news_card(photo_path, headline, category, source, date_str, logo_path, out_p
         fc = font(F_REG, 20)
         credit = f"Зураг: {photo_credit}"
         cw = d.textlength(credit, font=fc)
-        d.text((W - PAD - cw, PAD + 30), credit, font=fc, fill=(235, 235, 235))
+        cx, cy = W - PAD - cw, PAD + 30
+        chip_c = Image.new("RGBA", (int(cw) + 20, 34), (11, 11, 14, 150))
+        card.paste(chip_c, (int(cx) - 10, cy - 5), chip_c)
+        d.text((cx, cy), credit, font=fc, fill=(235, 235, 235))
 
     # 4. category label — text block anchored to bottom so short headlines don't leave a gap
     fl = font(F_BOLD, 28)
@@ -233,10 +237,7 @@ def web_card(photo_path, category, logo_path, out_path):
     chip = Image.new("RGBA", (mark.width + 28, 44 + 22), (11, 11, 14, 215))
     card.paste(chip, (28, 26), chip)
     card.paste(mark, (42, 37))
-    fl = font(F_BOLD, 24)
-    lw = d.textlength(label, font=fl)
-    d.rounded_rectangle((28, WH - 74, 28 + lw + 30, WH - 30), radius=6, fill=accent)
-    d.text((43, WH - 68), label, font=fl, fill=WHITE)
+    # no category label here: the website renders the category itself
     card.convert("RGB").save(out_path, quality=88)
     return out_path
 

@@ -39,6 +39,7 @@ CATEGORY_QUERY = {
     "ai":       "artificial intelligence technology",
     "crypto":   "bitcoin cryptocurrency",
     "energy":   "oil industry energy",
+    "commodity": "gold commodities",
     "mongolia": "mongolia ulaanbaatar",
     "business": "business meeting office",
     "video":    "news studio",
@@ -92,10 +93,15 @@ def concept_queries(post):
 
 
 def resolve_category(post):
+    """Refine the broad 'finance' category from the headline's main concept."""
     cat = (post.get("category") or "finance").lower()
-    title = (post.get("original_title") or "").lower()
-    if cat == "finance" and any(h in title for h in ENERGY_HINTS):
+    if cat != "finance":
+        return cat
+    first = (concept_queries(post) or [""])[0]
+    if first in ("oil refinery", "natural gas pipeline"):
         return "energy"
+    if first in ("gold bars", "mining industry"):
+        return "commodity"
     return cat
 
 

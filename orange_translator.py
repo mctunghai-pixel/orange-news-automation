@@ -113,13 +113,20 @@ def _claude_create(**kw):
 
 
 def _gemini_generate(**kw):
-    """Gemini call with retry on transient 503/429/500 (free tier spikes)."""
+    """Gemini call with retry on transient 503/500 and per-minute 429.
+    A *daily* quota 429 is not retried: Gemini is switched off for the rest of
+    the run so every remaining article goes straight to the Claude fallback."""
+    global ACTIVE_GEMINI_MODEL
     delays = [5, 15, 30]
     for attempt in range(len(delays) + 1):
         try:
             return _GEMINI_CLIENT.models.generate_content(**kw)
         except Exception as e:
             msg = str(e)
+            if ("429" in msg or "RESOURCE_EXHAUSTED" in msg) and ("PerDay" in msg or "per day" in msg.lower()):
+                print("  ⛔ Gemini daily free quota exhausted — Claude fallback for the rest of this run")
+                ACTIVE_GEMINI_MODEL = None
+                raise
             transient = any(c in msg for c in ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "500", "INTERNAL"))
             if not transient or attempt == len(delays):
                 raise
