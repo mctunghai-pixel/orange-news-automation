@@ -89,6 +89,43 @@ SOURCE_TAG_RE         = re.compile(r"Эх сурвалж\s*[:：]")
 # every run since 2026-08-20. The default client already verifies TLS via certifi.
 claude_client = anthropic.Anthropic() if os.environ.get("ANTHROPIC_API_KEY") else None
 
+
+def _claude_create(**kw):
+    """anthropic>=1.0 dropped `temperature` from Messages.create(); send it via
+    extra_body (the API still honours it). Also cache the long system prompt
+    (prompt caching → ~90% cheaper input on repeat calls). If the API ever
+    rejects temperature, retry once without it."""
+    if claude_client is None:
+        raise RuntimeError("ANTHROPIC_API_KEY not set")
+    temp = kw.pop("temperature", None)
+    sys_prompt = kw.get("system")
+    if isinstance(sys_prompt, str):
+        kw["system"] = [{"type": "text", "text": sys_prompt,
+                         "cache_control": {"type": "ephemeral"}}]
+    if temp is not None:
+        try:
+            return claude_client.messages.create(extra_body={"temperature": temp}, **kw)
+        except anthropic.BadRequestError as e:
+            if "temperature" not in str(e):
+                raise
+            print(f"  ⚠️ Claude rejected temperature — retrying without it")
+    return claude_client.messages.create(**kw)
+
+
+def _gemini_generate(**kw):
+    """Gemini call with retry on transient 503/429/500 (free tier spikes)."""
+    delays = [5, 15, 30]
+    for attempt in range(len(delays) + 1):
+        try:
+            return _GEMINI_CLIENT.models.generate_content(**kw)
+        except Exception as e:
+            msg = str(e)
+            transient = any(c in msg for c in ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "500", "INTERNAL"))
+            if not transient or attempt == len(delays):
+                raise
+            print(f"  ↻ Gemini transient error ({msg[:40]}…) — retry in {delays[attempt]}s")
+            time.sleep(delays[attempt])
+
 # =============================================================================
 # КАТЕГОРИ (7 төрөл) — unchanged
 # =============================================================================
@@ -801,7 +838,7 @@ def translate_with_gemini(article):
     user_prompt = build_user_prompt(article)
 
     t0 = time.time()
-    response = _GEMINI_CLIENT.models.generate_content(
+    response = _gemini_generate(
         model=ACTIVE_GEMINI_MODEL,
         contents=user_prompt,
         config=genai.types.GenerateContentConfig(
@@ -831,7 +868,7 @@ def translate_with_claude(article):
     user_prompt = build_user_prompt(article)
 
     t0 = time.time()
-    response = claude_client.messages.create(
+    response = _claude_create(
         model=CLAUDE_MODEL,
         max_tokens=CLAUDE_MAX_TOKENS,
         temperature=0.15,  # Phase 6.1.7: explicit (was implicit 1.0 — root cause of cc880cd)
@@ -1131,7 +1168,7 @@ def gemini_quality_gate(title: str, body: str) -> tuple:
         return None, "no_gemini_client"
     prompt = QUALITY_GATE_PROMPT.format(title=title or "", body=(body or "")[:500])
     try:
-        response = _GEMINI_CLIENT.models.generate_content(
+        response = _gemini_generate(
             model=ACTIVE_GEMINI_MODEL,
             contents=prompt,
             config=genai.types.GenerateContentConfig(
@@ -1162,7 +1199,7 @@ def claude_quality_gate(title: str, body: str) -> tuple:
         return None, "no_claude_key"
     prompt = QUALITY_GATE_PROMPT.format(title=title or "", body=(body or "")[:500])
     try:
-        response = claude_client.messages.create(
+        response = _claude_create(
             model=CLAUDE_MODEL,
             max_tokens=120,
             temperature=0.0,  # Phase 6.1.7: deterministic, mirrors gemini_quality_gate
@@ -1228,7 +1265,7 @@ def gemini_editorial_polish(title: str, body: str, source_domain: str):
         source_domain=source_domain or "",
     )
     t0 = time.time()
-    response = _GEMINI_CLIENT.models.generate_content(
+    response = _gemini_generate(
         model=ACTIVE_GEMINI_MODEL,
         contents=user_prompt,
         config=genai.types.GenerateContentConfig(
@@ -1255,7 +1292,7 @@ def claude_editorial_polish(title: str, body: str, source_domain: str):
         source_domain=source_domain or "",
     )
     t0 = time.time()
-    response = claude_client.messages.create(
+    response = _claude_create(
         model=CLAUDE_MODEL,
         max_tokens=CLAUDE_MAX_TOKENS,
         temperature=0.15,  # Phase 6.1.7: explicit (was implicit 1.0)
