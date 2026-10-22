@@ -99,6 +99,14 @@ jobs:
           echo "🎨 Image generator at $(date '+%H:%M:%S %Z')"
           python3 image_generator.py
 
+
+      - name: Phase 2.6 - Publish images (media-public) + annotate URLs
+        continue-on-error: true
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin media-public:media-public
+          python3 publishers/media_pusher.py --annotate translated_posts.json
       # -----------------------------------------------------------------
       # Phase 3: Facebook poster (LIVE)
       # -----------------------------------------------------------------

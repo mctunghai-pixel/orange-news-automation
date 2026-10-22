@@ -26,13 +26,16 @@
 name: Media Publisher
 
 on:
-  schedule:
-    # MNT 07:00 (UTC 23:00) — daily regen + push to media-public.
-    # 1-hour buffer before the first IG slot at MNT 08:00 (UTC 00:00).
-    # Scheduled triggers do not pass `inputs.date_override`, so MEDIA_PUSH_DATE
-    # arrives empty; media_pusher.py falls back to today MNT (publishers/
-    # media_pusher.py:144).
-    - cron: '0 23 * * *'
+  # Visual Standard v1 (2026-10): orange_news.yml + market_watch_live.yml push images
+  # to media-public themselves (Phase 2.6). Daily cron disabled to avoid a concurrent
+  # push race at 07:00 MNT; manual catch-up runs still work.
+  # schedule:
+  #   # MNT 07:00 (UTC 23:00) — daily regen + push to media-public.
+  #   # 1-hour buffer before the first IG slot at MNT 08:00 (UTC 00:00).
+  #   # Scheduled triggers do not pass `inputs.date_override`, so MEDIA_PUSH_DATE
+  #   # arrives empty; media_pusher.py falls back to today MNT (publishers/
+  #   # media_pusher.py:144).
+  #   - cron: '0 23 * * *'
 
   workflow_dispatch:
     inputs:
@@ -101,6 +104,8 @@ jobs:
           pip install Pillow requests beautifulsoup4
 
       - name: Regenerate today's images
+        env:
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
         # Re-runs image_generator.py against main's translated_posts.json +
         # market_data.json. Output: assets/generated/post_*_<date>.png.
         run: |

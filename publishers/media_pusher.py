@@ -143,7 +143,9 @@ def _cli_push_today() -> int:
     """
     date_str = os.environ.get("MEDIA_PUSH_DATE", "").strip() or _today_mnt_date_str()
     pattern = os.path.join("assets", "generated", f"post_*_{date_str}.png")
-    paths = sorted(glob.glob(pattern))
+    # Visual Standard v1: website cards (web_NN_<date>.jpg) travel with the feed cards
+    web_pattern = os.path.join("assets", "generated", f"web_*_{date_str}.jpg")
+    paths = sorted(glob.glob(pattern)) + sorted(glob.glob(web_pattern))
     if not paths:
         _log(f"❌ no images match {pattern}")
         return 1
@@ -155,7 +157,29 @@ def _cli_push_today() -> int:
     _log(f"=== url_map ({len(url_map)}) ===")
     for src, url in sorted(url_map.items()):
         _log(f"  {os.path.basename(src)} -> {url}")
+    if "--annotate" in sys.argv:
+        annotate_posts(sys.argv[sys.argv.index("--annotate") + 1], url_map)
     return 0
+
+
+def annotate_posts(posts_file: str, url_map: dict[str, str]) -> None:
+    """Write public image URLs into translated_posts.json — only for files that
+    were actually pushed, so the website never links to a missing image."""
+    import json
+    by_name = {os.path.basename(k): v for k, v in url_map.items()}
+    with open(posts_file, encoding="utf-8") as f:
+        posts = json.load(f)
+    n = 0
+    for p in posts:
+        web = os.path.basename(p.get("image_web") or "")
+        feed = os.path.basename(p.get("image_path") or "")
+        if web in by_name:
+            p["image_web_url"] = by_name[web]; n += 1
+        if feed in by_name:
+            p["image_feed_url"] = by_name[feed]
+    with open(posts_file, "w", encoding="utf-8") as f:
+        json.dump(posts, f, ensure_ascii=False, indent=2)
+    _log(f"annotated {n} post(s) with image_web_url in {posts_file}")
 
 
 if __name__ == "__main__":

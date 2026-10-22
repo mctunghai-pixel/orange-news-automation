@@ -48,9 +48,9 @@ ENERGY_HINTS = ("oil", "crude", "gas", "opec", "energy", "brent", "lng", "coal")
 
 # headline concept → visual stock-photo query (stock libraries have concepts, not people)
 CONCEPTS = [
+    (r"\b(gold|bullion)\b|алт", "gold bars"),
     (r"\b(oil|crude|brent|opec|refiner)", "oil refinery"),
     (r"\b(gas|lng)\b", "natural gas pipeline"),
-    (r"\b(gold|bullion)\b", "gold bars"),
     (r"\b(copper|iron ore|mining|miner|coal)\b", "mining industry"),
     (r"\b(bitcoin|btc)\b", "bitcoin"),
     (r"\b(ethereum|crypto|blockchain|stablecoin|token)", "cryptocurrency"),

@@ -88,8 +88,18 @@ jobs:
       # Phase 3: Market Watch LIVE publish (scheduled_publish_time=None)
       # -----------------------------------------------------------------
 
-      - name: Phase 2.5 - Market Watch data card
-        run: python3 image_generator.py --market-watch-only || echo "⚠️ MW card failed - static thumbnail fallback"
+      - name: Phase 2.5 - Images (Market Watch card + news cards)
+        env:
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+        run: python3 image_generator.py || echo "⚠️ image generation failed - static thumbnail fallback"
+
+      - name: Phase 2.6 - Publish images (media-public) + annotate URLs
+        continue-on-error: true
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git fetch origin media-public:media-public
+          python3 publishers/media_pusher.py --annotate translated_posts.json
       - name: Phase 3 - Market Watch LIVE publish
         env:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
