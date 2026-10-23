@@ -13,8 +13,12 @@ name: Market Watch Live
 
 on:
   schedule:
-    # UTC 23:00 = Монгол цагаар 07:00 → pipeline ~15 мин → 07:15 MNT publish (60-min buffer)
-    - cron: '0 23 * * *'
+    # GitHub cron is often 1–2.5 h late (2026-10-23: 07:00 job started 09:16).
+    # Fire early (05:13 / 06:13 / 07:13 MNT); fb_poster_live schedules the FB post
+    # for 08:00 MNT and logs/mw_published.json keeps it to one post per day.
+    - cron: '13 21 * * *'
+    - cron: '13 22 * * *'
+    - cron: '13 23 * * *'
 
   workflow_dispatch:
 
@@ -27,7 +31,27 @@ permissions:
   contents: write
 
 jobs:
+  guard:
+    runs-on: ubuntu-24.04
+    outputs:
+      done: ${{ steps.check.outputs.done }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: logs
+      - id: check
+        run: |
+          today=$(TZ=Asia/Ulaanbaatar date +%F)
+          if [ -f logs/mw_published.json ] && grep -q "\"date\": \"$today\"" logs/mw_published.json; then
+            echo "Market Watch already posted/scheduled today ($today) — skipping"
+            echo "done=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "done=false" >> "$GITHUB_OUTPUT"
+          fi
+
   publish:
+    needs: guard
+    if: needs.guard.outputs.done != 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
     timeout-minutes: 15
 
@@ -127,6 +151,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add translated_posts.json archive/
+          [ -f logs/mw_published.json ] && git add logs/mw_published.json
           if git diff --staged --quiet; then
             echo "ℹ️  No changes to translated_posts.json or archive"
             exit 0

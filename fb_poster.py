@@ -143,6 +143,36 @@ def get_page_token(user_token, page_id):
     return user_token
 
 
+def get_scheduled_messages(page_id, access_token) -> list:
+    """Messages already waiting in the Page's scheduled queue (re-run de-dupe).
+    Fail-open: on error return [] so the pipeline still publishes."""
+    try:
+        r = requests.get(f"{FB_API_URL}/{page_id}/scheduled_posts",
+                         params={"fields": "message,scheduled_publish_time", "limit": 100,
+                                 "access_token": access_token}, timeout=15)
+        r.raise_for_status()
+        return [(p.get("message") or "") for p in r.json().get("data", [])]
+    except Exception as e:
+        log(f"  ⚠️  scheduled-queue check failed ({type(e).__name__}) — fail-open")
+        return []
+
+
+def plan_slots(n, now_mnt, first_hour=9, last_hour=21):
+    """Same-day slots (MNT). Normal run: hourly from 09:00. Late run: from the next
+    half-hour, spacing compressed so all n posts fit before last_hour. Never tomorrow."""
+    start = now_mnt.replace(hour=first_hour, minute=0, second=0, microsecond=0)
+    earliest = now_mnt + timedelta(minutes=15)
+    if start < earliest:
+        start = earliest.replace(second=0, microsecond=0)
+        start += timedelta(minutes=(30 - start.minute % 30) % 30)
+    end = now_mnt.replace(hour=last_hour, minute=0, second=0, microsecond=0)
+    if n <= 1 or start >= end:
+        gap = timedelta(minutes=20)
+    else:
+        gap = min(timedelta(hours=1), max(timedelta(minutes=20), (end - start) / (n - 1)))
+    return [start + i * gap for i in range(n)]
+
+
 def check_market_watch_exists_today(page_id, access_token) -> bool:
     """
     v8: Query FB Page posts in the last 24h.
@@ -301,24 +331,16 @@ def run(live, use_scheduling=True, skip_market_watch=False):
     # Хуваарь: Post 1 → 08:00 MNT, Post 2 → 09:00 MNT, ..., Post 10 → 17:00 MNT
     # Pipeline-г 06:00 MNT гэх мэт эрт ажиллуулвал бүх пост цагтаа гарна.
     # =========================================================================
-    FIRST_POST_HOUR_MNT = 8  # 08:00 MNT
-    HOUR_GAP = 1             # Постын хоорондох цагийн зай
     MNT_OFFSET = timedelta(hours=8)
-
     now_utc = datetime.now(timezone.utc)
     now_mnt = now_utc + MNT_OFFSET
 
-    # Өнөөдрийн 08:00 MNT (UTC форматаар)
-    first_post_mnt = now_mnt.replace(
-        hour=FIRST_POST_HOUR_MNT, minute=0, second=0, microsecond=0
-    )
-    # Хэрвээ 08:00 MNT өнгөрсөн бол (жишээ нь pipeline 11:00-д ажилласан),
-    # маргаашын 08:00 MNT-ээр эхлүүлнэ. Иначе өнөөдрийн 08:00-аас.
-    if first_post_mnt <= now_mnt + timedelta(minutes=11):
-        first_post_mnt = first_post_mnt + timedelta(days=1)
-        log(f"⚠️ 08:00 MNT өнгөрсөн → маргаашаар schedule хийнэ")
-
-    first_post_utc = first_post_mnt - MNT_OFFSET
+    # v9: news only (Market Watch is owned by fb_poster_live.py), same-day slots
+    news_idx = [k for k, p in enumerate(posts)
+                if not (p.get("use_market_watch_image") or p.get("category") == "market_watch"
+                        or p.get("type") == "market_watch")]
+    slots = dict(zip(news_idx, plan_slots(len(news_idx), now_mnt)))
+    queued = get_scheduled_messages(page_id, access_token) if live else []
     success = failed = 0
 
     for idx, post in enumerate(posts):
@@ -327,27 +349,17 @@ def run(live, use_scheduling=True, skip_market_watch=False):
             log(f"[{idx+1}/{len(posts)}] ⚠️ Текстгүй, алгасав")
             continue
 
-        is_mw = (post.get("use_market_watch_image", False) or
-                 post.get("category") == "market_watch" or
-                 post.get("type") == "market_watch" or
-                 idx == 0)
-        if skip_market_watch and is_mw:
-            log(f"[{idx+1}/{len(posts)}] ⏭️ Skipped Market Watch (handled by fb_poster_live.py)")
+        if idx not in slots:
+            log(f"[{idx+1}/{len(posts)}] ⏭️ Market Watch — handled by fb_poster_live.py")
             continue
 
-        # v8: MW de-dupe — avoid double-posting if fb_poster_live.py already ran today
-        if live and is_mw and check_market_watch_exists_today(page_id, access_token):
-            log(f"[{idx+1}/{len(posts)}] ⏭️  MW already exists today — skipping this slot")
+        headline = (post.get("headline") or "").strip()
+        if headline and any(headline in m for m in queued):
+            log(f"[{idx+1}/{len(posts)}] ⏭️ Already in FB scheduled queue — skip duplicate")
             continue
 
-        label = "📊 MARKET WATCH" if is_mw else "📰 NEWS"
-
-        # Бүх постыг schedule хийнэ (шууд биш)
-        scheduled_utc = first_post_utc + timedelta(hours=idx * HOUR_GAP)
-        # Facebook minimum = 10 минут ирээдүй (safety check)
-        min_future = now_utc + timedelta(minutes=11)
-        if scheduled_utc < min_future:
-            scheduled_utc = min_future
+        label = "📰 NEWS"
+        scheduled_utc = slots[idx] - MNT_OFFSET
 
         scheduled_time = scheduled_utc.timestamp() if use_scheduling else None
         if scheduled_time:

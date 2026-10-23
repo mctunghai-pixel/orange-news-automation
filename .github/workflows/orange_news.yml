@@ -12,8 +12,9 @@ name: Orange News Daily Pipeline
 
 on:
   schedule:
-    # UTC 22:00 = Монгол цагаар 06:00 (off-peak → GHA queue delay ~15 min)
-    - cron: '0 22 * * *'
+    # GitHub cron is often 1–2.5 h late (2026-10-23: 06:00 job started 08:26).
+    # 04:13 MNT start keeps the first 09:00 news slot safe even with a 3 h delay.
+    - cron: '13 20 * * *'
 
   workflow_dispatch:
     inputs:
