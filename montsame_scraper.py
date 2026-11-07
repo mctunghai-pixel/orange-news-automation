@@ -25,6 +25,7 @@ Date: May 6, 2026
 """
 
 from __future__ import annotations
+import brand as BRAND
 
 import re
 import time
@@ -37,7 +38,7 @@ from bs4 import BeautifulSoup
 
 MNT_TZ = ZoneInfo("Asia/Ulaanbaatar")
 
-USER_AGENT = "Mozilla/5.0 (compatible; OrangeNews/1.0; +https://www.orangenews.mn)"
+USER_AGENT = BRAND.BOT_UA
 HTTP_TIMEOUT = 10
 RETRY_ATTEMPTS = 3
 RETRY_BACKOFF_SEC = 2.0

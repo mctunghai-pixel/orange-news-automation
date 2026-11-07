@@ -1,5 +1,5 @@
 """
-Orange News — Image Generator v9 (Visual Standard v1)
+Aravt News — Image Generator v10 (Visual Standard v2)
 =====================================================
 * FB feed card 1080x1350 (4:5): licensed news photo + brand panel  → post_NN_YYYYMMDD.png
 * Website card 1200x675 (16:9): photo + logo + category             → web_NN_YYYYMMDD.jpg
@@ -11,6 +11,7 @@ CLI:
   python3 image_generator.py                    # all posts in translated_posts.json
   python3 image_generator.py --market-watch-only
 """
+import brand as BRAND
 import json
 import os
 import re
@@ -45,7 +46,7 @@ def clean_source(src):
     for pat, name in SOURCE_NAMES:
         if re.search(pat, s):
             return name
-    return (src or "Orange News").split(" - ")[0].strip()
+    return (src or BRAND.NAME).split(" - ")[0].strip()
 
 
 def clean_headline(text):
@@ -112,7 +113,7 @@ def generate_image(headline, category="FINANCE", image_url=None, article_url=Non
 
 def main():
     mw_only = "--market-watch-only" in sys.argv
-    print("🎨 Orange News Image Generator v9 — Visual Standard v1")
+    print("🎨 Aravt News Image Generator v10 — Visual Standard v2")
     if not os.path.exists(INPUT_FILE):
         print(f"❌ {INPUT_FILE} not found"); return 1
     with open(INPUT_FILE, encoding="utf-8") as f:

@@ -1,5 +1,5 @@
 """
-Orange News — Market Data Fetcher v2
+Aravt News (ex-Orange News) — Market Data Fetcher v2
 =====================================
 3 түвшинтэй fallback chain:
 
@@ -15,6 +15,7 @@ Author: Azurise AI Master Architect
 Date: April 18, 2026
 """
 
+import brand as BRAND
 import json
 import os
 import warnings
@@ -49,7 +50,7 @@ def try_mongolbank_json():
     for url in urls:
         try:
             r = requests.get(url, timeout=10, verify=False, headers={
-                "User-Agent": "Mozilla/5.0 (compatible; OrangeNewsBot/1.0)",
+                "User-Agent": BRAND.BOT_UA,
                 "Accept": "application/json, text/plain, */*",
             })
             if r.status_code == 200 and r.text.strip():
@@ -237,7 +238,7 @@ def fetch_coingecko_crypto():
             f"?ids={ids}&vs_currencies=usd&include_24hr_change=true"
         )
         r = requests.get(url, timeout=10, headers={
-            "User-Agent": "Mozilla/5.0 (OrangeNewsBot/1.0)",
+            "User-Agent": BRAND.BOT_UA,
             "Accept": "application/json",
         })
         if r.status_code != 200:
@@ -440,10 +441,10 @@ def build_market_watch_body():
     summary += " Ази болон түүхий эдийн зах зээлийн гол үзүүлэлтийг доорх мэдээнээс уншина уу."
 
     header = f"📊 Дэлхийн хөрөнгийн зах зээл — {today}\n\n"
-    header += "Өнөөдрийн Orange Market Watch- Та манай энэ өдрийн санхүүгийн зурваст тавтай морилно уу. "
+    header += f"Өнөөдрийн {BRAND.MW_TITLE}- Та манай энэ өдрийн санхүүгийн зурваст тавтай морилно уу. "
     header += "Дэлхийн томоохон биржүүд, валют, түүхий эдийн зах зээлийн гол үзүүлэлтүүдийг товчлон танилцуулж байна."
 
-    body = f"{header}\n\n{currency_section}\n\n{stock_section}\n\n{crypto_section}\n\n{commodity_section}{summary}\n\nДэлгэрэнгүй мэдээллийг www.orangenews.mn сайтаас уншина уу."
+    body = f"{header}\n\n{currency_section}\n\n{stock_section}\n\n{crypto_section}\n\n{commodity_section}{summary}\n\nДэлгэрэнгүй мэдээллийг www.{BRAND.DOMAIN} сайтаас уншина уу."
 
     return body
 
@@ -454,7 +455,7 @@ if __name__ == "__main__":
 
     body = build_market_watch_body()
 
-    print("\n📰 ORANGE MARKET WATCH BODY:")
+    print("\n📰 ARAVT MARKET WATCH BODY:")
     print("=" * 60)
     print(body)
     print("=" * 60)

@@ -1,5 +1,5 @@
 """
-Orange News — Translator v8 (Gemini primary, Claude fallback)
+Aravt News (ex-Orange News) — Translator v8 (Gemini primary, Claude fallback)
 =============================================================
 
 Major changes from v7:
@@ -15,6 +15,7 @@ Author: Azurise AI Master Architect
 Date: 2026-04-23
 """
 
+import brand as BRAND
 import os
 import sys
 import json
@@ -155,7 +156,7 @@ CATEGORIES = {
         "hashtags": ["#AI", "#ArtificialIntelligence"],
     },
     "business": {
-        "badge": "🟠 BUSINESS",
+        "badge": "📰 BUSINESS",
         "hashtags": ["#Business", "#Markets"],
     },
     "economy": {
@@ -167,7 +168,7 @@ CATEGORIES = {
         "hashtags": ["#Mongolia", "#Монгол"],
     },
     "market_watch": {
-        "badge": "📊 ORANGE MARKET WATCH",
+        "badge": BRAND.MW_BADGE,
         "hashtags": ["#Finance", "#MarketWatch", "#DailyMarket"],
     }
 }
@@ -178,19 +179,7 @@ DEFAULT_CATEGORY = "business"
 # FOOTER (full_post-д оруулна) — v8 Bloomberg-style with visual separators
 # =============================================================================
 
-FOOTER_LINKS = """
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-🌐 www.orangenews.mn
-
-📘 facebook.com/orangenews.mn
-
-📷 instagram.com/orangenews.official
-
-🧵 threads.net/@orangenews.official
-
-📨 Telegram: t.me/OrangeNewsMN"""
+FOOTER_LINKS = BRAND.FOOTER_LINKS
 
 
 # =============================================================================
@@ -200,7 +189,7 @@ FOOTER_LINKS = """
 # Used by BOTH Gemini (system_instruction) and Claude (system=).
 # =============================================================================
 
-MONGOLIAN_EDITOR_SYSTEM_PROMPT = """You are the senior editor of Orange News — a professional Mongolian financial news publication modeled after Bloomberg, Reuters, and Financial Times. You rewrite English financial news into clear, professional Mongolian suitable for the Mongolian investor and business reader.
+MONGOLIAN_EDITOR_SYSTEM_PROMPT = """You are the senior editor of Aravt News — a professional Mongolian financial news publication modeled after Bloomberg, Reuters, and Financial Times. You rewrite English financial news into clear, professional Mongolian suitable for the Mongolian investor and business reader.
 
 # RULE 0 — TRANSCREATION IMPERATIVE (THE FOUNDATIONAL RULE)
 
@@ -609,7 +598,7 @@ def generate_market_watch_post():
         print(f"⚠️ Market data татаж чадсангүй: {e}")
         body = f"""📊 Дэлхийн хөрөнгийн зах зээл — {today}
 
-Өнөөдрийн Orange Market Watch- Та манай энэ өдрийн санхүүгийн зурваст тавтай морилно уу. Дэлхийн томоохон биржүүд, валют, түүхий эдийн зах зээлийн гол үзүүлэлтүүдийг өдөр бүр танилцуулна.
+Өнөөдрийн Aravt Market Watch- Та манай энэ өдрийн санхүүгийн зурваст тавтай морилно уу. Дэлхийн томоохон биржүүд, валют, түүхий эдийн зах зээлийн гол үзүүлэлтүүдийг өдөр бүр танилцуулна.
 
 💵 Валют ба хүүгийн ханш
 Америк доллар, Евро, Япон иен, Хятадын юань зэрэг гол валютын ханш болон АНУ-ын Холбооны нөөцийн банкны бодлогын хүүгийн мэдээллийг хүргэнэ.
@@ -620,21 +609,21 @@ S&P 500, Nasdaq, Nikkei, Shanghai Composite зэрэг индексүүд нь �
 💎 Крипто ба түүхий эд
 Bitcoin, Ethereum-ийн үнэ, мөн алт, нефть, зэсийн дэлхийн зах зээлийн ханш нь хөрөнгө оруулагчдын анхаарлын төвд байна.
 
-Дэлгэрэнгүй мэдээллийг www.orangenews.mn сайтаас уншина уу."""
+Дэлгэрэнгүй мэдээллийг www.aravtnews.com сайтаас уншина уу."""
 
     return {
         "category": "market_watch",
-        "badge": "📊 ORANGE MARKET WATCH",
+        "badge": BRAND.MW_BADGE,
         "headline": headline,
-        "image_caption": f"Orange Market Watch {today}",
+        "image_caption": f"{BRAND.MW_TITLE} {today}",
         "post_text": body,
-        "full_post": build_full_post("market_watch", headline, body, "#OrangeMarket"),
-        "dynamic_hashtag": "#OrangeMarket",
+        "full_post": build_full_post("market_watch", headline, body, BRAND.MW_HASHTAG),
+        "dynamic_hashtag": BRAND.MW_HASHTAG,
         "key_numbers": [],
-        "hashtags": ["#OrangeNews", "#Finance", "#MarketWatch", "#DailyMarket"],
-        "original_url": "https://www.orangenews.mn",
-        "original_title": f"Orange Market Watch {today}",
-        "source": "Orange News",
+        "hashtags": [BRAND.HASHTAG, "#Finance", "#MarketWatch", "#DailyMarket"],
+        "original_url": BRAND.SITE_URL,
+        "original_title": f"{BRAND.MW_TITLE} {today}",
+        "source": BRAND.NAME,
         "score": 10.0,
         "is_market_watch": True,
         "use_market_watch_image": True,
@@ -647,9 +636,9 @@ Bitcoin, Ethereum-ийн үнэ, мөн алт, нефть, зэсийн дэл�
 # =============================================================================
 
 def build_hashtags(category_key, dynamic_hashtag):
-    """#OrangeNews + категорийн 2 + динамик 1"""
+    """#AravtNews + категорийн 2 + динамик 1"""
     cat = CATEGORIES.get(category_key, CATEGORIES[DEFAULT_CATEGORY])
-    tags = ["#OrangeNews"] + cat["hashtags"]
+    tags = [BRAND.HASHTAG] + cat["hashtags"]
 
     if dynamic_hashtag and dynamic_hashtag.strip():
         dh = dynamic_hashtag.strip()
@@ -1000,7 +989,7 @@ from urllib.parse import urlparse
 
 
 # Phase 6.1.5: full-article fetch config.
-FULLTEXT_FETCH_UA       = "Mozilla/5.0 (compatible; OrangeNews/1.0; +https://www.orangenews.mn)"
+FULLTEXT_FETCH_UA       = BRAND.BOT_UA
 FULLTEXT_FETCH_TIMEOUT  = 10
 FULLTEXT_MAX_CHARS      = 1500
 # ikon.mn appends a reserved-rights footer beginning with this exact word.
@@ -1651,7 +1640,7 @@ def print_run_summary(run_data):
     all_warnings = [(a["article_index"], w) for a in articles for w in a.get("validation_warnings", [])]
 
     print("\n======================================")
-    print("Orange News Translator — Run Summary")
+    print("Aravt News Translator — Run Summary")
     print("======================================")
     print(f"Run started:  {run_data['started_utc']}")
     print(f"Run finished: {run_data['finished_utc']}")
@@ -1691,7 +1680,7 @@ def print_run_summary(run_data):
 # =============================================================================
 
 def main():
-    print("🟠 Orange News Translator v8 — Gemini primary, Claude fallback\n")
+    print("📰 Aravt News Translator v8 — Gemini primary, Claude fallback\n")
 
     started_utc = datetime.now(timezone.utc)
     run_id      = started_utc.strftime("%Y%m%d_%H%M")
@@ -1716,7 +1705,7 @@ def main():
     print(f"\n📥 {len(articles)} articles to translate...\n")
 
     # Market Watch first (generated, not translated)
-    print("📊 Generating Orange Market Watch...")
+    print("📊 Generating Aravt Market Watch...")
     market_watch = generate_market_watch_post()
     translated   = [market_watch]
     article_logs = []

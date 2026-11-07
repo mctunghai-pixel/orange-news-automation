@@ -14,6 +14,7 @@ untouched and exits non-zero so CI skips the commit.
 Output: ./market_data.json (repo root, alongside this script)
 """
 
+import brand as BRAND
 import json
 import re
 import sys
@@ -67,7 +68,7 @@ MSETOP20_META = {
     "currency": "MNT",
 }
 MSETOP20_URL    = "https://tradingeconomics.com/mongolia/stock-market"
-MSETOP20_UA     = "Mozilla/5.0 (compatible; OrangeNews/1.0; +https://www.orangenews.mn)"
+MSETOP20_UA     = BRAND.BOT_UA
 MSETOP20_LABEL  = "MSE 20"  # row identifier in the TE Indexes table
 
 

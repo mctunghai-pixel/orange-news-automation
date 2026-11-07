@@ -12,6 +12,7 @@ Orange News — RSS Feed Collector v7 FINAL
 Dependencies: pip install feedparser httpx python-dateutil certifi
 """
 
+import brand as BRAND
 import os
 import certifi
 os.environ.setdefault("SSL_CERT_FILE", certifi.where())
@@ -65,7 +66,7 @@ MONGOLIA_DOMAINS = ["ikon.mn"]
 
 # feedparser default UA is blocked by several .mn sites. Identify cleanly so
 # the source can rate-limit / contact us if needed.
-FEEDPARSER_UA = "Mozilla/5.0 (compatible; OrangeNews/1.0; +https://www.orangenews.mn)"
+FEEDPARSER_UA = BRAND.BOT_UA
 
 BOOST_KEYWORDS = [
     "AI", "artificial intelligence", "Bitcoin", "crypto", "stock market",
@@ -434,7 +435,7 @@ def _print_topic_breakdown(articles, breakdown):
 
 
 if __name__ == "__main__":
-    print("\n🍊 Orange News — RSS Collector v8 (quota-enforced)")
+    print("\n📰 Aravt News — RSS Collector v8 (quota-enforced)")
     print("=" * 50)
 
     articles, breakdown = collect_top_news()

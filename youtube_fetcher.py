@@ -25,6 +25,7 @@ Author: Azurise AI Master Architect
 Date: May 8, 2026
 """
 
+import brand as BRAND
 import json
 import os
 import re
@@ -59,7 +60,7 @@ DENY_LIST_FILE = "deny_list_videos.json"
 RSS_URL_TEMPLATE = "https://www.youtube.com/feeds/videos.xml?channel_id={uc_id}"
 API_VIDEOS_URL = "https://www.googleapis.com/youtube/v3/videos"
 
-USER_AGENT = "Mozilla/5.0 (compatible; OrangeNewsYouTubeBot/1.0; +https://www.orangenews.mn)"
+USER_AGENT = BRAND.BOT_UA
 HTTP_TIMEOUT = 15
 
 MIN_DURATION_SECONDS = 180  # 3-minute quality bias

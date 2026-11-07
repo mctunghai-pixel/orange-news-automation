@@ -22,6 +22,7 @@ TRUNCATION_MARKER = "…"
 
 STANDARD_HASHTAGS = [
     "#orangenews",
+    "#aravtnews",
     "#санхүү",
     "#эдийнзасаг",
     "#зах_зээл",
@@ -30,7 +31,7 @@ STANDARD_HASHTAGS = [
 
 _SOURCE_LINE_RE = re.compile(r"^\s*Эх\s+сурвалж\s*:.*$", re.MULTILINE)
 _FOOTER_LINK_RE = re.compile(r"^\s*[🌐📘📷🧵].*$", re.MULTILINE)
-_URL_LINE_RE = re.compile(r"^.*(?:orangenews\.mn|https?://\S+).*$", re.MULTILINE)
+_URL_LINE_RE = re.compile(r"^.*(?:orangenews\.mn|aravtnews\.com|https?://\S+).*$", re.MULTILINE)
 _DIVIDER_RE = re.compile(r"^━+\s*$", re.MULTILINE)
 _JUNK_PATTERNS = [
     re.compile(r"Та үүнийг юу гэж бодож байна\?.*$", re.MULTILINE | re.DOTALL),

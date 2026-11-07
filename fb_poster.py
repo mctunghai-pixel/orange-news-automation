@@ -1,5 +1,5 @@
 """
-Orange News — Facebook Poster v7 FINAL
+Aravt News (ex-Orange News) — Facebook Poster v7 FINAL
 =======================================
 Бүх засвар нэгтгэсэн эцсийн хувилбар
 
@@ -12,6 +12,7 @@ Orange News — Facebook Poster v7 FINAL
 6. ✅ Монгол цагаар лог бичнэ
 """
 
+import brand as BRAND
 import argparse
 import json
 import os
@@ -30,19 +31,7 @@ FB_API_URL = "https://graph.facebook.com/v19.0"
 MARKET_WATCH_IMAGE = "assets/market_watch_thumbnail.png"
 
 # Footer template (v8 Bloomberg-style — fallback-д ашиглана)
-FOOTER_LINKS = """
-
-━━━━━━━━━━━━━━━━━━━━━━
-
-🌐 www.orangenews.mn
-
-📘 facebook.com/orangenews.mn
-
-📷 instagram.com/orangenews.official
-
-🧵 threads.net/@orangenews.official
-
-📨 Telegram: t.me/OrangeNewsMN"""
+FOOTER_LINKS = BRAND.FOOTER_LINKS
 
 # =============================================================================
 # image_generator холболт
@@ -176,7 +165,7 @@ def plan_slots(n, now_mnt, first_hour=9, last_hour=21):
 def check_market_watch_exists_today(page_id, access_token) -> bool:
     """
     v8: Query FB Page posts in the last 24h.
-    Return True if an Orange Market Watch post already published today.
+    Return True if a Market Watch post (Aravt or legacy Orange) already published today.
 
     Fail-open: on any API/network error, return False so the pipeline
     proceeds and schedules a new MW rather than silently missing a day.
@@ -194,7 +183,7 @@ def check_market_watch_exists_today(page_id, access_token) -> bool:
         posts = r.json().get("data", [])
         for post in posts:
             msg = post.get("message", "") or ""
-            if "ORANGE MARKET WATCH" in msg:
+            if BRAND.is_market_watch(msg):
                 created = post.get("created_time", "?")
                 log(f"  ⏭️  MW already published in last 24h (created: {created})")
                 return True
@@ -252,7 +241,7 @@ def format_post(post):
 
     # PRIORITY 2: post_text full текст байж болзошгүй
     post_text = post.get("post_text", "")
-    if post_text and "orangenews.mn" in post_text and "#OrangeNews" in post_text:
+    if BRAND.is_formatted_post(post_text):
         return post_text
 
     # PRIORITY 3: Manual build
@@ -269,10 +258,10 @@ def format_post(post):
     ]:
         post_text_clean = re.sub(pattern, "", post_text_clean, flags=re.MULTILINE | re.DOTALL)
 
-    badge = post.get("badge", "🟠 BUSINESS")
+    badge = post.get("badge", "📰 BUSINESS")
     headline = post.get("headline", "")
     body = post.get("body_only") or post_text_clean
-    hashtags = post.get("hashtags", ["#OrangeNews", "#Finance"])
+    hashtags = post.get("hashtags", [BRAND.HASHTAG, "#Finance"])
     hashtag_line = " ".join(hashtags) if isinstance(hashtags, list) else hashtags
 
     # Empty headline (Market Watch) → skip the headline block; body header carries context.
@@ -300,7 +289,7 @@ def format_post(post):
 def run(live, use_scheduling=True, skip_market_watch=False):
     mode = "LIVE" if live else "TEST"
     log(f"{'='*50}")
-    log(f"🍊 Orange News FB Poster v7 FINAL | Mode: {mode}")
+    log(f"📰 Aravt News FB Poster v7 FINAL | Mode: {mode}")
     log(f"{'='*50}")
 
     if not os.path.exists(INPUT_FILE):

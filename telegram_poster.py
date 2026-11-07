@@ -1,5 +1,5 @@
 """
-Orange News — Telegram Channel Poster v1
+Aravt News (ex-Orange News) — Telegram Channel Poster v1
 ==========================================
 Цагийн хуваарьт нэг пост Telegram channel руу илгээдэг runner.
 fb_poster.py / ig_runner.py-тэй ижил архитектураар бичигдсэн:
@@ -23,6 +23,7 @@ CLI:
   python3 telegram_poster.py --dry-run    # Payload-only
 """
 from __future__ import annotations
+import brand as BRAND
 
 import argparse
 import json
@@ -131,22 +132,15 @@ def _format_post_text(post: dict) -> str:
     if post.get("full_post"):
         return post["full_post"]
     text = post.get("post_text", "")
-    if text and "orangenews.mn" in text and "#OrangeNews" in text:
+    if BRAND.is_formatted_post(text):
         return text
     # Fallback — энгийн угсралт
-    badge = post.get("badge", "🟠 BUSINESS")
+    badge = post.get("badge", "📰 BUSINESS")
     headline = post.get("headline", "")
     body = post.get("body_only") or text or ""
-    hashtags = post.get("hashtags", ["#OrangeNews"])
+    hashtags = post.get("hashtags", [BRAND.HASHTAG])
     htag_line = " ".join(hashtags) if isinstance(hashtags, list) else hashtags
-    footer = (
-        "\n\n━━━━━━━━━━━━━━━━━━━━━━\n\n"
-        "🌐 www.orangenews.mn\n\n"
-        "📘 facebook.com/orangenews.mn\n\n"
-        "📷 instagram.com/orangenews.official\n\n"
-        "🧵 threads.net/@orangenews.official\n\n"
-        "📨 Telegram: t.me/OrangeNewsMN"
-    )
+    footer = BRAND.FOOTER_LINKS
     head = f"{badge}\n\n{headline}\n\n" if headline.strip() else f"{badge}\n\n"
     return f"{head}{body}{footer}\n\n{htag_line}".strip()
 
@@ -401,7 +395,7 @@ def run(cli_idx: Optional[int], dry_run_cli: bool) -> int:
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Orange News → Telegram channel poster")
+    parser = argparse.ArgumentParser(description="Aravt News → Telegram channel poster")
     parser.add_argument("--idx", type=int, default=None, help="Force post index (0-9)")
     parser.add_argument("--dry-run", action="store_true", help="No-op (log payload only)")
     args = parser.parse_args()
