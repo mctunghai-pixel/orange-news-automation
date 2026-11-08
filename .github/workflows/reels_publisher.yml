@@ -1,0 +1,86 @@
+name: Reels Publisher (FB, 4/day)
+
+# Free: runs on GitHub Actions (public repo), ffmpeg + Pillow + numpy, Pixabay free
+# photos, original synthesised music, Facebook Graph API — no paid service.
+#
+# Slots (MNT): 10:30 Market Watch · 13:30 news#1 · 16:30 news#2 · 19:30 news#3
+# Each run publishes at most one due slot; a late run catches up on the next one.
+# Kill switch: repo variable REELS_PUBLISH_ENABLED=false.
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'true = render only (artifact), false = LIVE publish'
+        required: false
+        default: true
+        type: boolean
+      force_slot:
+        description: 'Force slot 0-3 (blank = time-based)'
+        required: false
+        default: ''
+        type: string
+  schedule:
+    - cron: '30 2,5,8,11 * * *'   # 10:30 13:30 16:30 19:30 MNT
+    - cron: '0 3,6,9,12 * * *'    # retry 30 min later
+
+concurrency:
+  group: reels-publisher
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      TZ: Asia/Ulaanbaatar
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies (ffmpeg)
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y -qq ffmpeg > /dev/null
+          pip install -q requests pillow numpy
+
+      - name: Render + publish one reel
+        env:
+          FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
+          FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
+          PIXABAY_API_KEY: ${{ secrets.PIXABAY_API_KEY }}
+          REELS_PUBLISH_ENABLED: ${{ vars.REELS_PUBLISH_ENABLED }}
+          DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && 'true' || 'false' }}
+          FORCE_SLOT: ${{ inputs.force_slot }}
+          REEL_KEEP_DIR: reels_out
+        run: python3 reels_runner.py
+
+      - name: Upload rendered reel (for review)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: reel-${{ github.run_id }}
+          path: reels_out/*.mp4
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Commit state
+        if: always()
+        run: |
+          [ -f logs/reels_publish_state.json ] || exit 0
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add logs/reels_publish_state.json
+          git diff --quiet --cached && exit 0
+          git commit -m "chore(reels): update reels_publish_state.json [skip ci]"
+          git pull --rebase origin main
+          git push origin HEAD:main
