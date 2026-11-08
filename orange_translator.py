@@ -113,13 +113,39 @@ def _claude_create(**kw):
     return claude_client.messages.create(**kw)
 
 
+# Free-tier pacing: Gemini Flash free tier allows ~10 requests/minute. The
+# translator fires several calls per article (translate + quality gates), so
+# bursts hit 429 and articles spilled over to the paid Claude fallback.
+# Spacing every call keeps the whole run on the free tier (same model, same
+# quality); the run is not time-critical (posts are scheduled hours later).
+GEMINI_MIN_INTERVAL = float(os.environ.get("GEMINI_MIN_INTERVAL", "7"))
+_LAST_GEMINI_CALL = 0.0
+
+
+def _gemini_pace():
+    global _LAST_GEMINI_CALL
+    wait = GEMINI_MIN_INTERVAL - (time.time() - _LAST_GEMINI_CALL)
+    if wait > 0:
+        time.sleep(wait)
+    _LAST_GEMINI_CALL = time.time()
+
+
+def _retry_after(msg, default):
+    """Use the server's suggested retryDelay ("retryDelay": "17s") when present."""
+    m = re.search(r"retry[_ ]?delay['\"]?\s*[:=]\s*['\"]?(\d+(?:\.\d+)?)s", msg, re.I) or \
+        re.search(r"retry in (\d+(?:\.\d+)?)\s*s", msg, re.I)
+    return min(65.0, float(m.group(1)) + 1) if m else default
+
+
 def _gemini_generate(**kw):
-    """Gemini call with retry on transient 503/500 and per-minute 429.
+    """Gemini call, paced to the free-tier rate limit, with retry on transient
+    503/500 and per-minute 429 (honouring the server's retry delay).
     A *daily* quota 429 is not retried: Gemini is switched off for the rest of
     the run so every remaining article goes straight to the Claude fallback."""
     global ACTIVE_GEMINI_MODEL
-    delays = [5, 15, 30]
+    delays = [10, 30, 60, 60]
     for attempt in range(len(delays) + 1):
+        _gemini_pace()
         try:
             return _GEMINI_CLIENT.models.generate_content(**kw)
         except Exception as e:
@@ -131,8 +157,9 @@ def _gemini_generate(**kw):
             transient = any(c in msg for c in ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "500", "INTERNAL"))
             if not transient or attempt == len(delays):
                 raise
-            print(f"  ↻ Gemini transient error ({msg[:40]}…) — retry in {delays[attempt]}s")
-            time.sleep(delays[attempt])
+            wait = _retry_after(msg, delays[attempt]) if ("429" in msg or "RESOURCE_EXHAUSTED" in msg) else delays[attempt]
+            print(f"  ↻ Gemini transient error ({msg[:40]}…) — retry in {wait:.0f}s")
+            time.sleep(wait)
 
 # =============================================================================
 # КАТЕГОРИ (7 төрөл) — unchanged

@@ -53,7 +53,7 @@ jobs:
     needs: guard
     if: needs.guard.outputs.done != 'true' || github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-24.04
-    timeout-minutes: 15
+    timeout-minutes: 30   # translator now paces Gemini calls (free tier)
 
     env:
       TZ: Asia/Ulaanbaatar
