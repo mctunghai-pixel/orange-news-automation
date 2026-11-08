@@ -2,7 +2,8 @@
 Aravt News — Image Generator v10 (Visual Standard v2)
 =====================================================
 * FB feed card 1080x1350 (4:5): licensed news photo + brand panel  → post_NN_YYYYMMDD.png
-* Website card 1200x675 (16:9): photo + logo + category             → web_NN_YYYYMMDD.jpg
+* Website card 1200x675 (16:9): photo + logo + category             → web_NN_YYYYMMDD_<hash>.jpg
+  (unique per story: an older post on the site never gets overwritten by a later run)
 * Market Watch: live data card built from market_data.json           → post_00_YYYYMMDD.png
 * Photos: Pixabay (photo_fetcher.py). Publisher/OG images are never used (copyright).
 * Fallback: branded category gradient when no photo is available.
@@ -20,7 +21,9 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 
 from brand_card import news_card, market_watch_card, web_card, gradient_photo
-from photo_fetcher import fetch_photo, resolve_category
+import hashlib
+
+from photo_fetcher import fetch_photo, resolve_category, recent_photo_ids
 
 MNT = ZoneInfo("Asia/Ulaanbaatar")
 OUTPUT_DIR = "assets/generated"
@@ -95,9 +98,11 @@ def build_news(post, index, used_ids):
         credit = None
     headline = clean_headline(post.get("headline") or post.get("title", ""))
     feed = f"{OUTPUT_DIR}/post_{index:02d}_{today_str()}.png"
+    # no "Зураг: Pixabay" chip — cards carry only the Aravt logo (Pixabay licence needs no credit)
     news_card(photo, headline, cat, clean_source(post.get("source")), today_str("%Y.%m.%d"),
-              LOGO_PATH, feed, photo_credit=credit)
-    web = f"{OUTPUT_DIR}/web_{index:02d}_{today_str()}.jpg"
+              LOGO_PATH, feed, photo_credit=None)
+    key = (post.get("original_title") or post.get("headline") or str(index)).encode("utf-8")
+    web = f"{OUTPUT_DIR}/web_{index:02d}_{today_str()}_{hashlib.md5(key).hexdigest()[:6]}.jpg"
     web_card(photo, cat, LOGO_PATH, web)
     return feed, web
 
@@ -118,7 +123,8 @@ def main():
         print(f"❌ {INPUT_FILE} not found"); return 1
     with open(INPUT_FILE, encoding="utf-8") as f:
         posts = json.load(f)
-    used_ids, ok, failed = set(), 0, 0
+    used_ids, ok, failed = recent_photo_ids(), 0, 0
+    print(f"  🗂  avoiding {len(used_ids)} photo(s) used in the last days")
     for i, p in enumerate(posts):
         mw = is_market_watch(p)
         if mw_only and not mw:

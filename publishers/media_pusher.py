@@ -144,7 +144,7 @@ def _cli_push_today() -> int:
     date_str = os.environ.get("MEDIA_PUSH_DATE", "").strip() or _today_mnt_date_str()
     pattern = os.path.join("assets", "generated", f"post_*_{date_str}.png")
     # Visual Standard v1: website cards (web_NN_<date>.jpg) travel with the feed cards
-    web_pattern = os.path.join("assets", "generated", f"web_*_{date_str}.jpg")
+    web_pattern = os.path.join("assets", "generated", f"web_*_{date_str}*.jpg")
     paths = sorted(glob.glob(pattern)) + sorted(glob.glob(web_pattern))
     if not paths:
         _log(f"❌ no images match {pattern}")

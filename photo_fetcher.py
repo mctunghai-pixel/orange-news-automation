@@ -2,7 +2,7 @@
 photo_fetcher.py — licensed, news-related photos for Orange News cards.
 
 Source: Pixabay API (free key, Pixabay Content License — commercial use OK,
-no attribution required; we still credit "Pixabay" on the card).
+no attribution required — cards carry only our own logo, no credit chip).
 Never uses publisher / OG images (copyright — see Instagram suspension 2026-05).
 
 Query strategy (no extra LLM cost):
@@ -13,9 +13,11 @@ Query strategy (no extra LLM cost):
 Pixabay rules respected: images are downloaded (no hotlinking), results are
 cached on disk for 24 h, ~15–30 requests/day (limit is 100/min).
 """
+import glob
 import hashlib
 import json
 import os
+import random
 import re
 import time
 
@@ -24,6 +26,8 @@ import requests
 API_URL = "https://pixabay.com/api/"
 CACHE_DIR = os.path.join("assets", "cache", "pixabay")
 CACHE_TTL = 24 * 3600
+HISTORY_DAYS = 21          # a Pixabay photo is not reused within this many days
+PICK_FROM = 12             # choose among the top-N unused hits (variety, still relevant)
 
 STOP = set("""a an the and or but of to in on at for from by with as is are was were be been
 being it its this that these those will would can could may might says say said
@@ -49,7 +53,7 @@ ENERGY_HINTS = ("oil", "crude", "gas", "opec", "energy", "brent", "lng", "coal")
 
 # headline concept → visual stock-photo query (stock libraries have concepts, not people)
 CONCEPTS = [
-    (r"\b(gold|bullion)\b|алт", "gold bars"),
+    (r"\b(gold|bullion)\b|(?<![а-яөү])алт(ны|ан|)\b", "gold bars"),
     (r"\b(oil|crude|brent|opec|refiner)", "oil refinery"),
     (r"\b(gas|lng)\b", "natural gas pipeline"),
     (r"\b(copper|iron ore|mining|miner|coal)\b", "mining industry"),
@@ -61,6 +65,12 @@ CONCEPTS = [
     (r"\b(rupee|yen|yuan|dollar|currency|forex|euro)\b", "currency money"),
     (r"\b(stock|shares|equit|s&p|nasdaq|dow|wall street|ipo)", "stock market"),
     (r"\b(bank|barclays|jpmorgan|goldman|hsbc|blackrock|fund|asset manager)", "business skyscraper"),
+    (r"\b(jobs|payroll|employment|unemployment|hiring|labor|labour|workers)\b", "office workers"),
+    (r"\b(election|midterm|congress|senate|democrat|republican|vote|white house)", "capitol washington"),
+    (r"\b(war|military|missile|strike|conflict|iran|israel|ukraine)\b", "world map globe"),
+    (r"\b(spy|espionage|intelligence agency|sanction)", "cyber security"),
+    (r"\b(ceo|leadership|executive|chairman|founder)\b", "business leader"),
+    (r"\b(china|chinese|beijing)\b", "shanghai skyline"),
     (r"\b(inflation|gdp|economy|recession|tariff|trade)", "economy business"),
     (r"\b(ai|artificial intelligence|openai|chatgpt|llm|model|nvidia|chip|semiconductor)", "artificial intelligence"),
     (r"\b(apple|iphone|smartphone|google|microsoft|meta|software|app)\b", "technology smartphone"),
@@ -89,7 +99,7 @@ def concept_queries(post):
     for pat, q in CONCEPTS:
         if re.search(pat, text) and q not in out:
             out.append(q)
-    return out[:2]
+    return out[:3]
 
 
 def resolve_category(post):
@@ -135,8 +145,31 @@ def _search(query, key):
     return hits
 
 
+def recent_photo_ids(archive_dir="archive", days=HISTORY_DAYS):
+    """Pixabay ids used in the last `days` archive snapshots (+ translated_posts.json)."""
+    ids = set()
+    files = sorted(glob.glob(os.path.join(archive_dir, "posts_*.json")))[-days:]
+    files.append("translated_posts.json")
+    for fp in files:
+        try:
+            with open(fp, encoding="utf-8") as f:
+                data = json.load(f)
+        except Exception:
+            continue
+        posts = data.get("posts", []) if isinstance(data, dict) else data
+        for p in posts or []:
+            if isinstance(p, dict) and p.get("photo_id"):
+                ids.add(p["photo_id"])
+    return ids
+
+
 def fetch_photo(post, used_ids, out_dir="assets/cache/photos"):
-    """Return (local_path, credit) or (None, None). used_ids: set, avoids repeats in a day."""
+    """Return (local_path, credit) or (None, None).
+
+    used_ids: Pixabay ids to avoid (recent days + this run). The chosen id is
+    stored in post["photo_id"] so the archive remembers it for future runs.
+    Picks randomly among the top unused hits (seeded by the headline, so a
+    re-run of the same story keeps its photo) for day-to-day variety."""
     key = os.environ.get("PIXABAY_API_KEY", "").strip()
     if not key:
         return None, None
@@ -150,9 +183,10 @@ def fetch_photo(post, used_ids, out_dir="assets/cache/photos"):
         except Exception as e:
             print(f"    ⚠️ Pixabay '{q}': {e}")
             continue
-        for h in hits:
-            if h.get("id") in used_ids:
-                continue
+        seed = (post.get("original_title") or post.get("headline") or q)
+        fresh = [h for h in hits if h.get("id") not in used_ids][:PICK_FROM]
+        random.Random(seed).shuffle(fresh)
+        for h in fresh:
             url = h.get("largeImageURL") or h.get("webformatURL")
             if not url:
                 continue
@@ -164,6 +198,7 @@ def fetch_photo(post, used_ids, out_dir="assets/cache/photos"):
                     with open(path, "wb") as f:
                         f.write(img.content)
                 used_ids.add(h["id"])
+                post["photo_id"] = h["id"]
                 print(f"    📷 Pixabay #{h['id']} ← '{q}'")
                 return path, "Pixabay"
             except Exception as e:
