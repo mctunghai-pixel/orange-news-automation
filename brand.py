@@ -13,6 +13,7 @@ DOMAIN = "aravtnews.com"
 SITE_URL = "https://www.aravtnews.com"
 FACEBOOK = "facebook.com/AravtNews"
 INSTAGRAM = "instagram.com/aravtnews"
+THREADS = "threads.com/@aravtnews"
 TELEGRAM = "t.me/AravtNews"            # renamed from t.me/OrangeNewsMN 2026-11-08
 HANDLE = "@AravtNews"
 HASHTAG = "#AravtNews"
@@ -41,6 +42,8 @@ FOOTER_LINKS = f"""
 📘 {FACEBOOK}
 
 📷 {INSTAGRAM}
+
+🧵 Threads: {THREADS}
 
 📨 Telegram: {TELEGRAM}"""
 
