@@ -166,7 +166,7 @@
         "close": 7376.8599
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:45Z"
+    "lastUpdated": "2026-11-08T13:44:36Z"
   },
   "dji": {
     "slug": "dji",
@@ -335,7 +335,7 @@
         "close": 51285.7305
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:45Z"
+    "lastUpdated": "2026-11-08T13:44:37Z"
   },
   "ixic": {
     "slug": "ixic",
@@ -504,7 +504,7 @@
         "close": 24579.4297
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:45Z"
+    "lastUpdated": "2026-11-08T13:44:37Z"
   },
   "btc": {
     "slug": "btc",
@@ -512,20 +512,16 @@
     "name": "Bitcoin",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 75725.0469,
-    "change": -21.8828,
-    "changePct": -0.0289,
+    "price": 75831.3594,
+    "change": 83.7812,
+    "changePct": 0.1106,
     "open": 75753.7109,
-    "prevClose": 75746.9297,
-    "dayHigh": 75841.5156,
+    "prevClose": 75747.5781,
+    "dayHigh": 76068.3203,
     "dayLow": 75585.3672,
     "high52w": 107428.2578,
     "low52w": 57747.7656,
     "history1w": [
-      {
-        "date": "2026-11-01",
-        "close": 78248.4531
-      },
       {
         "date": "2026-11-02",
         "close": 76677.2969
@@ -547,15 +543,15 @@
         "close": 75746.9297
       },
       {
+        "date": "2026-11-07",
+        "close": 75747.5781
+      },
+      {
         "date": "2026-11-08",
-        "close": 75725.0469
+        "close": 75831.3594
       }
     ],
     "history1m": [
-      {
-        "date": "2026-10-09",
-        "close": 82546.3203
-      },
       {
         "date": "2026-10-10",
         "close": 82912.2266
@@ -669,12 +665,16 @@
         "close": 75746.9297
       },
       {
+        "date": "2026-11-07",
+        "close": 75747.5781
+      },
+      {
         "date": "2026-11-08",
-        "close": 75725.0469
+        "close": 75831.3594
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:45Z",
-    "volume24h": 8826120192.0
+    "lastUpdated": "2026-11-08T13:44:37Z",
+    "volume24h": 8866438144.0
   },
   "eth": {
     "slug": "eth",
@@ -682,20 +682,16 @@
     "name": "Ethereum",
     "assetClass": "crypto",
     "currency": "USD",
-    "price": 2232.05,
-    "change": -2.9973,
-    "changePct": -0.1341,
+    "price": 2233.74,
+    "change": -2.5752,
+    "changePct": -0.1152,
     "open": 2236.9185,
-    "prevClose": 2235.0474,
-    "dayHigh": 2236.9185,
+    "prevClose": 2236.3152,
+    "dayHigh": 2242.6394,
     "dayLow": 2227.0168,
     "high52w": 3656.1489,
     "low52w": 1506.5057,
     "history1w": [
-      {
-        "date": "2026-11-01",
-        "close": 2273.0522
-      },
       {
         "date": "2026-11-02",
         "close": 2248.8862
@@ -717,15 +713,15 @@
         "close": 2235.0474
       },
       {
+        "date": "2026-11-07",
+        "close": 2236.3152
+      },
+      {
         "date": "2026-11-08",
-        "close": 2232.05
+        "close": 2233.74
       }
     ],
     "history1m": [
-      {
-        "date": "2026-10-09",
-        "close": 2485.5386
-      },
       {
         "date": "2026-10-10",
         "close": 2504.0278
@@ -839,12 +835,16 @@
         "close": 2235.0474
       },
       {
+        "date": "2026-11-07",
+        "close": 2236.3152
+      },
+      {
         "date": "2026-11-08",
-        "close": 2232.05
+        "close": 2233.74
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:46Z",
-    "volume24h": 3813845760.0
+    "lastUpdated": "2026-11-08T13:44:37Z",
+    "volume24h": 3568840448.0
   },
   "xau": {
     "slug": "xau",
@@ -858,7 +858,7 @@
     "open": 4098.5,
     "prevClose": 4113.5,
     "dayHigh": 4116.2002,
-    "dayLow": 4035.6001,
+    "dayLow": 4035.1001,
     "high52w": 5586.2002,
     "low52w": 3879.3,
     "history1w": [
@@ -1013,7 +1013,7 @@
         "close": 4074.8999
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:46Z"
+    "lastUpdated": "2026-11-08T13:44:37Z"
   },
   "cl": {
     "slug": "cl",
@@ -1182,7 +1182,7 @@
         "close": 90.83
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:46Z"
+    "lastUpdated": "2026-11-08T13:44:37Z"
   },
   "mntusd": {
     "slug": "mntusd",
@@ -1351,7 +1351,7 @@
         "close": 3598.4671
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:46Z"
+    "lastUpdated": "2026-11-08T13:44:38Z"
   },
   "msetop20": {
     "slug": "msetop20",
@@ -1520,6 +1520,6 @@
         "close": 67265.56
       }
     ],
-    "lastUpdated": "2026-11-08T06:26:46Z"
+    "lastUpdated": "2026-11-08T13:44:38Z"
   }
 }
