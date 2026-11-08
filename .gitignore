@@ -20,6 +20,13 @@ logs/*
 # Allowlist: telegram_poster.py state file (same idempotency reason as ig_runner)
 !logs/telegram_publish_state.json
 
+# Allowlist: other publishers' once-per-slot state files. If ignored, the
+# workflow's `git add` fails, the state never lands on main, and every retry
+# re-posts (Market Watch went out 3x on 2026-11-08).
+!logs/mw_published.json
+!logs/threads_publish_state.json
+!logs/reels_publish_state.json
+
 # macOS system files
 .DS_Store
 **/.DS_Store
