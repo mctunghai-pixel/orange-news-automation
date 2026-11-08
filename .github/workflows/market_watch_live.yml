@@ -84,7 +84,29 @@ jobs:
       # -----------------------------------------------------------------
       # Phase 1: RSS цуглуулах (translator-ийн INPUT_FILE = top_news.json)
       # -----------------------------------------------------------------
+      # -----------------------------------------------------------------
+      # Phase 0.5: reuse today's translation if the main news run already
+      # produced it — no second translation of the same stories (saves the
+      # free Gemini quota and keeps Claude fallback at ~0).
+      # -----------------------------------------------------------------
+      - name: Phase 0.5 - Reuse today's translation?
+        id: fresh
+        run: |
+          python3 - <<'PY' >> "$GITHUB_OUTPUT"
+          import json, datetime, zoneinfo
+          today = datetime.datetime.now(zoneinfo.ZoneInfo("Asia/Ulaanbaatar")).date().isoformat()
+          try:
+              posts = json.load(open("translated_posts.json", encoding="utf-8"))
+          except Exception:
+              posts = []
+          mw = any(p.get("is_market_watch") or p.get("type") == "market_watch" for p in posts)
+          fresh = bool(posts) and mw and str(posts[0].get("generated_date", ""))[:10] == today
+          print(f"fresh={'true' if fresh else 'false'}")
+          PY
+          cat "$GITHUB_OUTPUT" | tail -1
+
       - name: Phase 1 - Collect RSS news
+        if: steps.fresh.outputs.fresh != 'true'
         run: |
           echo "📡 RSS collector at $(date '+%H:%M:%S %Z')"
           python3 orange_rss_collector.py
@@ -101,7 +123,25 @@ jobs:
       # -----------------------------------------------------------------
       # Phase 2: Gemini translator (Claude fallback) — Option A: бүх 10 постыг translate, MW-г fb_poster_live.py сонгоно
       # -----------------------------------------------------------------
+      - name: Phase 2 (reuse) — refresh only the Market Watch post
+        if: steps.fresh.outputs.fresh == 'true'
+        run: |
+          echo "♻️  Reusing today's translated news; rebuilding Market Watch from fresh market data"
+          python3 - <<'PY'
+          import json
+          from orange_translator import generate_market_watch_post
+          posts = json.load(open("translated_posts.json", encoding="utf-8"))
+          for i, p in enumerate(posts):
+              if p.get("is_market_watch") or p.get("type") == "market_watch":
+                  new = generate_market_watch_post()
+                  new["generated_date"] = p.get("generated_date")
+                  posts[i] = new
+          json.dump(posts, open("translated_posts.json", "w", encoding="utf-8"), ensure_ascii=False, indent=2)
+          print("Market Watch refreshed")
+          PY
+
       - name: Phase 2 — Gemini translator (Claude fallback)
+        if: steps.fresh.outputs.fresh != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}

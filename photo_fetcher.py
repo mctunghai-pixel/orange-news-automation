@@ -173,6 +173,27 @@ def fetch_photo(post, used_ids, out_dir="assets/cache/photos"):
     key = os.environ.get("PIXABAY_API_KEY", "").strip()
     if not key:
         return None, None
+    os.makedirs(out_dir, exist_ok=True)
+    pid = post.get("photo_id")
+    if pid:   # a later run the same day keeps the story's photo (FB/IG/site stay consistent)
+        path = os.path.join(out_dir, f"pixabay_{pid}.jpg")
+        try:
+            if not os.path.exists(path):
+                r = requests.get(API_URL, params={"key": key, "id": pid}, timeout=15)
+                r.raise_for_status()
+                hits = r.json().get("hits", [])
+                url = hits and (hits[0].get("largeImageURL") or hits[0].get("webformatURL"))
+                if url:
+                    img = requests.get(url, timeout=20)
+                    img.raise_for_status()
+                    with open(path, "wb") as f:
+                        f.write(img.content)
+            if os.path.exists(path):
+                used_ids.add(pid)
+                print(f"    📷 Pixabay #{pid} (kept from earlier run)")
+                return path, "Pixabay"
+        except Exception as e:
+            print(f"    ⚠️ reuse photo #{pid}: {e}")
     cat = resolve_category(post)
     queries = concept_queries(post)
     queries.append(CATEGORY_QUERY.get(cat, "business news"))
