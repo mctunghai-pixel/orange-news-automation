@@ -110,7 +110,14 @@ def logo_lockup(height):
     d = ImageDraw.Draw(im)
     x = height + gap
     d.text((x, int(height * -0.04)), "ARAVT", font=f1, fill=WHITE)
-    d.text((x + 3, int(height * 0.64)), "N E W S", font=f2, fill=ACCENT)
+    # "NEWS" justified to the full width of "ARAVT" (approved lockup C, 2026-11-08)
+    ws = [d.textlength(c, font=f2) for c in "NEWS"]
+    x0, x1 = x + height * 0.02, x + w1 - height * 0.02
+    step = (x1 - x0 - sum(ws)) / 3
+    cx = x0
+    for c, cw in zip("NEWS", ws):
+        d.text((cx, int(height * 0.64)), c, font=f2, fill=ACCENT)
+        cx += cw + step
     return im
 
 
