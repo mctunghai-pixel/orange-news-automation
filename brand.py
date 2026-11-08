@@ -12,6 +12,7 @@ NAME_UPPER = "ARAVT NEWS"
 DOMAIN = "aravtnews.com"
 SITE_URL = "https://www.aravtnews.com"
 FACEBOOK = "facebook.com/AravtNews"
+INSTAGRAM = "instagram.com/aravtnews"
 TELEGRAM = "t.me/OrangeNewsMN"          # TODO: change when the Telegram channel username is renamed
 HANDLE = "@AravtNews"
 HASHTAG = "#AravtNews"
@@ -38,6 +39,8 @@ FOOTER_LINKS = f"""
 🌐 www.{DOMAIN}
 
 📘 {FACEBOOK}
+
+📷 {INSTAGRAM}
 
 📨 Telegram: {TELEGRAM}"""
 
