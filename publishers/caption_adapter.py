@@ -108,3 +108,49 @@ def adapt_caption_for_ig(post: dict) -> str:
     truncated_body = body[:body_budget].rstrip() + TRUNCATION_MARKER
     sections = [s for s in (badge, headline, truncated_body, hashtag_line) if s]
     return "\n\n".join(sections)
+
+
+def adapt_caption_for_threads(post: dict) -> str:
+    """Threads caption (≤500 chars, text-first, URL clickable).
+
+    badge + headline + short summary + ≤3 hashtags + compact footer
+    (site link + Telegram). Legacy brand tags are dropped.
+    """
+    import brand as BRAND
+
+    THREADS_LIMIT = 500
+    badge = (post.get("badge") or "").strip()
+    headline = (post.get("headline") or "").strip()
+    body = _clean_body(post.get("body_only") or post.get("post_text") or "")
+    summary = body.split("\n\n", 1)[0]
+    if len(summary) > 220:
+        summary = summary[:217].rstrip() + "…"
+
+    footer = f"\n\n🌐 {BRAND.SITE_URL}\n📨 {BRAND.TELEGRAM}"
+
+    raw_tags = post.get("hashtags") or []
+    if isinstance(raw_tags, str):
+        raw_tags = raw_tags.split()
+    tags = []
+    for t in raw_tags:
+        t = (t or "").strip()
+        if t and not t.startswith("#"):
+            t = "#" + t
+        if t and t.lower() not in BLOCKED_HASHTAGS and t not in tags:
+            tags.append(t)
+        if len(tags) == 3:
+            break
+    hashtag_line = " ".join(tags)
+
+    def _join(*parts):
+        return "\n\n".join(p for p in parts if p)
+
+    full = _join(badge, headline, summary, hashtag_line) + footer
+    if len(full) <= THREADS_LIMIT:
+        return full
+    overhead = len(_join(badge, headline, hashtag_line)) + len(footer) + 2 + 1
+    budget = THREADS_LIMIT - overhead
+    if budget > 30:
+        return _join(badge, headline, summary[:budget].rstrip() + "…", hashtag_line) + footer
+    out = _join(badge, headline, summary) + footer
+    return out if len(out) <= THREADS_LIMIT else out[: THREADS_LIMIT - 1].rstrip() + "…"
