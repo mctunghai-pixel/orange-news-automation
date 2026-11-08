@@ -21,13 +21,15 @@ HASHTAG_LIMIT = 30
 TRUNCATION_MARKER = "…"
 
 STANDARD_HASHTAGS = [
-    "#orangenews",
     "#aravtnews",
     "#санхүү",
     "#эдийнзасаг",
     "#зах_зээл",
     "#mongolia",
 ]
+
+# Legacy brand tags (pre-2026-11 rebrand) — never emit, even if a post carries them.
+BLOCKED_HASHTAGS = {"#orangenews"}
 
 _SOURCE_LINE_RE = re.compile(r"^\s*Эх\s+сурвалж\s*:.*$", re.MULTILINE)
 _FOOTER_LINK_RE = re.compile(r"^\s*[🌐📘📷🧵].*$", re.MULTILINE)
@@ -67,7 +69,7 @@ def _build_hashtags(post_hashtags) -> str:
         if not tag.startswith("#"):
             tag = "#" + tag
         key = tag.lower()
-        if key in seen:
+        if key in seen or key in BLOCKED_HASHTAGS:
             continue
         seen.add(key)
         merged.append(tag)
