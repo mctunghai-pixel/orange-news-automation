@@ -3,6 +3,12 @@
     "err0": {
       "at": "16:45",
       "error": "403 Client Error: Forbidden for url: https://graph.facebook.com/v21.0/876809188852576/video_reels {\"error\":{\"message\":\"(#200) Subject does not have permission to post videos on this target\",\"type\":\"OAuthException\",\"code\":200,\"fbtrace_id\":\"AYkdzSOYOSkrLGoWHrQmNt5\"}}"
+    },
+    "0": {
+      "video_id": "1602744814380030",
+      "idx": 0,
+      "kind": "market",
+      "at": "17:34"
     }
   }
 }
