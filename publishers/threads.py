@@ -75,7 +75,7 @@ class ThreadsPublisher(Publisher):
             try:
                 creation_id = self._create_container(image_url, caption)
                 self._wait_for_container(creation_id)
-                media_id = self._publish_container(creation_id)
+                media_id = self._publish_with_settle(creation_id)
                 return PublishResult(
                     ok=True,
                     external_id=media_id,
@@ -161,6 +161,21 @@ class ThreadsPublisher(Publisher):
             f"container poll timeout after {POLL_TIMEOUT_SECONDS}s "
             f"(last status: {last_status})"
         )
+
+    def _publish_with_settle(self, creation_id: str) -> str:
+        """fix24: Threads sometimes reports FINISHED but answers threads_publish
+        with code=24 subcode=4279009 ("resource does not exist") for a few more
+        seconds. Wait and retry the publish of the same container (no duplicate)."""
+        for wait in (0, 15, 30, 45):
+            if wait:
+                _log(f"container not publishable yet — retrying publish in {wait}s")
+                time.sleep(wait)
+            try:
+                return self._publish_container(creation_id)
+            except _PermanentError as e:
+                if "code=24" not in str(e) or wait == 45:
+                    raise
+        raise _PermanentError("unreachable")
 
     def _publish_container(self, creation_id: str) -> str:
         url = f"{BASE_URL}/{self._user_id}/threads_publish"
