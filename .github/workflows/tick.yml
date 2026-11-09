@@ -1,0 +1,43 @@
+name: Tick (external clock)
+
+# fix25: GitHub's own cron drops most ticks for this repo (2026-11-09: Reels 0 runs,
+# Market Data every ~4 h, publishers 1 of 4 attempts). cron-job.org calls this
+# workflow's dispatch endpoint every 15 min; it fans out to the publishers.
+# Every runner is idempotent (state files), so extra ticks never double-post.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '7,37 * * * *'   # fallback if the external clock is down
+
+permissions:
+  actions: write
+  contents: read
+
+concurrency:
+  group: tick
+  cancel-in-progress: false
+
+jobs:
+  fan-out:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    env:
+      GH_TOKEN: ${{ github.token }}
+      GH_REPO: ${{ github.repository }}
+    steps:
+      - name: Dispatch due publishers
+        run: |
+          H=$(TZ=Asia/Ulaanbaatar date +%H); H=$((10#$H))
+          echo "MNT hour: $H"
+          run() { echo "→ $*"; gh workflow run "$@" --ref main || echo "  ⚠️ dispatch failed: $1"; }
+          # Hourly IG / Threads / Telegram slots: 08:00–17:00 (runners accept up to 19:59)
+          if [ "$H" -ge 8 ] && [ "$H" -le 19 ]; then
+            for wf in ig_publisher_hourly.yml threads_publisher_hourly.yml telegram_publisher_hourly.yml; do
+              run "$wf" -f enable_publishing=true -f dry_run=false
+            done
+          fi
+          # Reels slots 10:30 / 13:30 / 16:30 / 19:30 — runner posts only the earliest due one
+          if [ "$H" -ge 10 ] && [ "$H" -le 22 ]; then
+            run reels_publisher.yml -f dry_run=false
+          fi
