@@ -13,6 +13,13 @@
       "error": null,
       "attempts": 1,
       "timestamp": "2026-11-09T06:30:38.414302+00:00"
+    },
+    "20261109:7": {
+      "ok": false,
+      "external_id": null,
+      "error": "publish_container: code=24 subcode=4279009 The requested resource does not exist",
+      "attempts": 1,
+      "timestamp": "2026-11-09T07:04:05.836095+00:00"
     }
   },
   "schema_version": 1
