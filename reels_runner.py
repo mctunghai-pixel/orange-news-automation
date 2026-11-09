@@ -147,6 +147,12 @@ def main():
             return 0
         slot = due[0]
     kind, idx = slots[slot]
+    if os.environ.get("CHECK_ONLY"):          # fix20: cheap pre-check before installing ffmpeg
+        out = os.environ.get("GITHUB_OUTPUT")
+        if out:
+            open(out, "a").write("due=true\n")
+        log(f"slot {slot} due ({kind})")
+        return 0
     if idx is None:
         done[str(slot)] = {"skipped": "no market watch"}
         save_state(st)

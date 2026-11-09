@@ -20,6 +20,12 @@ on:
         required: false
         default: ''
         type: string
+  # fix20: GitHub never fired this workflow's own cron (0 scheduled runs on 11-09).
+  # Piggy-back on Market Data Live Update, which runs reliably every ~30 min;
+  # the runner only renders when a slot is actually due, so extra wake-ups are free.
+  workflow_run:
+    workflows: ["Market Data Live Update"]
+    types: [completed]
   schedule:
     - cron: '30 2,5,8,11 * * *'   # 10:30 13:30 16:30 19:30 MNT
     - cron: '0 3,6,9,12 * * *'    # retry 30 min later
@@ -48,13 +54,26 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Install dependencies (ffmpeg)
+      - name: Install Python deps
+        run: pip install -q requests pillow numpy
+
+      - name: Is a reel due?
+        id: due
+        env:
+          REELS_PUBLISH_ENABLED: ${{ vars.REELS_PUBLISH_ENABLED }}
+          CHECK_ONLY: '1'
+          FORCE_SLOT: ${{ inputs.force_slot }}
+          DRY_RUN: ${{ (github.event_name == 'workflow_dispatch' && inputs.dry_run) && 'true' || 'false' }}
+        run: python3 reels_runner.py
+
+      - name: Install ffmpeg
+        if: steps.due.outputs.due == 'true'
         run: |
           sudo apt-get update -qq
           sudo apt-get install -y -qq ffmpeg > /dev/null
-          pip install -q requests pillow numpy
 
       - name: Render + publish one reel
+        if: steps.due.outputs.due == 'true'
         env:
           FB_PAGE_ID: ${{ secrets.FB_PAGE_ID }}
           FB_ACCESS_TOKEN: ${{ secrets.FB_ACCESS_TOKEN }}
