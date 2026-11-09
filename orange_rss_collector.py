@@ -221,6 +221,17 @@ _TOPIC_PATTERNS = {
 }
 
 
+# fix19: an ikon.mn article about Tesla/Nvidia is not "Монголын зах зээл".
+_MN_MARKERS = re.compile(r"Монгол|Улаанбаатар|төгрөг|Оюу ?толгой|Таван ?толгой|УИХ|Засгийн газ|аймаг|Mongolia|Ulaanbaatar", re.I)
+_FOREIGN_MARKERS = re.compile(r"\b(?:Tesla|Nvidia|Apple|Google|Microsoft|Amazon|Meta|OpenAI|Cybertruck|SpaceX|Bitcoin)\b"
+                              r"|Илон Маск|АНУ|Хятад[ау]|Орос[ын]|Япон|Европ|Трамп|Уолл", re.I)
+
+
+def is_domestic(text: str) -> bool:
+    """True unless the text is clearly about a foreign subject with no Mongolia angle."""
+    return bool(_MN_MARKERS.search(text or "")) or not _FOREIGN_MARKERS.search(text or "")
+
+
 def classify_topic(entry: dict) -> str:
     """
     Assign an article to exactly one topic bucket.
@@ -232,9 +243,9 @@ def classify_topic(entry: dict) -> str:
     misses on Mongolian-language content.
     """
     url = entry.get("url", "") or ""
-    if any(d in url for d in MONGOLIA_DOMAINS):
-        return "mongolia"
     text = (entry.get("title", "") or "") + " " + (entry.get("summary", "") or "")
+    if any(d in url for d in MONGOLIA_DOMAINS) and is_domestic(text):
+        return "mongolia"
     for topic in TOPIC_PRIORITY:
         if _TOPIC_PATTERNS[topic].search(text):
             return topic
@@ -244,6 +255,22 @@ def classify_topic(entry: dict) -> str:
 # =============================================================================
 # QUOTA-ENFORCED SELECTION (v8)
 # =============================================================================
+
+# fix19: the same story from Bloomberg + TechCrunch + CNBC must appear once.
+_GENERIC_STEMS = {"marke", "stock", "share", "price", "rates", "trade", "inves", "says", "with", "from",
+                  "after", "amid", "over", "into", "will", "what", "here", "week", "year", "news", "their",
+                  "about", "more", "than", "this", "that", "high", "highe", "lower", "open", "wrap"}
+
+
+def _stems(title: str) -> set:
+    words = re.findall(r"[A-Za-z]{4,}", (title or "").lower())
+    return {w[:5] for w in words} - _GENERIC_STEMS
+
+
+def is_near_dup(title: str, chosen_titles: list) -> bool:
+    a = _stems(title)
+    return any(len(a & _stems(t)) >= 2 for t in chosen_titles)
+
 
 def _select_from_neighbor(buckets: dict, selected_urls: set, primary_topic: str):
     """
@@ -278,6 +305,15 @@ def _select_top_news_quota(scored_entries: list, top_n: int = TOP_N):
     selected = []
     selected_urls = set()
     fallback_notes = []  # (slot, source_topic)
+
+    # fix19: mark later copies of an already-seen story as used so no pass picks them.
+    seen_titles = []
+    for entry in sorted(scored_entries, key=lambda x: x["score"], reverse=True):
+        if is_near_dup(entry["title"], seen_titles):
+            selected_urls.add(entry["url"])
+        else:
+            seen_titles.append(entry["title"])
+    dup_urls = set(selected_urls)
 
     # Priority pass: TOPIC_QUOTA[topic] articles per priority topic.
     for topic in TOPIC_PRIORITY:
@@ -321,7 +357,9 @@ def _select_top_news_quota(scored_entries: list, top_n: int = TOP_N):
                 selected.append(entry)
                 selected_urls.add(entry["url"])
 
+    selected = [e for e in selected if e["url"] not in dup_urls]
     breakdown = {
+        "near_duplicates_dropped": len(dup_urls),
         "classification_counts": classification_counts,
         "selected_count":        len(selected),
         "fallback_notes":        fallback_notes,

@@ -45,6 +45,7 @@ on:
     - cron: '0 0-9 * * *'    # primary  (:00)
     - cron: '15 0-9 * * *'   # retry 1  (:15)
     - cron: '30 0-9 * * *'   # retry 2  (:30)
+    - cron: '8,47 0-9 * * *' # fix19: off-peak extra attempts (GitHub drops many :00/:15/:30 ticks)
 
 # Serialize runs of this workflow. A delayed cron tick must not race with the
 # next on-time tick when both push logs/ig_publish_state.json back to main.

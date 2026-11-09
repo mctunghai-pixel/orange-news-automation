@@ -190,6 +190,9 @@ def main():
         body = getattr(getattr(e, "response", None), "text", "")[:400]
         log(f"❌ publish failed: {e} {body}")
         write_status(exit_path="publish_failure", slot=slot, post_idx=idx, date=date, error=f"{e} {body}")
+        # fix19: keep the last error in the committed state (slot stays "not done", so it is retried)
+        done[f"err{slot}"] = {"at": now.strftime("%H:%M"), "error": f"{e} {body}"[:300]}
+        save_state(st)
         return 1
     done[str(slot)] = {"video_id": vid, "idx": idx, "kind": kind, "at": now.strftime("%H:%M")}
     save_state(st)

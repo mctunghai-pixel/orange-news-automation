@@ -23,6 +23,7 @@ on:
   schedule:
     - cron: '30 2,5,8,11 * * *'   # 10:30 13:30 16:30 19:30 MNT
     - cron: '0 3,6,9,12 * * *'    # retry 30 min later
+    - cron: '41 2-12 * * *'       # fix19: off-peak hourly catch-up (runner posts earliest due slot only)
 
 concurrency:
   group: reels-publisher

@@ -1333,6 +1333,24 @@ def claude_editorial_polish(title: str, body: str, source_domain: str):
 # at the call site in translate_article())
 # -----------------------------------------------------------------------------
 
+_MN_MARKERS = re.compile(r"Монгол|Улаанбаатар|төгрөг|Оюу ?толгой|Таван ?толгой|УИХ|Засгийн газ|аймаг|Mongolia", re.I)
+_FOREIGN_MARKERS = re.compile(r"\b(?:Tesla|Nvidia|Apple|Google|Microsoft|Amazon|Meta|OpenAI|Cybertruck|SpaceX|Bitcoin)\b"
+                              r"|Илон Маск|АНУ|Хятад[ау]|Орос[ын]|Япон|Европ|Трамп|Уолл", re.I)
+_CRYPTO_RE = re.compile(r"крипто|биткойн|bitcoin|ethereum|\bBTC\b|\bETH\b", re.I)
+_TECH_RE = re.compile(r"Tesla|Nvidia|Apple|Google|Microsoft|OpenAI|SpaceX|Cybertruck|\bAI\b|хиймэл оюун|технологи|Илон Маск|машин", re.I)
+
+
+def _mongolian_source_category(text):
+    """fix19: a Mongolian-language article about a foreign company is not МОНГОЛ news."""
+    if _MN_MARKERS.search(text) or not _FOREIGN_MARKERS.search(text):
+        return "mongolia"
+    if _CRYPTO_RE.search(text):
+        return "crypto"
+    if _TECH_RE.search(text):
+        return "tech"
+    return "business"
+
+
 def process_mongolian_article(article, idx):
     """
     Full Mongolian editorial pipeline:
@@ -1417,7 +1435,7 @@ def process_mongolian_article(article, idx):
     # Validate
     validation_warnings = validate_translation(headline, body)
 
-    category  = "mongolia"
+    category  = _mongolian_source_category(f"{title} {headline} {body[:600]}")
     full_post = build_full_post(category, headline, body, dynamic_hashtag)
 
     output = {
