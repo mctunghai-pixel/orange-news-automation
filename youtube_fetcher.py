@@ -216,6 +216,65 @@ def enrich_with_durations(
 # MAIN
 # =============================================================================
 
+# --- fix21: Mongolian titles -------------------------------------------------
+GEMINI_URL = "https://generativelanguage.googleapis.com/v1beta/models/{model}:generateContent"
+TITLE_MN_PROMPT = (
+    "Чи Aravt News-ийн санхүүгийн редактор. Доорх YouTube видеоны англи гарчгуудыг "
+    "Монгол хэлээр товч, ойлгомжтой, мэргэжлийн санхүүгийн хэллэгээр найруулж орчуул. "
+    "Үгчлэн орчуулахгүй. Компани, хүний нэр, тикер (S&P 500, Nvidia, Fed)-ийг латинаар үлдээ. "
+    "Гарчиг бүр 90 тэмдэгтээс хэтрэхгүй. Зөвхөн JSON буцаа: {\"<id>\": \"<монгол гарчиг>\", ...}\n\n"
+)
+
+
+def load_previous_titles_mn() -> dict:
+    """Reuse earlier translations so each video is translated only once."""
+    try:
+        with open(OUTPUT_FILE, encoding="utf-8") as f:
+            prev = json.load(f)
+        return {v["id"]: v["title_mn"] for v in prev.get("videos", []) if v.get("title_mn")}
+    except Exception:
+        return {}
+
+
+def translate_titles_mn(videos: list, errors: list) -> None:
+    cache = load_previous_titles_mn()
+    todo = []
+    for v in videos:
+        if v["id"] in cache:
+            v["title_mn"] = cache[v["id"]]
+        else:
+            todo.append(v)
+    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    if not todo or not key:
+        print(f"🇲🇳 title_mn: {len(videos) - len(todo)} cached, {len(todo)} new"
+              + ("" if key or not todo else " (no GEMINI_API_KEY — English kept)"))
+        return
+    payload = "\n".join(json.dumps({"id": v["id"], "title": v["title"]}, ensure_ascii=False) for v in todo)
+    for model in ("gemini-2.5-flash", "gemini-2.5-flash-lite"):
+        try:
+            r = requests.post(
+                GEMINI_URL.format(model=model),
+                headers={"x-goog-api-key": key, "Content-Type": "application/json"},
+                json={"contents": [{"parts": [{"text": TITLE_MN_PROMPT + payload}]}],
+                      "generationConfig": {"responseMimeType": "application/json", "temperature": 0.3}},
+                timeout=60,
+            )
+            r.raise_for_status()
+            text = r.json()["candidates"][0]["content"]["parts"][0]["text"]
+            out = json.loads(text)
+            n = 0
+            for v in todo:
+                mn = (out.get(v["id"]) or "").strip()
+                if mn:
+                    v["title_mn"] = mn[:140]
+                    n += 1
+            print(f"🇲🇳 title_mn: {len(videos) - len(todo)} cached, {n}/{len(todo)} translated ({model})")
+            return
+        except Exception as e:
+            errors.append(f"title_mn {model}: {type(e).__name__}: {str(e)[:120]}")
+    print("⚠️ title_mn translation failed — English titles kept for new videos")
+
+
 def main() -> None:
     started = datetime.now(timezone.utc)
     api_key = os.environ.get("YOUTUBE_API_KEY", "").strip()
@@ -271,6 +330,7 @@ def main() -> None:
     # Sort by published_at desc, cap.
     surviving.sort(key=lambda v: v["published_at"], reverse=True)
     surviving = surviving[:MAX_OUTPUT_VIDEOS]
+    translate_titles_mn(surviving, errors)
 
     elapsed = (datetime.now(timezone.utc) - started).total_seconds()
 

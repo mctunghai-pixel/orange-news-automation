@@ -51,6 +51,7 @@ jobs:
       - name: Fetch YouTube data
         env:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: python3 youtube_fetcher.py
 
       - name: Commit youtube_data.json if changed
