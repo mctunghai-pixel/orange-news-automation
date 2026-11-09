@@ -24,7 +24,10 @@ on:
   # Piggy-back on Market Data Live Update, which runs reliably every ~30 min;
   # the runner only renders when a slot is actually due, so extra wake-ups are free.
   workflow_run:
-    workflows: ["Market Data Live Update"]
+    # fix22: Market Data's */30 cron actually fires only every ~4 h, so also wake
+    # on every publisher run (they fire several times an hour in the 08–17 window).
+    workflows: ["Market Data Live Update", "Telegram Publisher Hourly", "IG Publisher Hourly",
+                "Threads Publisher Hourly", "YouTube data refresh"]
     types: [completed]
   schedule:
     - cron: '30 2,5,8,11 * * *'   # 10:30 13:30 16:30 19:30 MNT
