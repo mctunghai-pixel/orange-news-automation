@@ -78,6 +78,11 @@ jobs:
           FORCE_IDX: ${{ inputs.force_idx }}
         run: |
           echo "🧵 Threads runner at $(date '+%H:%M:%S %Z')"
+          # fix30: use the auto-refreshed token when present (see threads_token_refresh.yml)
+          if [ -f logs/threads_token.enc ]; then
+            T=$(openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -a -A -pass env:THREADS_ACCESS_TOKEN -in logs/threads_token.enc 2>/dev/null || true)
+            if [ -n "$T" ]; then echo "::add-mask::$T"; export THREADS_ACCESS_TOKEN="$T"; echo "🔑 using refreshed token"; fi
+          fi
           python3 threads_runner.py
 
       - name: Commit state file back to main

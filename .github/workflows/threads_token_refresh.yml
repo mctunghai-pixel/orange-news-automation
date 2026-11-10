@@ -1,10 +1,10 @@
 name: Threads token refresh
 
 # fix30: the Threads long-lived token lives 60 days (set 2026-11-08 → dies ~2027-01-07).
-# Every 2 weeks this refreshes it (new 60-day token) and stores it back in the
-# THREADS_ACCESS_TOKEN secret. Writing a secret needs a token with
-# "Secrets: Read and write" on this repo — saved as secret GH_SECRETS_TOKEN.
-# Without it the job fails loudly (red run) instead of Threads silently stopping.
+# Twice a month this refreshes it (new 60-day token). GitHub Actions cannot write
+# secrets, so the fresh token is stored ENCRYPTED in logs/threads_token.enc
+# (AES-256, key = the original THREADS_ACCESS_TOKEN secret, which never changes).
+# threads_publisher_hourly.yml decrypts it before publishing. No extra token needed.
 
 on:
   workflow_dispatch:
@@ -12,29 +12,39 @@ on:
     - cron: '41 3 1,15 * *'
 
 permissions:
-  contents: read
+  contents: write
+
+concurrency:
+  group: threads-token
+  cancel-in-progress: false
 
 jobs:
   refresh:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - name: Refresh and store
+      - uses: actions/checkout@v4
+      - name: Refresh, encrypt, commit
         env:
-          OLD: ${{ secrets.THREADS_ACCESS_TOKEN }}
-          GH_TOKEN: ${{ secrets.GH_SECRETS_TOKEN }}
-          GH_REPO: ${{ github.repository }}
+          KEY: ${{ secrets.THREADS_ACCESS_TOKEN }}
         run: |
           set -euo pipefail
+          CUR="$KEY"
+          if [ -f logs/threads_token.enc ]; then
+            CUR=$(openssl enc -d -aes-256-cbc -pbkdf2 -iter 200000 -a -A -pass env:KEY -in logs/threads_token.enc) || CUR="$KEY"
+          fi
+          echo "::add-mask::$CUR"
           resp=$(curl -sS -G "https://graph.threads.net/refresh_access_token" \
-                   --data-urlencode "grant_type=th_refresh_token" --data-urlencode "access_token=$OLD")
+                   --data-urlencode "grant_type=th_refresh_token" --data-urlencode "access_token=$CUR")
           NEW=$(echo "$resp" | python3 -c "import json,sys;print(json.load(sys.stdin).get('access_token',''))")
           DAYS=$(echo "$resp" | python3 -c "import json,sys;print(int(json.load(sys.stdin).get('expires_in',0))//86400)")
-          if [ -z "$NEW" ]; then echo "❌ refresh failed: $(echo "$resp" | head -c 300)"; exit 1; fi
+          if [ -z "$NEW" ]; then echo "❌ refresh failed: $(echo "$resp" | sed 's/access_token[^,]*//' | head -c 300)"; exit 1; fi
           echo "::add-mask::$NEW"
-          echo "✅ new Threads token valid for $DAYS days"
-          if [ -z "${GH_TOKEN:-}" ]; then
-            echo "❌ GH_SECRETS_TOKEN secret missing — cannot store the refreshed token"; exit 1
-          fi
-          printf '%s' "$NEW" | gh secret set THREADS_ACCESS_TOKEN --repo "$GH_REPO"
-          echo "✅ THREADS_ACCESS_TOKEN updated"
+          mkdir -p logs
+          printf '%s' "$NEW" | openssl enc -aes-256-cbc -pbkdf2 -iter 200000 -salt -a -A -pass env:KEY -out logs/threads_token.enc
+          echo "✅ new Threads token valid for $DAYS days (stored encrypted)"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -f logs/threads_token.enc
+          git commit -qm "chore(threads): refresh encrypted token [skip ci]"
+          for i in 1 2 3 4 5; do git pull -q --rebase origin main && git push -q && break; sleep $((i*5)); done

@@ -25,6 +25,7 @@ logs/*
 # re-posts (Market Watch went out 3x on 2026-11-08).
 !logs/mw_published.json
 !logs/threads_publish_state.json
+!logs/threads_token.enc
 !logs/reels_publish_state.json
 
 # macOS system files
