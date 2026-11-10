@@ -88,6 +88,11 @@ SOURCE_TAG_RE         = re.compile(r"Эх сурвалж\s*[:：]")
 # Claude client (kept for fallback)
 # anthropic>=1.0 rejects a raw httpx.Client (SDK moved to httpx2) — this crashed
 # every run since 2026-08-20. The default client already verifies TLS via certifi.
+# fix29: Gemini-only (owner decision 2026-11-10 — Claude Haiku's Mongolian was
+# noticeably weaker). A story Gemini cannot write is skipped, never handed to
+# Claude. Set ALLOW_CLAUDE_FALLBACK=1 to bring the fallback back.
+if os.environ.get("ALLOW_CLAUDE_FALLBACK") != "1":
+    os.environ.pop("ANTHROPIC_API_KEY", None)
 claude_client = anthropic.Anthropic() if os.environ.get("ANTHROPIC_API_KEY") else None
 
 
@@ -140,8 +145,8 @@ def _retry_after(msg, default):
 def _gemini_generate(**kw):
     """Gemini call, paced to the free-tier rate limit, with retry on transient
     503/500 and per-minute 429 (honouring the server's retry delay).
-    A *daily* quota 429 is not retried: Gemini is switched off for the rest of
-    the run so every remaining article goes straight to the Claude fallback."""
+    A *daily* quota 429 moves to the next Gemini model; when all are spent the
+    article fails (no Claude fallback since fix29)."""
     global ACTIVE_GEMINI_MODEL
     delays = [10, 30, 60, 60]
     for attempt in range(len(delays) + 1):
@@ -151,7 +156,17 @@ def _gemini_generate(**kw):
         except Exception as e:
             msg = str(e)
             if ("429" in msg or "RESOURCE_EXHAUSTED" in msg) and ("PerDay" in msg or "per day" in msg.lower()):
-                print("  ⛔ Gemini daily free quota exhausted — Claude fallback for the rest of this run")
+                # fix29: a daily quota is per model — move to the next Gemini model
+                # (2.5-pro → 2.5-flash) instead of giving up on Gemini.
+                chain = [GEMINI_MODEL_PRIMARY] + GEMINI_MODEL_FALLBACKS
+                cur = kw.get("model") or ACTIVE_GEMINI_MODEL
+                nxt = chain[chain.index(cur) + 1] if cur in chain and chain.index(cur) + 1 < len(chain) else None
+                if nxt:
+                    print(f"  ⛔ {cur} daily free quota exhausted — switching to {nxt}")
+                    ACTIVE_GEMINI_MODEL = nxt
+                    kw["model"] = nxt
+                    continue
+                print("  ⛔ Gemini daily free quota exhausted on every model — remaining stories skipped")
                 ACTIVE_GEMINI_MODEL = None
                 raise
             transient = any(c in msg for c in ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "500", "INTERNAL"))
