@@ -1,6 +1,11 @@
 """
 photo_fetcher.py — licensed, news-related photos for Orange News cards.
 
+fix30: stories about a named company / product / person first try Wikimedia
+Commons (freely licensed real photos: a Tesla Cybertruck story gets a Cybertruck,
+not a random EV). Only CC0 / Public domain / CC BY / CC BY-SA files are used, and
+the required credit is written into the post text (post["photo_credit"]).
+
 Source: Pixabay API (free key, Pixabay Content License — commercial use OK,
 no attribution required — cards carry only our own logo, no credit chip).
 Never uses publisher / OG images (copyright — see Instagram suspension 2026-05).
@@ -79,6 +84,140 @@ CONCEPTS = [
     (r"\b(airline|aviation|boeing|airbus)", "airplane"),
     (r"\b(real estate|housing|property|mortgage)", "real estate city"),
 ]
+
+
+# ---------------------------------------------------------------- fix30: Commons
+COMMONS_API = "https://commons.wikimedia.org/w/api.php"
+COMMONS_UA = "AravtNewsBot/1.0 (https://www.aravtnews.com; info@aravtnews.com)"
+FREE_LICENSES = re.compile(r"^(cc0|public domain|pd\b|cc by(-sa)? \d)", re.I)
+BAD_FILE = re.compile(r"logo|map|chart|diagram|graph|icon|flag|coat of arms|screenshot|"
+                      r"\.svg|signature|seal|stamp|poster|banner|infographic", re.I)
+
+# headline entity → Commons search. Ordered: most specific first. Matches the
+# English original title and the Mongolian headline (Latin names stay Latin).
+ENTITIES = [
+    (r"cybertruck", "Tesla Cybertruck"),
+    (r"cybercab|robotaxi", "Tesla Cybercab"),
+    (r"\bmodel (y|3)\b", "Tesla Model Y"),
+    (r"\b(elon )?musk\b|илон маск", "Elon Musk"),
+    (r"\bspacex\b|starship", "SpaceX Starship"),
+    (r"\btesla\b", "Tesla Gigafactory"),
+    (r"jensen huang|\bhuang\b", "Jensen Huang"),
+    (r"\bnvidia\b", "Nvidia headquarters Santa Clara"),
+    (r"sam altman", "Sam Altman"),
+    (r"\bopenai\b|chatgpt", "OpenAI office"),
+    (r"\btsmc\b", "TSMC fab"),
+    (r"\bsamsung\b", "Samsung Electronics building"),
+    (r"\bapple\b|iphone|tim cook", "Apple Park"),
+    (r"\bmicrosoft\b", "Microsoft Redmond campus"),
+    (r"\bgoogle\b|alphabet", "Googleplex"),
+    (r"\bamazon\b", "Amazon Spheres"),
+    (r"\bmeta\b|zuckerberg", "Meta Platforms headquarters"),
+    (r"\bboeing\b", "Boeing 737 MAX"),
+    (r"\bairbus\b", "Airbus A350"),
+    (r"exxon", "ExxonMobil"),
+    (r"\bchevron\b", "Chevron gas station"),
+    (r"\bopec\b", "OPEC headquarters Vienna"),
+    (r"\bbyd\b", "BYD electric car"),
+    (r"\btoyota\b", "Toyota headquarters"),
+    (r"warren buffett|berkshire", "Warren Buffett"),
+    (r"jamie dimon|jpmorgan", "JPMorgan Chase Tower"),
+    (r"goldman sachs", "Goldman Sachs headquarters"),
+    (r"blackrock", "BlackRock headquarters"),
+    (r"jerome powell|\bpowell\b", "Jerome Powell"),
+    (r"federal reserve|\bthe fed\b|\bfed\b|холбооны нөөц", "Marriner S. Eccles Federal Reserve Board Building"),
+    (r"\becb\b|lagarde|european central bank", "European Central Bank Frankfurt"),
+    (r"bank of japan|\bboj\b", "Bank of Japan headquarters"),
+    (r"\btrump\b|трамп", "Donald Trump"),
+    (r"white house|цагаан ордон", "White House"),
+    (r"wall street|nyse|new york stock exchange", "New York Stock Exchange"),
+    (r"nasdaq", "Nasdaq MarketSite Times Square"),
+    (r"\bxi jinping\b|си жиньпин", "Xi Jinping"),
+    (r"oyu tolgoi|оюу толгой", "Oyu Tolgoi mine"),
+    (r"tavan tolgoi|таван толгой", "Tavan Tolgoi"),
+    (r"ulaanbaatar|улаанбаатар", "Ulaanbaatar skyline"),
+    (r"baltic exchange", "Baltic Exchange London"),
+    (r"\bbinance\b", "Binance"),
+    (r"coinbase", "Coinbase"),
+    (r"vitalik|buterin", "Vitalik Buterin"),
+]
+
+
+def entity_queries(post):
+    text = " ".join([post.get("original_title") or "", post.get("headline") or ""]).lower()
+    out = []
+    for pat, q in ENTITIES:
+        if re.search(pat, text) and q not in out:
+            out.append(q)
+    return out[:2]
+
+
+def _strip_html(s):
+    return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", "", s or "")).strip()
+
+
+def _commons_search(query):
+    key = "commons:" + query
+    cached = _cache_get(key)
+    if cached is not None:
+        return cached
+    r = requests.get(COMMONS_API, params={
+        "action": "query", "format": "json", "generator": "search",
+        "gsrsearch": f"{query} filetype:bitmap", "gsrnamespace": 6, "gsrlimit": 15,
+        "prop": "imageinfo", "iiprop": "url|size|extmetadata", "iiurlwidth": 1600,
+    }, headers={"User-Agent": COMMONS_UA}, timeout=20)
+    r.raise_for_status()
+    pages = sorted((r.json().get("query") or {}).get("pages", {}).values(), key=lambda p: p.get("index", 99))
+    hits = []
+    for p in pages:
+        ii = (p.get("imageinfo") or [{}])[0]
+        meta = ii.get("extmetadata") or {}
+        lic = _strip_html((meta.get("LicenseShortName") or {}).get("value"))
+        w, h = ii.get("width") or 0, ii.get("height") or 1
+        title = p.get("title", "")
+        if not FREE_LICENSES.match(lic) or BAD_FILE.search(title):
+            continue
+        if w < 1200 or not (1.15 <= w / h <= 2.4):      # landscape photos only
+            continue
+        artist = _strip_html((meta.get("Artist") or {}).get("value"))[:60] or "Wikimedia Commons"
+        hits.append({"id": f"wm:{p.get('pageid')}", "url": ii.get("thumburl") or ii.get("url"),
+                     "license": lic, "artist": artist, "title": title})
+    _cache_put(key, hits)
+    return hits
+
+
+def _credit_text(hit):
+    lic = hit["license"]
+    if re.match(r"cc0|public domain|pd\b", lic, re.I):
+        return "📷 Зураг: Wikimedia Commons"
+    return f"📷 Зураг: {hit['artist']} / Wikimedia Commons ({lic})"
+
+
+def fetch_commons(post, used_ids, out_dir):
+    for q in entity_queries(post):
+        try:
+            hits = _commons_search(q)
+        except Exception as e:
+            print(f"    ⚠️ Commons '{q}': {e}")
+            continue
+        fresh = [h for h in hits if h["id"] not in used_ids][:6]
+        random.Random(post.get("original_title") or post.get("headline") or q).shuffle(fresh)
+        for h in fresh:
+            path = os.path.join(out_dir, f"commons_{h['id'][3:]}.jpg")
+            try:
+                if not os.path.exists(path):
+                    img = requests.get(h["url"], headers={"User-Agent": COMMONS_UA}, timeout=30)
+                    img.raise_for_status()
+                    with open(path, "wb") as f:
+                        f.write(img.content)
+                used_ids.add(h["id"])
+                post["photo_id"], post["photo_url"] = h["id"], h["url"]
+                post["photo_credit"] = _credit_text(h)
+                print(f"    📷 Commons {h['id']} ← '{q}' ({h['license']})")
+                return path, "Wikimedia Commons"
+            except Exception as e:
+                print(f"    ⚠️ Commons download {h['id']}: {e}")
+    return None, None
 
 
 def _keywords(title, max_words=3):
@@ -171,11 +310,22 @@ def fetch_photo(post, used_ids, out_dir="assets/cache/photos"):
     Picks randomly among the top unused hits (seeded by the headline, so a
     re-run of the same story keeps its photo) for day-to-day variety."""
     key = os.environ.get("PIXABAY_API_KEY", "").strip()
-    if not key:
-        return None, None
     os.makedirs(out_dir, exist_ok=True)
     pid = post.get("photo_id")
-    if pid:   # a later run the same day keeps the story's photo (FB/IG/site stay consistent)
+    if pid and str(pid).startswith("wm:") and post.get("photo_url"):   # fix30: keep a Commons photo
+        path = os.path.join(out_dir, f"commons_{str(pid)[3:]}.jpg")
+        try:
+            if not os.path.exists(path):
+                img = requests.get(post["photo_url"], headers={"User-Agent": COMMONS_UA}, timeout=30)
+                img.raise_for_status()
+                with open(path, "wb") as f:
+                    f.write(img.content)
+            used_ids.add(pid)
+            return path, "Wikimedia Commons"
+        except Exception as e:
+            print(f"    ⚠️ reuse Commons {pid}: {e}")
+        pid = None
+    if pid and not str(pid).startswith("wm:"):   # a later run the same day keeps the story's photo (FB/IG/site stay consistent)
         path = os.path.join(out_dir, f"pixabay_{pid}.jpg")
         try:
             if not os.path.exists(path):
@@ -194,10 +344,15 @@ def fetch_photo(post, used_ids, out_dir="assets/cache/photos"):
                 return path, "Pixabay"
         except Exception as e:
             print(f"    ⚠️ reuse photo #{pid}: {e}")
+    path, credit = fetch_commons(post, used_ids, out_dir)
+    if path:
+        return path, credit
     cat = resolve_category(post)
     queries = concept_queries(post)
     queries.append(CATEGORY_QUERY.get(cat, "business news"))
     os.makedirs(out_dir, exist_ok=True)
+    if not key:
+        return None, None
     for q in queries:
         try:
             hits = _search(q, key)

@@ -88,10 +88,28 @@ def build_market_watch(index=0):
     return market_watch_card(rows, today_str("%Y.%m.%d"), LOGO_PATH, out)
 
 
+def add_photo_credit(post):
+    """fix30: CC BY / CC BY-SA photos need a credit — one line after the source."""
+    credit = post.get("photo_credit")
+    if not credit:
+        return
+    body = post.get("body_only") or ""
+    if credit in body:
+        return
+    new_body = body.rstrip() + "\n" + credit
+    for k in ("full_post", "post_text"):
+        if body and post.get(k) and body in post[k]:
+            post[k] = post[k].replace(body, new_body, 1)
+    post["body_only"] = new_body
+
+
 def build_news(post, index, used_ids):
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     cat = resolve_category(post)
+    if not str(post.get("photo_id", "")).startswith("wm:"):
+        post.pop("photo_credit", None)
     photo, credit = fetch_photo(post, used_ids)
+    add_photo_credit(post)
     if not photo:
         print("    🎨 branded gradient (no licensed photo)")
         photo = gradient_photo(cat, f"{OUTPUT_DIR}/_bg_{index:02d}.jpg")

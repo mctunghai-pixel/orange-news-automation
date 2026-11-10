@@ -127,6 +127,8 @@ def adapt_caption_for_threads(post: dict) -> str:
         summary = summary[:217].rstrip() + "…"
 
     footer = f"\n\n🌐 {BRAND.SITE_URL}\n📨 {BRAND.TELEGRAM}"
+    if post.get("photo_credit"):            # fix30: Commons photo credit
+        footer += "\n" + post["photo_credit"]
 
     raw_tags = post.get("hashtags") or []
     if isinstance(raw_tags, str):

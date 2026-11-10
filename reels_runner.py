@@ -68,7 +68,16 @@ def plan(posts):
 def photo_for(post, tmp):
     key = os.environ.get("PIXABAY_API_KEY", "").strip()
     pid = post.get("photo_id")
-    if key and pid:
+    if str(pid or "").startswith("wm:") and post.get("photo_url"):     # fix30: Commons photo
+        try:
+            img = requests.get(post["photo_url"], headers={"User-Agent": "AravtNewsBot/1.0 (https://www.aravtnews.com)"}, timeout=30)
+            img.raise_for_status()
+            path = os.path.join(tmp, "commons.jpg")
+            open(path, "wb").write(img.content)
+            return path
+        except Exception as e:
+            log(f"commons {pid}: {e}")
+    if key and pid and not str(pid).startswith("wm:"):
         try:
             r = requests.get("https://pixabay.com/api/", params={"key": key, "id": pid}, timeout=15)
             hits = r.json().get("hits", [])

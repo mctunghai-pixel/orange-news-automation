@@ -1,0 +1,40 @@
+name: Threads token refresh
+
+# fix30: the Threads long-lived token lives 60 days (set 2026-11-08 → dies ~2027-01-07).
+# Every 2 weeks this refreshes it (new 60-day token) and stores it back in the
+# THREADS_ACCESS_TOKEN secret. Writing a secret needs a token with
+# "Secrets: Read and write" on this repo — saved as secret GH_SECRETS_TOKEN.
+# Without it the job fails loudly (red run) instead of Threads silently stopping.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '41 3 1,15 * *'
+
+permissions:
+  contents: read
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Refresh and store
+        env:
+          OLD: ${{ secrets.THREADS_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_SECRETS_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          set -euo pipefail
+          resp=$(curl -sS -G "https://graph.threads.net/refresh_access_token" \
+                   --data-urlencode "grant_type=th_refresh_token" --data-urlencode "access_token=$OLD")
+          NEW=$(echo "$resp" | python3 -c "import json,sys;print(json.load(sys.stdin).get('access_token',''))")
+          DAYS=$(echo "$resp" | python3 -c "import json,sys;print(int(json.load(sys.stdin).get('expires_in',0))//86400)")
+          if [ -z "$NEW" ]; then echo "❌ refresh failed: $(echo "$resp" | head -c 300)"; exit 1; fi
+          echo "::add-mask::$NEW"
+          echo "✅ new Threads token valid for $DAYS days"
+          if [ -z "${GH_TOKEN:-}" ]; then
+            echo "❌ GH_SECRETS_TOKEN secret missing — cannot store the refreshed token"; exit 1
+          fi
+          printf '%s' "$NEW" | gh secret set THREADS_ACCESS_TOKEN --repo "$GH_REPO"
+          echo "✅ THREADS_ACCESS_TOKEN updated"
