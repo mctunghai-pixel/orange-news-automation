@@ -26,6 +26,36 @@ jobs:
       GH_TOKEN: ${{ github.token }}
       GH_REPO: ${{ github.repository }}
     steps:
+      - uses: actions/checkout@v4
+        with:
+          sparse-checkout: |
+            translated_posts.json
+            logs
+          sparse-checkout-cone-mode: false
+
+      # fix26: on 2026-11-10 GitHub dropped the 06:13 daily-pipeline cron and all
+      # Market Watch crons, so nothing new was made. The external clock now also
+      # starts those two when today's output is missing (and none is running).
+      - name: Start daily pipeline / Market Watch if today's run was skipped
+        run: |
+          H=$(TZ=Asia/Ulaanbaatar date +%H); H=$((10#$H)); M=$(TZ=Asia/Ulaanbaatar date +%M); M=$((10#$M))
+          TODAY=$(TZ=Asia/Ulaanbaatar date +%F)
+          GEN=$(python3 -c "import json;p=json.load(open('translated_posts.json'));print(str(p[0].get('generated_date',''))[:10])" 2>/dev/null || true)
+          MWD=$(python3 -c "import json;print(json.load(open('logs/mw_published.json')).get('date',''))" 2>/dev/null || true)
+          recent() {  # any run of $1 queued/running or created in the last $2 minutes?
+            gh run list --workflow "$1" -L 5 --json status,createdAt \
+              --jq "[.[] | select(.status!=\"completed\" or ((now - (.createdAt|fromdateiso8601)) < ($2*60)))] | length"
+          }
+          echo "MNT $H:$M  posts=$GEN  mw=$MWD  today=$TODAY"
+          if [ "$H" -ge 6 ] && [ "$H" -le 15 ] && [ "$GEN" != "$TODAY" ] && [ "$(recent orange_news.yml 75)" = "0" ]; then
+            echo "→ daily pipeline missing — dispatching"; gh workflow run orange_news.yml --ref main -f live=true || true
+          fi
+          # Market Watch: fb_poster_live posts live until 11:00; wait for today's posts first (fix18 reuse)
+          if [ "$MWD" != "$TODAY" ] && [ "$GEN" = "$TODAY" ] && [ $((H*60+M)) -ge 465 ] && [ "$H" -lt 11 ] \
+             && [ "$(recent market_watch_live.yml 45)" = "0" ]; then
+            echo "→ Market Watch missing — dispatching"; gh workflow run market_watch_live.yml --ref main || true
+          fi
+
       - name: Dispatch due publishers
         run: |
           H=$(TZ=Asia/Ulaanbaatar date +%H); H=$((10#$H))
