@@ -47,4 +47,10 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -f logs/threads_token.enc
           git commit -qm "chore(threads): refresh encrypted token [skip ci]"
-          for i in 1 2 3 4 5; do git pull -q --rebase origin main && git push -q && break; sleep $((i*5)); done
+          ok=0
+          for i in 1 2 3 4 5; do
+            if git pull -q --rebase origin main && git push -q; then ok=1; break; fi
+            sleep $((i*5))
+          done
+          # fix31: a token that was refreshed but not saved must show as a red run
+          [ "$ok" = 1 ] || { echo "❌ could not push logs/threads_token.enc"; exit 1; }
