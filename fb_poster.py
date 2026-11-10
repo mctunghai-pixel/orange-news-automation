@@ -146,6 +146,38 @@ def get_scheduled_messages(page_id, access_token) -> list:
         return []
 
 
+def news_already_on_page_today(page_id, access_token, now_mnt) -> int:
+    """fix28: how many news posts (not Market Watch) are already scheduled for, or
+    published on, today's MNT date. A second pipeline run the same day re-translates
+    the same stories with different wording, so the headline de-dupe misses them —
+    this whole-day guard stops the duplicate batch. Fail-open (returns 0)."""
+    day = now_mnt.date()
+    n = 0
+    try:
+        r = requests.get(f"{FB_API_URL}/{page_id}/scheduled_posts",
+                         params={"fields": "message,scheduled_publish_time", "limit": 100,
+                                 "access_token": access_token}, timeout=15)
+        r.raise_for_status()
+        for p in r.json().get("data", []):
+            t = p.get("scheduled_publish_time")
+            if not t or BRAND.is_market_watch(p.get("message") or ""):
+                continue
+            ts = int(t) if str(t).isdigit() else int(datetime.fromisoformat(str(t).replace("Z", "+00:00")).timestamp())
+            if (datetime.fromtimestamp(ts, timezone.utc) + timedelta(hours=8)).date() == day:
+                n += 1
+        since = int((datetime(day.year, day.month, day.day, tzinfo=timezone.utc) - timedelta(hours=8)).timestamp())
+        r = requests.get(f"{FB_API_URL}/{page_id}/posts",
+                         params={"fields": "message,created_time", "since": since, "limit": 100,
+                                 "access_token": access_token}, timeout=15)
+        r.raise_for_status()
+        n += sum(1 for p in r.json().get("data", [])
+                 if (p.get("message") or "").strip() and not BRAND.is_market_watch(p.get("message") or ""))
+    except Exception as e:
+        log(f"  ⚠️  today-guard check failed ({type(e).__name__}) — fail-open")
+        return 0
+    return n
+
+
 def plan_slots(n, now_mnt, first_hour=9, last_hour=21):
     """Same-day slots (MNT). Normal run: hourly from 09:00. Late run: from the next
     half-hour, spacing compressed so all n posts fit before last_hour. Never tomorrow."""
@@ -329,6 +361,11 @@ def run(live, use_scheduling=True, skip_market_watch=False):
                 if not (p.get("use_market_watch_image") or p.get("category") == "market_watch"
                         or p.get("type") == "market_watch")]
     slots = dict(zip(news_idx, plan_slots(len(news_idx), now_mnt)))
+    if live and os.environ.get("FB_FORCE_REPOST") != "1":
+        already = news_already_on_page_today(page_id, access_token, now_mnt)
+        if already >= 3:
+            log(f"⏭️  {already} news posts already scheduled/published today — skipping FB batch (no duplicates)")
+            return
     queued = get_scheduled_messages(page_id, access_token) if live else []
     success = failed = 0
 

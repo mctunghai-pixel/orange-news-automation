@@ -1640,6 +1640,9 @@ def translate_article(article, idx):
         "score": article.get("score", 0),
         "is_market_watch": False,
         "type": "news",
+        # fix28: audit trail — which engine wrote this post (gemini / claude)
+        "translated_by": (ACTIVE_GEMINI_MODEL or "gemini") if api_used == "gemini" else
+                         (CLAUDE_MODEL if api_used == "claude" else api_used),
     }
 
     log_entry = build_article_log_entry(
