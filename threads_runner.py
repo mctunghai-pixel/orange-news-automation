@@ -186,6 +186,14 @@ def main() -> int:
             return 1
         with open(INPUT_FILE, "r", encoding="utf-8") as f:
             posts = json.load(f)
+        # fix27: never pair yesterday's caption with today's image (2026-11-10:
+        # the daily pipeline published images but its commit of the posts failed).
+        from freshness import posts_are_fresh, posts_generated_date
+        if not posts_are_fresh(posts):
+            _log(f"⛔ stale translated_posts.json (generated {posts_generated_date(posts)}) — waiting for today's run")
+            status["exit_path"] = "stale_input"
+            status["generated_date"] = posts_generated_date(posts)
+            return 0
         if idx >= len(posts):
             _log(f"idx {idx} out of range ({len(posts)} posts)")
             status["exit_path"] = "idx_out_of_range"

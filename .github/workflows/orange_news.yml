@@ -141,7 +141,11 @@ jobs:
             echo "ℹ️  No changes to translated_posts.json or archive"
           else
             git commit -m "data: update translated_posts.json + archive [skip ci]"
-            git push
+            # fix27: publishers push state files every few minutes — rebase and retry
+            for i in 1 2 3 4 5; do
+              git pull --rebase -q origin main && git push && break
+              echo "push attempt $i failed — retrying"; sleep $((i*5))
+            done
             echo "✅ translated_posts.json + archive committed and pushed"
           fi
 
