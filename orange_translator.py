@@ -73,6 +73,26 @@ GEMINI_MODEL_PRIMARY   = "gemini-2.5-pro"
 GEMINI_MODEL_FALLBACKS = ["gemini-2.5-flash"]  # free-tier safe fallback before paid Claude
 ACTIVE_GEMINI_MODEL    = None  # set by get_working_gemini_model()
 _GEMINI_CLIENT         = None  # genai.Client instance, set at probe time
+_GEMINI_PAID           = False # fix32: True once switched to the billed key (GEMINI_API_KEY_PAID)
+
+
+def _switch_to_paid_gemini():
+    """fix32: when the free key's daily quota is spent, continue on a key from a
+    billing-enabled Google Cloud project (GitHub secret GEMINI_API_KEY_PAID).
+    Same models, same prompts — only the quota/billing changes. Returns True if
+    the client was switched (once per run)."""
+    global _GEMINI_CLIENT, _GEMINI_PAID
+    key = (os.environ.get("GEMINI_API_KEY_PAID") or "").strip()
+    if _GEMINI_PAID or not key or not _GENAI_AVAILABLE:
+        return False
+    try:
+        _GEMINI_CLIENT = genai.Client(api_key=key)
+    except Exception as e:
+        print(f"  ⚠️ paid Gemini client init failed: {e}")
+        return False
+    _GEMINI_PAID = True
+    print("  💳 Free Gemini quota spent — continuing on the paid Google Cloud key (GEMINI_API_KEY_PAID)")
+    return True
 
 # Claude fallback
 CLAUDE_MODEL         = "claude-haiku-4-5-20251001"
@@ -166,7 +186,11 @@ def _gemini_generate(**kw):
                     ACTIVE_GEMINI_MODEL = nxt
                     kw["model"] = nxt
                     continue
-                print("  ⛔ Gemini daily free quota exhausted on every model — remaining stories skipped")
+                if _switch_to_paid_gemini():
+                    ACTIVE_GEMINI_MODEL = GEMINI_MODEL_PRIMARY
+                    kw["model"] = GEMINI_MODEL_PRIMARY
+                    continue
+                print("  ⛔ Gemini daily quota exhausted on every model (no paid key) — remaining stories skipped")
                 ACTIVE_GEMINI_MODEL = None
                 raise
             transient = any(c in msg for c in ("503", "UNAVAILABLE", "429", "RESOURCE_EXHAUSTED", "500", "INTERNAL"))
@@ -798,28 +822,31 @@ def get_working_gemini_model():
 
     candidates = [GEMINI_MODEL_PRIMARY] + GEMINI_MODEL_FALLBACKS
 
-    for model_name in candidates:
-        try:
-            t0 = time.time()
-            response = _GEMINI_CLIENT.models.generate_content(
-                model=model_name,
-                contents="Return {\"status\": \"ok\"} as JSON only.",
-                config=genai.types.GenerateContentConfig(
-                    temperature=0.0,
-                    response_mime_type="application/json",
-                    max_output_tokens=20,
-                ),
-            )
-            elapsed = time.time() - t0
-            # Touch response to confirm parse
-            _ = response.text
-            print(f"Gemini model probe: {model_name} → OK (response time {elapsed:.1f}s)")
-            ACTIVE_GEMINI_MODEL = model_name
-            print(f"ACTIVE_GEMINI_MODEL = {model_name}")
-            return model_name
-        except Exception as e:
-            short_err = f"{type(e).__name__}: {str(e)[:100]}"
-            print(f"Gemini model probe: {model_name} → FAIL ({short_err})")
+    for pass_no in range(2):  # fix32: second pass on the paid key if the free one is spent
+        for model_name in candidates:
+            try:
+                t0 = time.time()
+                response = _GEMINI_CLIENT.models.generate_content(
+                    model=model_name,
+                    contents="Return {\"status\": \"ok\"} as JSON only.",
+                    config=genai.types.GenerateContentConfig(
+                        temperature=0.0,
+                        response_mime_type="application/json",
+                        max_output_tokens=20,
+                    ),
+                )
+                elapsed = time.time() - t0
+                _ = response.text  # touch response to confirm parse
+                print(f"Gemini model probe: {model_name} → OK (response time {elapsed:.1f}s)"
+                      + (" [paid key]" if _GEMINI_PAID else ""))
+                ACTIVE_GEMINI_MODEL = model_name
+                print(f"ACTIVE_GEMINI_MODEL = {model_name}")
+                return model_name
+            except Exception as e:
+                short_err = f"{type(e).__name__}: {str(e)[:100]}"
+                print(f"Gemini model probe: {model_name} → FAIL ({short_err})")
+        if pass_no == 0 and not _switch_to_paid_gemini():
+            break
 
     print("⚠️ All Gemini probes failed. Claude fallback will handle every article.")
     ACTIVE_GEMINI_MODEL = None
@@ -1656,7 +1683,7 @@ def translate_article(article, idx):
         "is_market_watch": False,
         "type": "news",
         # fix28: audit trail — which engine wrote this post (gemini / claude)
-        "translated_by": (ACTIVE_GEMINI_MODEL or "gemini") if api_used == "gemini" else
+        "translated_by": ((ACTIVE_GEMINI_MODEL or "gemini") + (" (paid)" if _GEMINI_PAID else "")) if api_used == "gemini" else
                          (CLAUDE_MODEL if api_used == "claude" else api_used),
     }
 

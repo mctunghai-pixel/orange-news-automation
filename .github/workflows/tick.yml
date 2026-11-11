@@ -33,6 +33,8 @@ jobs:
             logs
           sparse-checkout-cone-mode: false
 
+      # fix32: retry window extended to 19:59 MNT — the free Gemini quota resets at
+      # 16:00 MNT (midnight PT), so a morning run that died on quota can still recover.
       # fix26: on 2026-11-10 GitHub dropped the 06:13 daily-pipeline cron and all
       # Market Watch crons, so nothing new was made. The external clock now also
       # starts those two when today's output is missing (and none is running).
@@ -47,7 +49,7 @@ jobs:
               --jq "[.[] | select(.status!=\"completed\" or ((now - (.createdAt|fromdateiso8601)) < ($2*60)))] | length"
           }
           echo "MNT $H:$M  posts=$GEN  mw=$MWD  today=$TODAY"
-          if [ "$H" -ge 6 ] && [ "$H" -le 15 ] && [ "$GEN" != "$TODAY" ] && [ "$(recent orange_news.yml 75)" = "0" ]; then
+          if [ "$H" -ge 6 ] && [ "$H" -le 19 ] && [ "$GEN" != "$TODAY" ] && [ "$(recent orange_news.yml 75)" = "0" ]; then
             echo "→ daily pipeline missing — dispatching"; gh workflow run orange_news.yml --ref main -f live=true || true
           fi
           # Market Watch: fb_poster_live posts live until 11:00; wait for today's posts first (fix18 reuse)

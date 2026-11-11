@@ -144,6 +144,7 @@ jobs:
         if: steps.fresh.outputs.fresh != 'true'
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_PAID: ${{ secrets.GEMINI_API_KEY_PAID }}
         run: |
           echo "🤖 Translator at $(date '+%H:%M:%S %Z')"
           python3 orange_translator.py

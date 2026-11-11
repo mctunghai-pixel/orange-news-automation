@@ -86,6 +86,7 @@ jobs:
       - name: Phase 2 — Gemini translator (Claude fallback)
         env:
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          GEMINI_API_KEY_PAID: ${{ secrets.GEMINI_API_KEY_PAID }}
         run: |
           echo "🤖 Translator at $(date '+%H:%M:%S %Z')"
           python3 orange_translator.py
