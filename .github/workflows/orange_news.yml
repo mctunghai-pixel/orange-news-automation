@@ -142,10 +142,15 @@ jobs:
           else
             git commit -m "data: update translated_posts.json + archive [skip ci]"
             # fix27: publishers push state files every few minutes — rebase and retry
+            # fix33: --autostash — other phases leave tracked files modified (2026-11-12:
+            # "cannot pull with rebase: You have unstaged changes" x5, posts never pushed)
+            ok=0
             for i in 1 2 3 4 5; do
-              git pull --rebase -q origin main && git push && break
+              if git pull --rebase --autostash -q origin main && git push; then ok=1; break; fi
               echo "push attempt $i failed — retrying"; sleep $((i*5))
             done
+            git status --short | head -20
+            if [ "$ok" != 1 ]; then echo "❌ translated_posts.json could NOT be pushed"; exit 1; fi
             echo "✅ translated_posts.json + archive committed and pushed"
           fi
 

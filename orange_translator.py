@@ -175,17 +175,23 @@ def _gemini_generate(**kw):
             return _GEMINI_CLIENT.models.generate_content(**kw)
         except Exception as e:
             msg = str(e)
-            if ("429" in msg or "RESOURCE_EXHAUSTED" in msg) and ("PerDay" in msg or "per day" in msg.lower()):
+            # fix33b: on the paid project 2.5-pro answers 404 "no longer available to new
+            # users" — treat a retired/unknown model like a spent quota: next model.
+            model_gone = ("404" in msg or "NOT_FOUND" in msg) and "model" in msg.lower()
+            if model_gone or (("429" in msg or "RESOURCE_EXHAUSTED" in msg) and ("PerDay" in msg or "per day" in msg.lower())):
                 # fix29: a daily quota is per model — move to the next Gemini model
                 # (2.5-pro → 2.5-flash) instead of giving up on Gemini.
                 chain = [GEMINI_MODEL_PRIMARY] + GEMINI_MODEL_FALLBACKS
                 cur = kw.get("model") or ACTIVE_GEMINI_MODEL
                 nxt = chain[chain.index(cur) + 1] if cur in chain and chain.index(cur) + 1 < len(chain) else None
                 if nxt:
-                    print(f"  ⛔ {cur} daily free quota exhausted — switching to {nxt}")
+                    print(f"  ⛔ {cur} {'unavailable on this key' if model_gone else 'daily quota exhausted'} — switching to {nxt}")
                     ACTIVE_GEMINI_MODEL = nxt
                     kw["model"] = nxt
                     continue
+                if model_gone:
+                    print(f"  ⛔ {cur} unavailable and no further Gemini model — story skipped")
+                    raise
                 if _switch_to_paid_gemini():
                     ACTIVE_GEMINI_MODEL = GEMINI_MODEL_PRIMARY
                     kw["model"] = GEMINI_MODEL_PRIMARY
