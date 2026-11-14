@@ -846,7 +846,7 @@ def get_working_gemini_model():
                     config=genai.types.GenerateContentConfig(
                         temperature=0.0,
                         response_mime_type="application/json",
-                        max_output_tokens=20,
+                        max_output_tokens=512,  # fix35: room for thinking tokens
                     ),
                 )
                 elapsed = time.time() - t0
@@ -1256,7 +1256,9 @@ def gemini_quality_gate(title: str, body: str) -> tuple:
             config=genai.types.GenerateContentConfig(
                 temperature=0.0,
                 response_mime_type="application/json",
-                max_output_tokens=120,
+                # fix35: Gemini 3.x "thinking" tokens count toward this limit — 120 left the
+                # JSON cut off (gemini_gate_parse_error on 2 of 12 stories, 2026-11-14).
+                max_output_tokens=2048,
             ),
         )
         raw = (response.text or "").strip()
