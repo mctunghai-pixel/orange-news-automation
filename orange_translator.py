@@ -73,6 +73,7 @@ GEMINI_MODEL_PRIMARY   = "gemini-2.5-pro"
 GEMINI_MODEL_FALLBACKS = ["gemini-2.5-flash"]  # free-tier safe fallback before paid Claude
 ACTIVE_GEMINI_MODEL    = None  # set by get_working_gemini_model()
 _GEMINI_CLIENT         = None  # genai.Client instance, set at probe time
+_GEMINI_TRIED          = set()  # fix34: models already tried this run
 _GEMINI_PAID           = False # fix32: True once switched to the billed key (GEMINI_API_KEY_PAID)
 
 
@@ -184,6 +185,13 @@ def _gemini_generate(**kw):
                 chain = [GEMINI_MODEL_PRIMARY] + GEMINI_MODEL_FALLBACKS
                 cur = kw.get("model") or ACTIVE_GEMINI_MODEL
                 nxt = chain[chain.index(cur) + 1] if cur in chain and chain.index(cur) + 1 < len(chain) else None
+                # fix34: a retired model's 404 names its successor ("…use models/gemini-3.8-flash…")
+                # — follow it when the static chain is used up (paid project, 2026-11-14).
+                if model_gone and not nxt:
+                    m = re.search(r"use (?:models/)?(gemini-[\w.\-]+)", msg)
+                    if m and m.group(1) != cur and m.group(1) not in _GEMINI_TRIED:
+                        nxt = m.group(1)
+                _GEMINI_TRIED.add(cur)
                 if nxt:
                     print(f"  ⛔ {cur} {'unavailable on this key' if model_gone else 'daily quota exhausted'} — switching to {nxt}")
                     ACTIVE_GEMINI_MODEL = nxt
@@ -851,6 +859,9 @@ def get_working_gemini_model():
             except Exception as e:
                 short_err = f"{type(e).__name__}: {str(e)[:100]}"
                 print(f"Gemini model probe: {model_name} → FAIL ({short_err})")
+                m = re.search(r"use (?:models/)?(gemini-[\w.\-]+)", str(e))
+                if m and m.group(1) not in candidates:  # fix34: follow the named successor
+                    candidates.append(m.group(1))
         if pass_no == 0 and not _switch_to_paid_gemini():
             break
 
