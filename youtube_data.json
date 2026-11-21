@@ -1,14 +1,56 @@
 {
-  "fetched_at_utc": "2026-11-21T01:03:23Z",
-  "fetched_at_mnt": "2026-11-21T09:03:42+0800",
+  "fetched_at_utc": "2026-11-21T09:09:20Z",
+  "fetched_at_mnt": "2026-11-21T17:09:22+0800",
   "channels_processed": 6,
-  "videos_total": 38,
-  "videos_filtered_short": 49,
+  "videos_total": 41,
+  "videos_filtered_short": 47,
   "videos_filtered_denied": 0,
-  "videos_filtered_no_duration": 3,
-  "errors": [],
-  "elapsed_seconds": 19.06,
+  "videos_filtered_no_duration": 2,
+  "errors": [
+    "title_mn gemini-2.5-flash: HTTPError: 503 Server Error: Service Unavailable for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:",
+    "title_mn gemini-2.5-flash-lite: HTTPError: 404 Client Error: Not Found for url: https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-lite:gener"
+  ],
+  "elapsed_seconds": 1.73,
   "videos": [
+    {
+      "id": "py9uIgX8UyM",
+      "title": "Illustrating a year of turmoil inside Iran",
+      "description": "On this week’s episode of On Assignment, host Jonah Green speaks with Reuters correspondent John Davison about Under Fire, a graphic memoir by Reuters that tells the story of one Iranian woman through a year of protests, war and a tenuous ceasefire. Davison describes how he reported it over 11 months, how the team verified meticulous details with illustrator Adolfo Arranz, and what daily life looked like inside Iran during the conflict.\n\n#News #Reuters #Newsfeed \n\nRead the story here: https://www.reuters.com/graphics/IRAN-CRISIS/ILLUSTRATED/jnvwdgmnrpw/\n\n👉 Subscribe: https://reut.rs/4b8fRGn\n\nKeep up with the latest news from around the world: https://www.reuters.com/\nFollow Reuters on Facebook: https://www.facebook.com/Reuters\nFollow Reuters on X: https://twitter.com/Reuters\nFollow Reuters on Instagram: https://www.instagram.com/reuters/?hl=en",
+      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
+      "channel_title": "Reuters",
+      "published_at": "2026-11-21T06:00:19+00:00",
+      "thumbnail_url": "https://i1.ytimg.com/vi/py9uIgX8UyM/hqdefault.jpg",
+      "watch_url": "https://www.youtube.com/watch?v=py9uIgX8UyM",
+      "duration_seconds": 1280,
+      "duration_iso": "PT21M20S",
+      "mongolia_relevant": false
+    },
+    {
+      "id": "XI5HoAj7ELM",
+      "title": "What next for the Democrats? | Martin Wolf on the US midterms",
+      "description": "Americans roundly rejected the Republican Party under President Donald Trump at the ballot box, giving the Democratic Party control of both the House of Representatives and the Senate. That means Democrats have a raft of new tools with which to oppose Trump, including control of investigative committees the party may use to look into alleged corruption. How should the Democrats use that power? \n\nDoes the scale of their victory mean they have the country’s backing, or just that Republicans were unpopular? And will Trump’s brand of politics return? Martin speaks to Nobel prize-winning economist Paul Krugman to discuss what happens next.\n\nTo enjoy future episodes, be sure to subscribe to ‘Martin Wolf on the World’ wherever you get your podcasts. \n\nHost: Martin Wolf\nProducer: Mischa Frankl-Duval\nSenior producer: Laurence Knight\nExecutive producer: Manuela Saragosa\nVideo editor: Richard Topping\nSenior Audio Engineer: Breen Turner\nBroadcast engineers: Andrew Georgiadis\nPodcast development: Laura Clarke\nFT Global Head of Audio: Flo Phillips \n\nLearn more at www.ft.com/martin-wolf-on-the-world\n► Enjoying FT content? Get a daily slice of the very best FT journalism with FT Edit. Free for 30 days then just £4.99 a month\n\nSee if you get the FT for free as a student (http://ft.com/schoolsarefree) or start a £1 trial: https://subs.ft.com/spa3_trial?segmentId=3d4ba81b-96bb-cef0-9ece-29efd6ef2132.\n\n► Check out our Community tab for more stories: https://www.youtube.com/@FinancialTimes/community\n►  Listen to our podcasts: https://www.ft.com/podcasts\n►  Follow us on Instagram: https://www.instagram.com/financialtimes\n►  Follow us on Instagram: https://www.tiktok.com/@financialtimes",
+      "channel_id": "UCoUxsWakJucWg46KW5RsvPw",
+      "channel_title": "Financial Times",
+      "published_at": "2026-11-21T05:00:05+00:00",
+      "thumbnail_url": "https://i1.ytimg.com/vi/XI5HoAj7ELM/hqdefault.jpg",
+      "watch_url": "https://www.youtube.com/watch?v=XI5HoAj7ELM",
+      "duration_seconds": 2233,
+      "duration_iso": "PT37M13S",
+      "mongolia_relevant": false
+    },
+    {
+      "id": "lQOlQH6nsys",
+      "title": "LIVE: Celebration of life service for civil rights leader Dolores Huerta",
+      "description": "A celebration of life service is being held in California for US civil rights leader Dolores Huerta, who co-founded the United Farm Workers with Cesar Chavez and fought legislators and powerful growers to improve the lives of farmworkers across the United States.\n\n#DoloresHuerta #California #CivilRights #CelebrationOfLife #Live #Reuters #News\n\nKeep up with the latest news from around the world: https://www.reuters.com/",
+      "channel_id": "UChqUTb7kYRX8-EiaN3XFrSQ",
+      "channel_title": "Reuters",
+      "published_at": "2026-11-21T03:00:19+00:00",
+      "thumbnail_url": "https://i1.ytimg.com/vi/lQOlQH6nsys/hqdefault.jpg",
+      "watch_url": "https://www.youtube.com/watch?v=lQOlQH6nsys",
+      "duration_seconds": 31158,
+      "duration_iso": "PT8H39M18S",
+      "mongolia_relevant": false
+    },
     {
       "id": "H4ZByULvs-Q",
       "title": "Trump Vows To Tax US Companies Building Data Centers Abroad",
