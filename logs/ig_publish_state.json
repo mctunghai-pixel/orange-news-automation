@@ -912,8 +912,8 @@
     "20261123:5": {
       "ok": false,
       "external_id": null,
-      "error": "create_container: code=9004 subcode=2207052 Only photo or video can be accepted as media type.",
-      "timestamp": "2026-11-23T05:01:11.383156+00:00"
+      "error": "max attempts exhausted: publish_container: code=4 subcode=2207051 Application request limit reached",
+      "timestamp": "2026-11-23T05:16:12.402116+00:00"
     }
   },
   "meta": {
