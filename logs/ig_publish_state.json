@@ -908,6 +908,12 @@
       "external_id": "18120019817045350",
       "via_cross_check": true,
       "timestamp": "2026-11-23T04:16:08.516742+00:00"
+    },
+    "20261123:5": {
+      "ok": false,
+      "external_id": null,
+      "error": "create_container: code=9004 subcode=2207052 Only photo or video can be accepted as media type.",
+      "timestamp": "2026-11-23T05:01:11.383156+00:00"
     }
   },
   "meta": {
