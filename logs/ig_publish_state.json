@@ -902,6 +902,12 @@
       "external_id": "17999521476103909",
       "error": null,
       "timestamp": "2026-11-23T03:01:19.350481+00:00"
+    },
+    "20261123:4": {
+      "ok": false,
+      "external_id": null,
+      "error": "max attempts exhausted: publish_container: code=4 subcode=2207051 Application request limit reached",
+      "timestamp": "2026-11-23T04:01:15.709782+00:00"
     }
   },
   "meta": {
