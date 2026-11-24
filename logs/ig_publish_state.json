@@ -986,6 +986,12 @@
       "external_id": "18187720012437470",
       "via_cross_check": true,
       "timestamp": "2026-11-24T07:16:14.110608+00:00"
+    },
+    "20261124:8": {
+      "ok": false,
+      "external_id": null,
+      "error": "max attempts exhausted: publish_container: code=4 subcode=2207051 Application request limit reached",
+      "timestamp": "2026-11-24T08:01:12.161299+00:00"
     }
   },
   "meta": {
