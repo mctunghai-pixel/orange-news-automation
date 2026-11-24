@@ -956,6 +956,12 @@
       "external_id": "17993435703075667",
       "via_cross_check": true,
       "timestamp": "2026-11-24T02:15:55.051691+00:00"
+    },
+    "20261124:3": {
+      "ok": false,
+      "external_id": null,
+      "error": "max attempts exhausted: publish_container: code=4 subcode=2207051 Application request limit reached",
+      "timestamp": "2026-11-24T03:01:12.563538+00:00"
     }
   },
   "meta": {
