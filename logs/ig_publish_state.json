@@ -1210,10 +1210,10 @@
       "timestamp": "2026-11-28T05:16:06.128047+00:00"
     },
     "20261128:6": {
-      "ok": false,
-      "external_id": null,
-      "error": "max attempts exhausted: publish_container: code=4 subcode=2207051 Application request limit reached",
-      "timestamp": "2026-11-28T06:01:18.081467+00:00"
+      "ok": true,
+      "external_id": "18649338082050687",
+      "via_cross_check": true,
+      "timestamp": "2026-11-28T06:15:56.634328+00:00"
     }
   },
   "meta": {
